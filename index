@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Present Value | Home</title>
+    <style>
+        /* --- RESET & BASICS --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        a:hover { color: var(--primary-color); }
+        ul { list-style: none; }
+
+        /* --- VARIABLES --- */
+        :root {
+            --primary-color: #4169e1; /* Royal Blue */
+            --secondary-color: #2c3e50; /* Darker Navy */
+            --bg-color: #ffffff;
+            --light-gray: #f4f4f4;
+            --border-color: #ddd;
+        }
+
+        /* --- HEADER & NAV --- */
+        header {
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+        /* Updated Logo Style */
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            color: var(--primary-color); 
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a { font-weight: 600; font-size: 0.95rem; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2a4cb3 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+        }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        /* --- MAIN LAYOUT (Grid) --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 3fr 1fr; /* 3 parts Content, 1 part Sidebar */
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        /* --- SPLIT FEED SECTION --- */
+        .split-feed-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Split the main content area in two */
+            gap: 30px;
+        }
+
+        .feed-column h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .investing-title {
+            color: var(--secondary-color);
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        .general-title {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        /* Cards inside the columns */
+        .mini-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .mini-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-color: var(--primary-color);
+        }
+        
+        .tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #888;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .mini-card h4 { margin-bottom: 8px; font-size: 1.1rem; }
+        .mini-card p { font-size: 0.9rem; color: #666; margin-bottom: 10px; }
+        .mini-card .date { font-size: 0.8rem; color: #999; }
+
+        /* --- SIDEBAR & SOCIALS --- */
+        .sidebar-widget {
+            background: var(--bg-color);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+        .sidebar-widget h3 { margin-bottom: 15px; font-size: 1.1rem; }
+        .profile-pic {
+            width: 80px; height: 80px;
+            background: #ddd; border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        /* Social Button Styles */
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 2px solid transparent;
+        }
+
+        .social-btn.business {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .social-btn.business:hover {
+            background-color: #3355b5;
+            color: white;
+        }
+
+        .social-btn.personal {
+            background-color: transparent;
+            border: 2px solid #333;
+            color: #333;
+        }
+        .social-btn.personal:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #333; color: white;
+            text-align: center; padding: 30px; margin-top: auto;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        }
+        @media (max-width: 600px) {
+            .split-feed-container { grid-template-columns: 1fr; }
+            .sidebar { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">The Present <span style="color:#333">Value.</span></div>
+                
+                <ul class="nav-links">
+                    <li><a href="index.html" style="color:var(--primary-color)">Home</a></li>
+                    <li><a href="posts/investing/index.html">Investing</a></li>
+                    <li><a href="posts/general/index.html">General</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Markets, Taxes & Daily Life</h1>
+            <p>A personal blog exploring value investing in the Philippines, tax compliance, and the pursuit of a balanced life.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="main-grid">
+            
+            <div class="content-area">
+                <div class="split-feed-container">
+                    
+                    <div class="feed-column">
+                        <h3 class="investing-title">📈 Investing & Finance</h3>
+                        
+                        <article class="mini-card">
+                            <span class="tag" style="color:green">PSE Analysis</span>
+                            <h4><a href="posts/investing/market-outlook-q1.html">My Q1 Outlook for Philippine Stocks</a></h4>
+                            <p>Analyzing the latest movements in mining and utilities...</p>
+                            <span class="date">Feb 14, 2026</span>
+                        </article>
+
+                        <article class="mini-card">
+                            <span class="tag" style="color:green">Tax Law</span>
+                            <h4><a href="posts/investing/tax-updates-2026.html">Key Tax Updates for Freelancers</a></h4>
+                            <p>What you need to know about the new BIR issuances this year...</p>
+                            <span class="date">Jan 28, 2026</span>
+                        </article>
+
+                        <article class="mini-card">
+                            <span class="tag" style="color:green">Strategy</span>
+                            <h4><a href="posts/investing/value-investing-basics.html">Why Value Investing Still Works</a></h4>
+                            <p>Ignoring the hype and looking at the fundamentals.</p>
+                            <span class="date">Jan 10, 2026</span>
+                        </article>
+                    </div>
+
+                    <div class="feed-column">
+                        <h3 class="general-title">☕ Life & Journal</h3>
+                        
+                        <article class="mini-card">
+                            <span class="tag">Fitness</span>
+                            <h4><a href="posts/general/my-ppl-split.html">Optimizing My PPL Routine</a></h4>
+                            <p>Adjusting volume for hypertrophy while working a desk job...</p>
+                            <span class="date">Feb 10, 2026</span>
+                        </article>
+
+                        <article class="mini-card">
+                            <span class="tag">Tech</span>
+                            <h4><a href="posts/general/macbook-m4-review.html">Thoughts on the MacBook Pro M4</a></h4>
+                            <p>Is it worth the upgrade for productivity?</p>
+                            <span class="date">Feb 02, 2026</span>
+                        </article>
+
+                        <article class="mini-card">
+                            <span class="tag">Hobbies</span>
+                            <h4><a href="posts/general/starting-scrapbooking.html">Why I Started Scrapbooking</a></h4>
+                            <p>Taking a break from screens to make something tangible.</p>
+                            <span class="date">Jan 15, 2026</span>
+                        </article>
+                    </div>
+
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                
+                <div class="sidebar-widget">
+                    <h3>Connect</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 15px; color:#666;">Follow my journey on Instagram:</p>
+                    
+                    <a href="https://instagram.com/YOUR_BUSINESS_HANDLE" target="_blank" class="social-btn business">
+                        Business & CPA 💼
+                    </a>
+                    
+                    <a href="https://instagram.com/YOUR_PERSONAL_HANDLE" target="_blank" class="social-btn personal">
+                        Personal & Hobbies 📸
+                    </a>
+                </div>
+
+                <div class="sidebar-widget">
+                    <h3>About Me</h3>
+                    <div class="profile-pic">
+                        </div>
+                    <p>I'm a freelance CPA and value investor based in the Philippines. I write about navigating the PSE, understanding tax laws, and my personal hobbies.</p>
+                    <a href="about.html" style="color:var(--primary-color); font-size:0.9rem; font-weight:bold;">More about me &rarr;</a>
+                </div>
+
+            </aside>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 The Present Value. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
