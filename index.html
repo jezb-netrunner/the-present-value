@@ -8,29 +8,37 @@
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
     <link rel="apple-touch-icon" href="images/favicon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
     
     <style>
-        /* Your existing CSS starts here... */
         /* --- RESET & BASICS --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f9f9f9;
-        }
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-        a:hover { color: var(--primary-color); }
-        ul { list-style: none; }
 
         /* --- VARIABLES --- */
         :root {
             --primary-color: #4169e1; /* Royal Blue */
             --secondary-color: #2c3e50; /* Darker Navy */
             --bg-color: #ffffff;
-            --light-gray: #f4f4f4;
-            --border-color: #ddd;
+            --border-color: #eaeaea; 
+            
+            /* Font Variables */
+            --font-serif: 'Source Serif 4', Georgia, serif;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
         }
+
+        body {
+            /* Main reading text defaults to Serif */
+            font-family: var(--font-serif);
+            line-height: 1.8; 
+            color: #444; 
+            background-color: #f9f9faf0; 
+        }
+        
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
 
         /* --- HEADER & NAV --- */
         header {
@@ -39,55 +47,69 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02); 
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         
         nav {
+            /* UI elements use the clean Sans-serif */
+            font-family: var(--font-sans);
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 70px;
         }
-        /* Updated Logo Style */
         .logo { 
             font-size: 1.5rem; 
-            font-weight: bold; 
+            font-weight: 600; 
             color: var(--primary-color); 
             letter-spacing: -0.5px;
         }
         
         .nav-links { display: flex; gap: 25px; }
-        .nav-links a { font-weight: 600; font-size: 0.95rem; }
+        .nav-links a { font-weight: 500; font-size: 0.95rem; color: #555; }
+        .nav-links a:hover { color: var(--primary-color); }
 
         /* --- HERO SECTION --- */
         .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #2a4cb3 100%);
-            color: white;
+            background: var(--bg-color);
             text-align: center;
-            padding: 60px 20px;
-            margin-bottom: 40px;
+            padding: 80px 20px;
+            margin-bottom: 50px;
+            border-bottom: 1px solid var(--border-color);
         }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        .hero p { font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+        .hero h1 { 
+            font-size: 2.8rem; 
+            margin-bottom: 15px; 
+            color: var(--primary-color); 
+            letter-spacing: -0.5px;
+        }
+        .hero p { 
+            font-size: 1.2rem; 
+            color: #666; 
+            max-width: 650px; 
+            margin: 0 auto; 
+        }
 
         /* --- MAIN LAYOUT (Grid) --- */
         .main-grid {
             display: grid;
-            grid-template-columns: 3fr 1fr; /* 3 parts Content, 1 part Sidebar */
+            grid-template-columns: 3fr 1fr;
             gap: 40px;
-            margin-bottom: 60px;
+            margin-bottom: 80px;
         }
 
         /* --- SPLIT FEED SECTION --- */
         .split-feed-container {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Split the main content area in two */
+            grid-template-columns: 1fr 1fr;
             gap: 30px;
         }
 
         .feed-column h3 {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
+            font-family: var(--font-sans);
+            font-size: 1.3rem;
+            margin-bottom: 25px;
             padding-bottom: 10px;
             display: flex;
             align-items: center;
@@ -96,67 +118,98 @@
 
         .investing-title {
             color: var(--secondary-color);
-            border-bottom: 3px solid var(--secondary-color);
+            border-bottom: 2px solid var(--secondary-color);
         }
         .general-title {
             color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
         }
 
-        /* Cards inside the columns */
+        /* --- CARDS --- */
         .mini-card {
             background: var(--bg-color);
-            border: 1px solid var(--border-color);
+            border: none; 
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 30px; 
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .mini-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border-color: var(--primary-color);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08); 
         }
         
         .tag {
+            font-family: var(--font-sans); /* UI contrast */
             font-size: 0.75rem;
             text-transform: uppercase;
-            font-weight: bold;
+            font-weight: 600;
             color: #888;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             display: block;
+            letter-spacing: 0.5px;
         }
-        .mini-card h4 { margin-bottom: 8px; font-size: 1.1rem; }
-        .mini-card p { font-size: 0.9rem; color: #666; margin-bottom: 10px; }
-        .mini-card .date { font-size: 0.8rem; color: #999; }
+        
+        .mini-card h4 { 
+            margin-bottom: 10px; 
+            font-size: 1.2rem; 
+            line-height: 1.4; 
+        }
+        
+        /* Updated Hover State for Article Links */
+        .mini-card h4 a { 
+            color: #222; 
+            transition: color 0.2s ease-in-out; 
+        }
+        .mini-card h4 a:hover { 
+            color: var(--primary-color); /* Pops with Royal Blue */
+        }
+        
+        .mini-card p { font-size: 0.95rem; color: #666; margin-bottom: 15px; }
+        
+        .date { 
+            font-family: var(--font-sans); /* UI contrast */
+            font-size: 0.85rem; 
+            color: #a0a0a0; 
+        }
 
         /* --- SIDEBAR & SOCIALS --- */
         .sidebar-widget {
             background: var(--bg-color);
-            padding: 25px;
+            padding: 30px;
             border-radius: 8px;
-            border: 1px solid var(--border-color);
+            border: none; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
             margin-bottom: 30px;
         }
-        .sidebar-widget h3 { margin-bottom: 15px; font-size: 1.1rem; }
-        .profile-pic {
-            width: 80px; height: 80px;
-            background: #ddd; border-radius: 50%;
-            margin-bottom: 15px;
+        .sidebar-widget h3 { 
+            font-family: var(--font-sans);
+            margin-bottom: 20px; 
+            font-size: 1.1rem; 
+            color: #222; 
         }
+        .profile-pic {
+            width: 90px; height: 90px;
+            background: #f0f0f0; border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .sidebar-widget p { font-size: 0.95rem; color: #666; margin-bottom: 15px;}
 
         /* Social Button Styles */
         .social-btn {
+            font-family: var(--font-sans); /* UI contrast */
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
             padding: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             border-radius: 6px;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 0.9rem;
             border: 2px solid transparent;
+            transition: 0.3s;
         }
 
         .social-btn.business {
@@ -170,18 +223,24 @@
 
         .social-btn.personal {
             background-color: transparent;
-            border: 2px solid #333;
-            color: #333;
+            border: 2px solid #ddd;
+            color: #555;
         }
         .social-btn.personal:hover {
-            background-color: #333;
-            color: white;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
 
         /* --- FOOTER --- */
         footer {
-            background: #333; color: white;
-            text-align: center; padding: 30px; margin-top: auto;
+            font-family: var(--font-sans); /* UI contrast */
+            background: var(--bg-color); 
+            color: #666;
+            text-align: center; 
+            padding: 40px 20px; 
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
         }
 
         /* --- RESPONSIVE --- */
@@ -230,21 +289,21 @@
                         <h3 class="investing-title">📈 Investing & Finance</h3>
                         
                         <article class="mini-card">
-                            <span class="tag" style="color:green">PSE Analysis</span>
+                            <span class="tag" style="color:var(--secondary-color)">PSE Analysis</span>
                             <h4><a href="posts/investing/market-outlook-q1.html">My Q1 Outlook for Philippine Stocks</a></h4>
                             <p>Analyzing the latest movements in mining and utilities...</p>
                             <span class="date">Feb 14, 2026</span>
                         </article>
 
                         <article class="mini-card">
-                            <span class="tag" style="color:green">Tax Law</span>
+                            <span class="tag" style="color:var(--secondary-color)">Tax Law</span>
                             <h4><a href="posts/investing/tax-updates-2026.html">Key Tax Updates for Freelancers</a></h4>
                             <p>What you need to know about the new BIR issuances this year...</p>
                             <span class="date">Jan 28, 2026</span>
                         </article>
 
                         <article class="mini-card">
-                            <span class="tag" style="color:green">Strategy</span>
+                            <span class="tag" style="color:var(--secondary-color)">Strategy</span>
                             <h4><a href="posts/investing/value-investing-basics.html">Why Value Investing Still Works</a></h4>
                             <p>Ignoring the hype and looking at the fundamentals.</p>
                             <span class="date">Jan 10, 2026</span>
@@ -283,7 +342,7 @@
                 
                 <div class="sidebar-widget">
                     <h3>Connect</h3>
-                    <p style="font-size: 0.9rem; margin-bottom: 15px; color:#666;">Follow my journey on Instagram:</p>
+                    <p>Follow my journey on Instagram:</p>
                     
                     <a href="https://instagram.com/YOUR_BUSINESS_HANDLE" target="_blank" class="social-btn business">
                         Business & CPA 💼
@@ -296,10 +355,9 @@
 
                 <div class="sidebar-widget">
                     <h3>About Me</h3>
-                    <div class="profile-pic">
-                        </div>
+                    <div class="profile-pic"></div>
                     <p>I'm a freelance CPA and value investor based in the Philippines. I write about navigating the PSE, understanding tax laws, and my personal hobbies.</p>
-                    <a href="about.html" style="color:var(--primary-color); font-size:0.9rem; font-weight:bold;">More about me &rarr;</a>
+                    <a href="about.html" style="color:var(--primary-color); font-weight:bold;">More about me &rarr;</a>
                 </div>
 
             </aside>
