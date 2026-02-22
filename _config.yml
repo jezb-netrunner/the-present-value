@@ -1,0 +1,5 @@
+name: The Present Value
+description: Markets, Taxes & Daily Life
+url: "https://yourusername.github.io" # Replace with your actual GitHub Pages URL
+markdown: kramdown
+permalink: /:categories/:title/
