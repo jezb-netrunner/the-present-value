@@ -3,4 +3,3 @@ description: Markets, Taxes & Daily Life
 url: "https://yourusername.github.io" # Replace with your actual URL
 markdown: kramdown
 permalink: /:categories/:title/
-theme: jekyll-blank
