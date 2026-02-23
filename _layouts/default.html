@@ -216,29 +216,26 @@
             .logo { text-align: center; width: 100%; }
             .mini-card { padding: 22px; }
         }
-                /* ─── PREMIUM BLOG POST LAYOUT ─── */
+                /* ─── PREMIUM BLOG POST LAYOUT (SEAMLESS) ─── */
         .reading-container {
-            max-width: 800px; /* Constrains the text width for perfect readability */
-            margin: 0 auto;   /* Centers the article on the page */
-            background: var(--bg-color);
-            padding: 60px 80px;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.04); /* Soft floating card effect */
+            max-width: 720px; /* Slightly tighter width for optimal eye-tracking */
+            margin: 0 auto;   /* Centers the article */
+            padding: 20px 20px 80px 20px; 
+            /* Notice we removed the white background, border-radius, and box-shadow! */
         }
         
         .post-header {
             text-align: center;
-            margin-bottom: 48px;
-            padding-bottom: 32px;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 56px;
+            /* Notice we removed the border-bottom line and bottom padding! */
         }
         
         .post-title {
             font-family: var(--font-serif);
-            font-size: 2.8rem;
+            font-size: 3rem; /* Made slightly larger for impact */
             font-weight: 600;
             color: #111;
-            line-height: 1.25;
+            line-height: 1.2;
             margin-bottom: 16px;
             letter-spacing: -0.5px;
         }
@@ -246,7 +243,7 @@
         .post-meta {
             font-family: var(--font-sans);
             font-size: 0.9rem;
-            color: var(--muted);
+            color: var(--primary-color); /* Uses your brand blue to make it pop */
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-weight: 600;
