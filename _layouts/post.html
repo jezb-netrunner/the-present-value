@@ -1,18 +1,14 @@
 ---
 layout: default
 ---
-<div class="container" style="max-width: 720px; margin-bottom: 24px;">
+<div style="max-width: 720px; margin: 0 auto 24px auto; padding: 0 20px;">
     <a href="{{ '/' | relative_url }}" style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--muted);">&larr; Back to Home</a>
 </div>
 
 <article class="reading-container">
     
     <header class="post-header">
-        <div class="post-meta">
-            <span style="color: var(--primary-color);">{{ page.categories | first }}</span> 
-            &nbsp;&bull;&nbsp; 
-            <span>{{ page.date | date: "%B %d, %Y" }}</span>
-        </div>
+        <span class="post-meta">{{ page.categories | first }} &nbsp;&bull;&nbsp; {{ page.date | date: "%B %d, %Y" }}</span>
         <h1 class="post-title">{{ page.title }}</h1>
     </header>
 
