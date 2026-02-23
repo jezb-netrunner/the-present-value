@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-<div class="container" style="max-width: 800px; margin-bottom: 24px;">
+<div class="container" style="max-width: 720px; margin-bottom: 24px;">
     <a href="{{ '/' | relative_url }}" style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--muted);">&larr; Back to Home</a>
 </div>
 
@@ -15,6 +15,10 @@ layout: default
         </div>
         <h1 class="post-title">{{ page.title }}</h1>
     </header>
+
+    {% if page.image %}
+        <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" class="hero-image">
+    {% endif %}
 
     <div class="post-content">
         {{ content }}
