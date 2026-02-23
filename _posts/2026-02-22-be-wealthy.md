@@ -1,9 +1,9 @@
 ---
-layout: default
-title: "Don’t Be Rich, Be Wealthy—Knowing the Difference"
+layout: post
+title: "The Fine Line: Rich vs. Wealthy"
 date: 2026-02-22
 categories: investing
-tag: "Self-growth"
+tag: "Strategy"
 ---
 
 # The Fine Line: Rich vs. Wealthy
