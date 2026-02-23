@@ -2,7 +2,6 @@
 layout: default
 title: Home
 ---
-
 <section class="hero">
     <div class="container">
         <h1>Markets, Taxes &amp; Daily Life</h1>
@@ -18,7 +17,6 @@ title: Home
 
                 <div class="feed-column">
                     <h3 class="investing-title">📈 Investing &amp; Finance</h3>
-
                     {% for post in site.categories.investing limit:5 %}
                     <article class="mini-card">
                         <span class="tag" style="color:var(--secondary-color)">{{ post.tag }}</span>
@@ -27,15 +25,10 @@ title: Home
                         <span class="date">{{ post.date | date: "%b %d, %Y" }}</span>
                     </article>
                     {% endfor %}
-                    
-                    {% if site.categories.investing.size == 0 %}
-                        <p class="muted">No investing posts yet. Stay tuned!</p>
-                    {% endif %}
                 </div>
 
                 <div class="feed-column">
                     <h3 class="general-title">☕ Life &amp; Journal</h3>
-
                     {% for post in site.categories.general limit:5 %}
                     <article class="mini-card">
                         <span class="tag">{{ post.tag }}</span>
@@ -44,10 +37,6 @@ title: Home
                         <span class="date">{{ post.date | date: "%b %d, %Y" }}</span>
                     </article>
                     {% endfor %}
-
-                    {% if site.categories.general.size == 0 %}
-                        <p class="muted">No general posts yet. Stay tuned!</p>
-                    {% endif %}
                 </div>
 
             </div>
@@ -57,14 +46,9 @@ title: Home
             <div class="sidebar-widget">
                 <h3>Connect</h3>
                 <p>Follow my journey on Instagram:</p>
-                <a href="https://instagram.com/YOUR_BUSINESS_HANDLE" target="_blank" class="social-btn business">
-                    Business &amp; CPA 💼
-                </a>
-                <a href="https://instagram.com/YOUR_PERSONAL_HANDLE" target="_blank" class="social-btn personal">
-                    Personal &amp; Hobbies 📸
-                </a>
+                <a href="https://instagram.com/YOUR_BUSINESS_HANDLE" target="_blank" class="social-btn business">Business &amp; CPA 💼</a>
+                <a href="https://instagram.com/YOUR_PERSONAL_HANDLE" target="_blank" class="social-btn personal">Personal &amp; Hobbies 📸</a>
             </div>
-
             <div class="sidebar-widget">
                 <h3>About Me</h3>
                 <div class="profile-pic"></div>
