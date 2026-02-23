@@ -38,7 +38,50 @@
 
         a { text-decoration: none; color: inherit; transition: color 0.2s; }
         ul { list-style: none; }
-
+        /* ─── PULL QUOTES (MARK MANSON STYLE) ─── */
+        .post-content blockquote {
+            position: relative;
+            margin: 48px 32px; /* Adds breathing room above, below, and on the sides */
+            padding-left: 64px; /* Creates space for the giant quotation mark */
+            border: none; /* Removes any default browser lines */
+        }
+        
+        /* This creates the giant floating quotation mark automatically */
+        .post-content blockquote::before {
+            content: '\201C'; /* Unicode for the left double quote */
+            position: absolute;
+            left: 0;
+            top: -10px;
+            font-family: var(--font-serif);
+            font-size: 5rem;
+            color: var(--primary-color); /* Uses your Royal Blue */
+            line-height: 1;
+        }
+        
+        /* This styles the actual text inside the quote */
+        .post-content blockquote p {
+            font-family: var(--font-serif);
+            font-size: 1.35rem; /* Makes the quote larger than normal body text */
+            font-style: italic;
+            color: var(--secondary-color); /* Uses your darker navy for contrast */
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        /* Mobile Adjustments for Quotes */
+        @media (max-width: 650px) {
+            .post-content blockquote { 
+                margin: 40px 0; /* Removes side margins on small phone screens */
+                padding-left: 50px; 
+            }
+            .post-content blockquote::before { 
+                font-size: 4rem; 
+                top: -5px; 
+            }
+            .post-content blockquote p { 
+                font-size: 1.2rem; 
+            }
+        }
         /* ─── BULLETPROOF STICKY HEADER ─── */
         header {
             background-color: #ffffff !important; 
