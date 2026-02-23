@@ -4,6 +4,7 @@ title: "The Fine Line: Rich vs. Wealthy"
 date: 2026-02-22
 categories: investing
 tag: "Strategy"
+image: "/images/posts/luxury-wealth.jpg" 
 ---
 
 The fine line between being **rich** and **wealthy** is nearly invisible, yet sharp enough to cut even the richest down to crippling insolvency.
