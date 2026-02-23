@@ -216,6 +216,83 @@
             .logo { text-align: center; width: 100%; }
             .mini-card { padding: 22px; }
         }
+                /* ─── PREMIUM BLOG POST LAYOUT ─── */
+        .reading-container {
+            max-width: 800px; /* Constrains the text width for perfect readability */
+            margin: 0 auto;   /* Centers the article on the page */
+            background: var(--bg-color);
+            padding: 60px 80px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04); /* Soft floating card effect */
+        }
+        
+        .post-header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .post-title {
+            font-family: var(--font-serif);
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: #111;
+            line-height: 1.25;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        
+        .post-meta {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        
+        /* Enhancing the Markdown Body Text */
+        .post-content p {
+            font-size: 1.15rem; /* Larger body text like Mark Manson's */
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 28px;
+        }
+        
+        .post-content h2, .post-content h3 {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            color: #111;
+            margin-top: 56px; /* Huge breathing room above headers */
+            margin-bottom: 20px;
+            letter-spacing: -0.01em;
+        }
+        
+        .post-content h2 { font-size: 1.8rem; }
+        .post-content h3 { font-size: 1.4rem; }
+        
+        /* Styles the horizontal lines (---) elegantly */
+        .post-content hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 48px auto;
+            width: 50%;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 32px 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        
+        /* Mobile Adjustments for the Article */
+        @media (max-width: 768px) {
+            .reading-container { padding: 40px 24px; box-shadow: none; border-radius: 0; }
+            .post-title { font-size: 2.2rem; }
+        }
     </style>
 </head>
 <body>
