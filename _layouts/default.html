@@ -228,16 +228,20 @@
         }
                 /* ─── PREMIUM BLOG POST LAYOUT (SEAMLESS) ─── */
         .reading-container {
-            max-width: 720px; /* Slightly tighter width for optimal eye-tracking */
-            margin: 0 auto;   /* Centers the article */
+            max-width: 720px; 
+            margin: 0 auto;   
             padding: 20px 20px 80px 20px; 
-            /* Notice we removed the white background, border-radius, and box-shadow! */
+            background: transparent !important; /* Forces the background to disappear */
+            box-shadow: none !important;        /* Kills any lingering shadows */
         }
         
         .post-header {
             text-align: center;
-            margin-bottom: 56px;
-            /* Notice we removed the border-bottom line and bottom padding! */
+            margin-bottom: 40px;
+            padding: 0;                         /* Removes the padding that was puffing up the box */
+            background: transparent !important; /* Ensures the header itself has no background */
+            box-shadow: none !important;
+            border: none;
         }
         
         .post-title {
