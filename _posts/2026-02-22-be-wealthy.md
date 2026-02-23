@@ -6,8 +6,6 @@ categories: investing
 tag: "Strategy"
 ---
 
-# The Fine Line: Rich vs. Wealthy
-
 The fine line between being **rich** and **wealthy** is nearly invisible, yet sharp enough to cut even the richest down to crippling insolvency.
 
 At some point in your life, you might encounter someone driving a sports car worth millions—whether paid in cash or debt. On the flip side, you could meet someone dressed plainly, driving a modest sedan, yet earning a six-figure income without ever stepping foot in an office.
