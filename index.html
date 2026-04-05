@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Present Value — Philippine Investing, Trading & Personal Finance</title>
+<meta name="description" content="Market insights, PSE analysis, investing guides, and free tax compliance tools for Filipinos. By a CPA who believes financial literacy shouldn't cost you.">
+<link rel="icon" type="image/png" sizes="48x48" href="tpv-favicon-48.png">
+<link rel="icon" type="image/png" sizes="32x32" href="tpv-favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="tpv-favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="tpv-apple-touch-icon.png">
+<meta property="og:title" content="The Present Value — Philippine Investing, Trading & Personal Finance">
+<meta property="og:description" content="Market insights, PSE analysis, investing guides, and free tax compliance tools for Filipinos.">
+<meta property="og:image" content="tpv-monogram-512.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+    --bg:#f9f9fa;--sf:#fff;--s2:#f0f1f3;--s3:#e8e9ec;--bd:#e0e2e6;--bl:#d0d3d8;
+    --ink:#111;--ch:#333;--dim:#666;--mu:#999;--lt:#bbb;
+    --royal:#4169e1;--rs:rgba(65,105,225,.07);--rm:rgba(65,105,225,.14);--rd:#3355c4;
+    --navy:#2c3e50;--navyd:#1a2634;
+    --green:#2d8a4e;--gs:rgba(45,138,78,.07);
+    --amber:#d4850a;--as:rgba(212,133,10,.07);
+    --red:#c0392b;
+    --teal:#1a8a7a;--ts:rgba(26,138,122,.07);
+    --purple:#6c5ce7;
+    --se:'Source Serif 4',Georgia,serif;
+    --sa:'Inter',system-ui,sans-serif;
+    --r:8px;--rr:5px;
+    --sh:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.06);
+    --shs:0 1px 2px rgba(0,0,0,.04),0 2px 8px rgba(0,0,0,.04);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sa);background:var(--bg);color:var(--ch);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ═══════════════ HEADER ═══════════════ */
+.hdr{background:var(--sf);border-bottom:1px solid var(--bd);padding:.85rem 2rem;position:sticky;top:0;z-index:200;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.hdr-i{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.brand{text-decoration:none;display:flex;align-items:center}
+.brand-logo{height:32px;width:auto;display:block}
+.hdr-nav{display:flex;gap:.25rem;align-items:center}
+.hdr-nav a{font-size:.68rem;font-weight:600;color:var(--dim);text-decoration:none;padding:.32rem .7rem;border-radius:100px;transition:all .2s;border:1.5px solid transparent}
+.hdr-nav a:hover{color:var(--ch);background:var(--s2)}
+.hdr-nav a.act{background:var(--ink);color:var(--sf);border-color:var(--ink)}
+.hdr-nav a.sub{background:var(--royal);color:#fff;border-color:var(--royal)}
+.hdr-nav a.sub:hover{background:var(--rd)}
+
+/* ═══════════════ HERO ═══════════════ */
+.hero{max-width:960px;margin:0 auto;padding:3rem 2rem 2.5rem;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--royal);background:var(--rs);padding:.25rem .75rem;border-radius:100px;margin-bottom:1.25rem}
+.hero h2{font-family:var(--se);font-size:clamp(2rem,4.5vw,2.75rem);font-weight:700;color:var(--ink);line-height:1.15;letter-spacing:-.03em;margin-bottom:.85rem}
+.hero p{font-family:var(--se);font-size:1rem;color:var(--dim);line-height:1.65;max-width:560px;margin:0 auto 2rem}
+.hero-ctas{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--sa);font-size:.78rem;font-weight:700;padding:.55rem 1.3rem;border-radius:100px;text-decoration:none;transition:all .25s;border:1.5px solid transparent}
+.btn-primary{background:var(--royal);color:#fff;border-color:var(--royal);box-shadow:0 2px 8px rgba(65,105,225,.2)}
+.btn-primary:hover{background:var(--rd);transform:translateY(-1px);box-shadow:0 4px 14px rgba(65,105,225,.3)}
+.btn-outline{background:var(--sf);color:var(--ch);border-color:var(--bd)}
+.btn-outline:hover{border-color:var(--royal);color:var(--royal);transform:translateY(-1px)}
+.btn svg{width:15px;height:15px;flex-shrink:0}
+
+/* ═══════════════ SECTIONS ═══════════════ */
+.wrap{max-width:960px;margin:0 auto;padding:0 2rem}
+.section{padding:2.5rem 0}
+.sep{height:1px;background:var(--bd);margin:0}
+.s-label{font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--royal);margin-bottom:.55rem}
+.s-title{font-family:var(--se);font-size:1.35rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.25rem}
+.s-desc{font-family:var(--se);font-size:.82rem;color:var(--dim);line-height:1.55;max-width:480px;margin-bottom:1.5rem}
+
+/* ═══════════════ LATEST FROM SUBSTACK ═══════════════ */
+.featured{background:var(--navyd);border-radius:var(--r);padding:1.75rem;color:#fff;text-decoration:none;display:block;transition:all .3s;position:relative;overflow:hidden;margin-bottom:1rem}
+.featured:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.15)}
+.featured::after{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(65,105,225,.12);pointer-events:none}
+.featured .ft-label{font-size:.56rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.75rem;position:relative;z-index:1}
+.featured h3{font-family:var(--se);font-size:1.2rem;font-weight:700;line-height:1.3;margin-bottom:.5rem;position:relative;z-index:1;letter-spacing:-.01em}
+.featured .ft-excerpt{font-size:.8rem;color:rgba(255,255,255,.55);line-height:1.55;max-width:520px;position:relative;z-index:1;margin-bottom:.75rem}
+.featured .ft-meta{font-size:.65rem;color:rgba(255,255,255,.3);position:relative;z-index:1}
+
+.post-row{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+.post-link{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);padding:1.15rem;text-decoration:none;color:inherit;transition:all .25s;display:flex;flex-direction:column}
+.post-link:hover{border-color:var(--royal);box-shadow:0 4px 18px rgba(65,105,225,.07);transform:translateY(-2px)}
+.post-link .ptag{font-size:.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.45rem}
+.ptag.market{color:var(--royal)}.ptag.strategy{color:var(--green)}.ptag.macro{color:var(--amber)}.ptag.learn{color:var(--teal)}
+.post-link h4{font-family:var(--se);font-size:.88rem;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:.3rem}
+.post-link p{font-size:.7rem;color:var(--mu);line-height:1.5;flex:1}
+.post-link .pdate{font-size:.6rem;color:var(--lt);margin-top:.65rem;padding-top:.55rem;border-top:1px solid var(--s2)}
+.read-sub{display:inline-flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:700;color:var(--royal);text-decoration:none;margin-top:1rem;transition:gap .2s}
+.read-sub:hover{gap:.5rem}
+
+/* ═══════════════ TAX TOOLS CARD ═══════════════ */
+.tools-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem}
+.tool-card{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);padding:1.25rem;text-decoration:none;color:inherit;transition:all .25s;text-align:center}
+.tool-card:hover{border-color:var(--royal);box-shadow:0 4px 18px rgba(65,105,225,.07);transform:translateY(-2px)}
+.tool-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.1rem}
+.tool-icon.blue{background:var(--rs)}.tool-icon.green{background:var(--gs)}.tool-icon.amber{background:var(--as)}
+.tool-card h4{font-family:var(--se);font-size:.88rem;font-weight:600;color:var(--ink);margin-bottom:.25rem}
+.tool-card p{font-size:.68rem;color:var(--mu);line-height:1.45}
+
+/* ═══════════════ RESOURCE LIBRARY ═══════════════ */
+.lib-cats{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:1rem}
+.lib-cat{font-size:.64rem;font-weight:700;padding:.3rem .65rem;border-radius:100px;border:1.5px solid var(--bd);background:var(--sf);color:var(--mu);cursor:pointer;transition:all .2s}
+.lib-cat:hover{color:var(--ch);border-color:var(--bl)}.lib-cat.act{background:var(--ink);color:#fff;border-color:var(--ink)}
+.lib-section{margin-bottom:1.25rem;display:none}.lib-section.vis{display:block}
+.lib-header{font-family:var(--se);font-size:.92rem;font-weight:600;color:var(--ink);margin-bottom:.45rem;padding-bottom:.3rem;border-bottom:2px solid var(--royal);display:inline-block}
+.lib-item{display:flex;align-items:flex-start;gap:.65rem;padding:.6rem 0;border-bottom:1px solid var(--s2);text-decoration:none;color:inherit;transition:all .15s}
+.lib-item:last-child{border-bottom:none}
+.lib-item:hover{padding-left:.2rem}
+.lib-item:hover .li-title{color:var(--royal)}
+.li-num{font-family:var(--sa);font-size:.6rem;font-weight:700;color:var(--lt);min-width:1.3rem;text-align:right;padding-top:.15rem}
+.li-title{font-family:var(--se);font-size:.82rem;font-weight:600;color:var(--ch);line-height:1.3;transition:color .15s}
+.li-desc{font-size:.65rem;color:var(--mu);line-height:1.4;margin-top:.08rem}
+.li-ext{font-size:.52rem;font-weight:700;color:var(--royal);background:var(--rs);padding:.08rem .3rem;border-radius:100px;white-space:nowrap;flex-shrink:0;margin-top:.15rem}
+
+/* ═══════════════ ABOUT ═══════════════ */
+.about-card{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);padding:1.5rem;display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:start}
+.about-avatar{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--royal),var(--navyd));display:flex;align-items:center;justify-content:center;font-family:var(--se);font-size:1.6rem;font-weight:700;color:#fff;flex-shrink:0}
+.about-card h3{font-family:var(--se);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:.15rem}
+.about-card .about-sub{font-size:.68rem;color:var(--royal);font-weight:600;margin-bottom:.55rem}
+.about-card p{font-family:var(--se);font-size:.78rem;color:var(--dim);line-height:1.6}
+
+/* ═══════════════ SOCIALS ═══════════════ */
+.socials-row{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.75rem}
+.social-chip{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:600;color:var(--ch);background:var(--sf);border:1.5px solid var(--bd);padding:.5rem 1rem;border-radius:100px;text-decoration:none;transition:all .25s}
+.social-chip:hover{border-color:var(--royal);color:var(--royal);transform:translateY(-1px);box-shadow:0 3px 10px rgba(65,105,225,.08)}
+.social-chip svg{width:15px;height:15px;flex-shrink:0}
+
+/* ═══════════════ SUBSCRIBE ═══════════════ */
+.sub-section{text-align:center;padding:2.5rem 0}
+.sub-section h2{font-family:var(--se);font-size:1.35rem;font-weight:700;color:var(--ink);margin-bottom:.35rem;letter-spacing:-.02em}
+.sub-section>p{font-size:.82rem;color:var(--dim);margin-bottom:1.5rem;line-height:1.55}
+.sub-form{display:flex;gap:.5rem;max-width:380px;margin:0 auto}
+.sub-form input{flex:1;font-family:var(--sa);font-size:.82rem;font-weight:500;padding:.5rem .8rem;border:1.5px solid var(--bd);border-radius:var(--rr);background:var(--sf);color:var(--ink);outline:none;transition:border-color .2s}
+.sub-form input::placeholder{color:var(--lt)}.sub-form input:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}
+.sub-form button{font-family:var(--sa);font-size:.75rem;font-weight:700;color:#fff;background:var(--royal);border:none;padding:.5rem 1.1rem;border-radius:var(--rr);cursor:pointer;transition:all .2s;white-space:nowrap}
+.sub-form button:hover{background:var(--rd);transform:translateY(-1px)}
+.sub-note{font-size:.62rem;color:var(--lt);margin-top:.6rem}
+
+/* ═══════════════ FOOTER ═══════════════ */
+.ftr{max-width:960px;margin:0 auto;padding:1.25rem 2rem;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.ftr p{font-size:.6rem;color:var(--lt)}
+.ftr-disclaimer{font-style:italic;max-width:480px;line-height:1.5}
+
+/* ═══════════════ ANIMATIONS ═══════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.anim{opacity:0;transform:translateY(16px);transition:all .6s cubic-bezier(.16,1,.3,1)}
+.anim.vis{opacity:1;transform:translateY(0)}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media(max-width:768px){
+    .hdr{padding:.65rem 1rem}
+    .hdr-nav a{font-size:.62rem;padding:.28rem .5rem}
+    .wrap{padding:0 1.25rem}
+    .hero{padding:2rem 1.25rem 2rem}
+    .hero h2{font-size:1.75rem}
+    .post-row{grid-template-columns:1fr}
+    .tools-grid{grid-template-columns:1fr}
+    .about-card{grid-template-columns:1fr;text-align:center}
+    .about-avatar{margin:0 auto}
+    .ftr{flex-direction:column;text-align:center}
+    .sub-form{flex-direction:column}
+}
+@media(max-width:480px){
+    .hero-ctas{flex-direction:column;align-items:center}
+    .btn{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="hdr">
+<div class="hdr-i">
+    <a href="/" class="brand"><img src="tpv-wordmark.svg" alt="The Present Value" class="brand-logo"></a>
+    <nav class="hdr-nav">
+        <a href="#insights" class="act">Home</a>
+        <a href="tax-suite.html">Tax Tools</a>
+        <a href="#resources">Library</a>
+        <a href="#about">About</a>
+        <a href="#subscribe" class="sub">Subscribe</a>
+    </nav>
+</div>
+</header>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+    <div class="hero-badge">📈 Philippine Investing & Personal Finance</div>
+    <h2>Grow your money.<br>Keep what you earn.</h2>
+    <p>Market insights, PSE analysis, and investing guides for Filipinos — plus free tax compliance tools that actually make sense. Written by a CPA who thinks financial literacy should be free.</p>
+    <div class="hero-ctas">
+        <a href="https://substack.com/@thepresentvalue" class="btn btn-primary" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Read on Substack
+        </a>
+        <a href="tax-suite.html" class="btn btn-outline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Open Tax Tools
+        </a>
+    </div>
+</section>
+
+<div class="wrap"><div class="sep"></div></div>
+
+<!-- ═══════════════ LATEST FROM SUBSTACK ═══════════════ -->
+<section class="section wrap anim" id="insights">
+    <div class="s-label">Latest from Substack</div>
+    <div class="s-title">Insights & analysis</div>
+    <div class="s-desc">Market commentary, investing strategy, and the occasional macro take — grounded in data, not hype.</div>
+
+    <a href="https://substack.com/@thepresentvalue" class="featured" target="_blank" rel="noopener">
+        <div class="ft-label">Featured · March 28, 2026</div>
+        <h3>The PSE Is Pricing In Recovery — But the Macro Isn't There Yet</h3>
+        <div class="ft-excerpt">Index valuations have quietly repriced, but BSP policy trajectory and earnings revisions tell a more cautious story. Where the opportunity actually is — and what to avoid.</div>
+        <div class="ft-meta">Market Analysis · 10 min read · Read on Substack →</div>
+    </a>
+
+    <div class="post-row">
+        <a href="https://substack.com/@thepresentvalue" class="post-link" target="_blank" rel="noopener">
+            <span class="ptag macro">Macro</span>
+            <h4>CREATE MORE and CMEPA: What Actually Changes for Investors</h4>
+            <p>The two biggest tax reform bills since TRAIN — and how they affect corporate earnings, STT, and your portfolio strategy.</p>
+            <div class="pdate">March 20, 2026</div>
+        </a>
+        <a href="https://substack.com/@thepresentvalue" class="post-link" target="_blank" rel="noopener">
+            <span class="ptag strategy">Strategy</span>
+            <h4>A Swing Trading Framework for the PSE</h4>
+            <p>Value screens + momentum signals on a 1-to-2 month horizon. How I identify entries, set stops, and size positions.</p>
+            <div class="pdate">March 12, 2026</div>
+        </a>
+    </div>
+
+    <a href="https://substack.com/@thepresentvalue" class="read-sub" target="_blank" rel="noopener">
+        All posts on Substack
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+</section>
+
+<div class="wrap"><div class="sep"></div></div>
+
+<!-- ═══════════════ TAX TOOLS ═══════════════ -->
+<section class="section wrap anim">
+    <div class="s-label">Free Tools</div>
+    <div class="s-title">Tax & compliance suite</div>
+    <div class="s-desc">Stop Googling BIR deadlines. These tools cover every form, every deadline, and every regime — in plain language.</div>
+
+    <div class="tools-grid">
+        <a href="tax-suite.html" class="tool-card">
+            <div class="tool-icon blue">📅</div>
+            <h4>Tax Calendar</h4>
+            <p>Every BIR deadline for self-employed, mixed income, corporations, and employees. Filterable by taxpayer type and regime.</p>
+        </a>
+        <a href="tax-suite.html#ref" class="tool-card">
+            <div class="tool-icon green">📋</div>
+            <h4>Form Reference</h4>
+            <p>Every BIR form explained — who files it, when it's due, what to attach, and common mistakes to avoid.</p>
+        </a>
+        <a href="tax-suite.html#calc" class="tool-card">
+            <div class="tool-icon amber">🧮</div>
+            <h4>Regime Calculator</h4>
+            <p>8% flat vs. graduated + OSD vs. itemized — see which saves you the most, with quarterly breakdown.</p>
+        </a>
+    </div>
+</section>
+
+<div class="wrap"><div class="sep"></div></div>
+
+<!-- ═══════════════ RESOURCE LIBRARY ═══════════════ -->
+<section class="section wrap anim" id="resources">
+    <div class="s-label">Resource Library</div>
+    <div class="s-title">Best of The Present Value</div>
+    <div class="s-desc">The essential reads, organized by topic. Each links to the full post on Substack.</div>
+
+    <div class="lib-cats">
+        <button class="lib-cat act" onclick="showLib('all',this)">All</button>
+        <button class="lib-cat" onclick="showLib('investing',this)">Investing</button>
+        <button class="lib-cat" onclick="showLib('macro',this)">Macro & Policy</button>
+        <button class="lib-cat" onclick="showLib('tax',this)">Tax & Compliance</button>
+        <button class="lib-cat" onclick="showLib('pf',this)">Personal Finance</button>
+    </div>
+
+    <div class="lib-section vis" data-lib="investing">
+        <div class="lib-header">Investing & Trading</div>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">01</span>
+            <div>
+                <div class="li-title">Getting Started with the PSE: A No-Nonsense Guide</div>
+                <div class="li-desc">Brokerage accounts, order types, fees, and how to place your first trade.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">02</span>
+            <div>
+                <div class="li-title">Value Investing in the Philippine Market</div>
+                <div class="li-desc">Intrinsic value, margin of safety, and how to read financial statements for PSE-listed companies.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">03</span>
+            <div>
+                <div class="li-title">My Swing Trading Framework</div>
+                <div class="li-desc">Blending Buffett's value lens with Druckenmiller's macro/momentum approach on 1-to-2 month holds.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">04</span>
+            <div>
+                <div class="li-title">Dividend Investing: Screening for Sustainable Yields</div>
+                <div class="li-desc">Payout ratios, free cash flow, and what makes a dividend stock actually worth holding.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+    </div>
+
+    <div class="lib-section vis" data-lib="macro">
+        <div class="lib-header">Macro & Policy</div>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">01</span>
+            <div>
+                <div class="li-title">Reading BSP: What Rate Decisions Mean for Your Portfolio</div>
+                <div class="li-desc">How monetary policy moves equities, bonds, and the peso — and how to position ahead of it.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">02</span>
+            <div>
+                <div class="li-title">CREATE MORE and CMEPA: The Investor's Breakdown</div>
+                <div class="li-desc">STT cut to 0.1%, corporate tax changes, and what it means for market structure.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+    </div>
+
+    <div class="lib-section vis" data-lib="tax">
+        <div class="lib-header">Tax & Compliance</div>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">01</span>
+            <div>
+                <div class="li-title">What the EOPT Act Actually Changed</div>
+                <div class="li-desc">The overhaul of Philippine tax filing — from unified invoicing to the death of the annual registration fee.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">02</span>
+            <div>
+                <div class="li-title">8% Flat Tax vs. Graduated Rates: Which Should You Choose?</div>
+                <div class="li-desc">A practical comparison for freelancers and sole proprietors earning under ₱3M.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+        <a href="tax-suite.html" class="lib-item">
+            <span class="li-num">→</span>
+            <div>
+                <div class="li-title" style="color:var(--royal)">Open the Tax Compliance Suite</div>
+                <div class="li-desc">Calendar, form reference, and regime calculator — all in one tool.</div>
+            </div>
+            <span class="li-ext" style="background:var(--rm);color:var(--rd)">Tool</span>
+        </a>
+    </div>
+
+    <div class="lib-section vis" data-lib="pf">
+        <div class="lib-header">Personal Finance</div>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">01</span>
+            <div>
+                <div class="li-title">Personal Finance 101 for Filipinos</div>
+                <div class="li-desc">Budgeting, emergency funds, and a realistic path to building wealth on a Philippine income.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+        <a href="#" class="lib-item" target="_blank" rel="noopener">
+            <span class="li-num">02</span>
+            <div>
+                <div class="li-title">SSS, PhilHealth & Pag-IBIG: What You're Actually Paying For</div>
+                <div class="li-desc">2025 contribution rates, what you get, and how to stay current as a self-employed individual.</div>
+            </div>
+            <span class="li-ext">Substack</span>
+        </a>
+    </div>
+</section>
+
+<div class="wrap"><div class="sep"></div></div>
+
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<section class="section wrap anim" id="about">
+    <div class="s-label">About</div>
+    <div class="about-card">
+        <div class="about-avatar">J</div>
+        <div>
+            <h3>Jez</h3>
+            <div class="about-sub">CPA · Investor · Builder</div>
+            <p>I'm a Certified Public Accountant based in Baguio City. I invest and swing trade on the PSE, run a small business, and built this site because I got tired of seeing bad tax advice and gatekept financial information. The Present Value is my attempt to make investing and compliance accessible to every Filipino — for free. I write on Substack, post quick takes on Facebook and TikTok, and build tools here that I wish existed when I was starting out.</p>
+        </div>
+    </div>
+
+    <div class="socials-row" style="margin-top:1.25rem">
+        <a href="https://substack.com/@thepresentvalue" class="social-chip" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+            Substack
+        </a>
+        <a href="#" class="social-chip">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Facebook
+        </a>
+        <a href="#" class="social-chip">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.72a8.19 8.19 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.15z"/></svg>
+            TikTok
+        </a>
+    </div>
+</section>
+
+<div class="wrap"><div class="sep"></div></div>
+
+<!-- ═══════════════ SUBSCRIBE ═══════════════ -->
+<section class="sub-section wrap anim" id="subscribe">
+    <div class="s-label">Newsletter</div>
+    <h2>Get market takes and tax reminders</h2>
+    <p>New posts, BIR deadlines, and whatever's moving the PSE — in one short email. No spam, no fluff.</p>
+    <form class="sub-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓ Subscribed!';this.querySelector('button').style.background='var(--green)'">
+        <input type="email" placeholder="you@email.com" required>
+        <button type="submit">Subscribe</button>
+    </form>
+    <p class="sub-note">Free forever. Unsubscribe anytime. Or subscribe directly on <a href="https://substack.com/@thepresentvalue" style="color:var(--royal);text-decoration:none;font-weight:600" target="_blank">Substack</a>.</p>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="ftr">
+    <p>&copy; 2026 The Present Value</p>
+    <p class="ftr-disclaimer">General financial education only — not investment or tax advice. Market data is illustrative. Do your own research and consult a licensed professional.</p>
+</footer>
+
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
+<script>
+// Resource library filter
+function showLib(cat, btn) {
+    document.querySelectorAll('.lib-cat').forEach(b => b.classList.remove('act'));
+    btn.classList.add('act');
+    document.querySelectorAll('.lib-section').forEach(s => {
+        if (cat === 'all') { s.classList.add('vis'); }
+        else { s.classList.toggle('vis', s.dataset.lib === cat); }
+    });
+}
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.anim').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>

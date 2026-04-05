@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 90" width="520" height="90">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,700;8..60,900&amp;family=Inter:wght@500&amp;display=swap');
+  </style>
+  <text y="46" font-family="'Source Serif 4', Georgia, 'Times New Roman', serif" font-size="42">
+    <tspan fill="#7a7a7a" font-weight="300">The </tspan><tspan fill="#111111" font-weight="700">Present Value</tspan><tspan fill="#4169e1" font-weight="900">.</tspan>
+  </text>
+  <line x1="0" y1="58" x2="130" y2="58" stroke="#4169e1" stroke-width="1.5" opacity="0.45"/>
+  <text x="2" y="78" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="500" fill="#999999" letter-spacing="3">MARKETS, TAXES &amp; DAILY LIFE</text>
+</svg>

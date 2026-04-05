@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Present Value — Philippine Tax Compliance Suite</title>
+<link rel="icon" type="image/png" sizes="48x48" href="tpv-favicon-48.png">
+<link rel="icon" type="image/png" sizes="32x32" href="tpv-favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="tpv-favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="tpv-apple-touch-icon.png">
+<meta property="og:title" content="The Present Value — Philippine Tax Compliance Suite">
+<meta property="og:description" content="Free tax calendar, BIR form reference, and regime calculator for Filipino taxpayers.">
+<meta property="og:image" content="tpv-monogram-512.png">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f9f9fa;--sf:#fff;--s2:#f0f1f3;--s3:#e8e9ec;--bd:#e0e2e6;--bl:#d0d3d8;--ink:#111;--ch:#333;--dim:#666;--mu:#999;--lt:#bbb;--royal:#4169e1;--rs:rgba(65,105,225,.07);--rm:rgba(65,105,225,.14);--navy:#2c3e50;--green:#2d8a4e;--gs:rgba(45,138,78,.07);--amber:#d4850a;--as:rgba(212,133,10,.07);--red:#c0392b;--rds:rgba(192,57,43,.07);--teal:#1a8a7a;--ts:rgba(26,138,122,.07);--purple:#6c5ce7;--ps:rgba(108,92,231,.07);--rose:#c44569;--ros:rgba(196,69,105,.07);--slate:#5a6c7d;--sls:rgba(90,108,125,.07);--se:'Source Serif 4',Georgia,serif;--sa:'Inter',system-ui,sans-serif;--r:8px;--rr:5px;--sh:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.06);--shs:0 1px 2px rgba(0,0,0,.04),0 2px 8px rgba(0,0,0,.04);}
+html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);color:var(--ch);line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+/* HEADER */
+.hdr{background:var(--sf);border-bottom:1px solid var(--bd);padding:1rem 2rem;position:sticky;top:0;z-index:200;box-shadow:0 1px 4px rgba(0,0,0,.03);}
+.hdr-i{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.brand h1{font-family:var(--se);font-size:1.2rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1.1;}
+.brand h1 span{color:var(--royal);}.brand .tl{font-size:.58rem;color:var(--mu);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-top:.08rem;}
+.hdr-r{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.pnav{display:flex;background:var(--sf);border:1.5px solid var(--bd);border-radius:100px;overflow:hidden;box-shadow:var(--shs);}
+.pnav button{font-family:var(--sa);font-size:.68rem;font-weight:700;padding:.35rem .85rem;border:none;background:transparent;color:var(--mu);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.pnav button:not(:last-child){border-right:1px solid var(--bd);}
+.pnav button.active{background:var(--ink);color:var(--sf);}
+.pnav button:hover:not(.active){background:var(--s2);color:var(--ch);}
+
+/* PAGES */
+.page{display:none}.page.vis{display:block}
+
+/* SHARED CONTROLS */
+.tbar{background:var(--sf);border-bottom:1px solid var(--bd);padding:.5rem 2rem;}
+.tbar-i{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;}
+.tl-l{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin-right:.2rem;}
+.tb{font-family:var(--sa);font-size:.68rem;font-weight:600;padding:.3rem .7rem;border-radius:100px;border:1.5px solid var(--bd);background:var(--sf);color:var(--dim);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tb:hover{border-color:var(--bl);color:var(--ch)}.tb.act{background:var(--ink);color:var(--sf);border-color:var(--ink)}
+.rbar{max-width:1200px;margin:.55rem auto 0;padding:0 2rem;display:flex;flex-wrap:wrap;gap:.22rem;align-items:center;}
+.rb{font-family:var(--sa);font-size:.65rem;font-weight:600;padding:.26rem .6rem;border-radius:100px;border:1.5px solid var(--bd);background:var(--sf);color:var(--dim);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.rb:hover{color:var(--ch);border-color:var(--bl)}.rb.act{background:var(--royal);color:#fff;border-color:var(--royal)}
+.mn{max-width:1200px;margin:0 auto;padding:.75rem 2rem 2rem;}
+
+/* CHECKLIST */
+.cls{max-width:1200px;margin:.5rem auto 0;padding:0 2rem;}
+.clp{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);overflow:hidden;}
+.clh{padding:.5rem .9rem;display:flex;align-items:center;justify-content:space-between;gap:.4rem;cursor:pointer;border-bottom:1px solid var(--bd);flex-wrap:wrap;}
+.clh h2{font-family:var(--se);font-size:.88rem;font-weight:600;color:var(--ink);}
+.cta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.sat{display:flex;align-items:center;gap:.28rem;font-size:.64rem;font-weight:600;color:var(--dim);cursor:pointer;}
+.sat input{display:none}.sat .tt{width:28px;height:15px;border-radius:100px;background:var(--s3);border:1px solid var(--bd);position:relative;transition:all .25s;flex-shrink:0;}
+.sat .tt::after{content:'';position:absolute;top:1px;left:2px;width:11px;height:11px;border-radius:50%;background:var(--mu);transition:all .25s;}
+.sat input:checked+.tt{background:var(--royal);border-color:var(--royal)}.sat input:checked+.tt::after{left:13px;background:#fff}
+.clch{color:var(--mu);transition:transform .3s;font-size:.55rem}
+.clp.open .clch{transform:rotate(180deg)}
+.clb{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}.clp.open .clb{max-height:700px;overflow-y:auto}
+.clg{padding:.6rem .9rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0 .7rem}
+.ci{display:flex;align-items:flex-start;gap:.45rem;padding:.38rem 0;border-bottom:1px solid var(--s2);cursor:pointer}.ci:last-child{border-bottom:none}
+.cbox{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--bl);background:var(--sf);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:2px}
+.ci.ck .cbox{background:var(--royal);border-color:var(--royal)}.cbox svg{width:9px;height:9px;opacity:0;stroke:#fff;transition:opacity .15s}.ci.ck .cbox svg{opacity:1}
+.ciq{font-size:.72rem;font-weight:600;color:var(--ch);line-height:1.2}.cid{font-size:.6rem;color:var(--mu);line-height:1.15;margin-top:.03rem}
+.cic{font-size:.54rem;font-weight:700;padding:.06rem .3rem;border-radius:100px;background:var(--s2);color:var(--mu);white-space:nowrap;flex-shrink:0;margin-top:2px}
+.ci.ck .cic{background:var(--rs);color:var(--royal)}
+.csm{padding:.4rem .9rem;border-top:1px solid var(--bd);font-size:.65rem;color:var(--dim)}.csm strong{color:var(--ink);font-weight:700}
+
+/* VIEW CONTROLS */
+.vc{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-bottom:.65rem;justify-content:space-between}
+.vl{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.vt{display:flex;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--rr);overflow:hidden;box-shadow:var(--shs)}
+.vt button{font-family:var(--sa);font-size:.65rem;font-weight:600;padding:.28rem .55rem;border:none;background:transparent;color:var(--dim);cursor:pointer;transition:all .2s}
+.vt button:not(:last-child){border-right:1px solid var(--bd)}.vt button.act{background:var(--ink);color:#fff}
+.sb{font-family:var(--sa);font-size:.7rem;font-weight:500;padding:.3rem .6rem;border-radius:var(--rr);border:1.5px solid var(--bd);background:var(--sf);color:var(--ch);width:165px;outline:none;box-shadow:var(--shs)}
+.sb:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}.sb::placeholder{color:var(--lt)}
+.ft{display:flex;flex-wrap:wrap;gap:.18rem}
+.fb{font-size:.59rem;font-weight:600;padding:.18rem .35rem;border-radius:100px;border:1.5px solid var(--bd);background:var(--sf);color:var(--mu);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.12rem}
+.fb .fd{width:5px;height:5px;border-radius:50%;flex-shrink:0}.fb.fba{color:var(--ch);border-color:var(--bl);background:var(--s2)}
+.stb{display:flex;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap;font-size:.68rem;color:var(--dim)}.stb strong{color:var(--ink);font-weight:700;font-size:.76rem}
+
+/* TIMELINE */
+.tl{display:flex;flex-direction:column}.ms{border-bottom:1px solid var(--bd);animation:fi .2s ease both}.ms:last-child{border-bottom:none}.ms.em{display:none}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.mh{display:flex;align-items:center;gap:.55rem;padding:.55rem 0;cursor:pointer;user-select:none}
+.mh:hover .mnn{color:var(--ink)}
+.mni{font-size:.5rem;font-weight:700;color:var(--lt);width:1.4rem;text-align:right;flex-shrink:0}
+.mnn{font-family:var(--se);font-size:1.05rem;font-weight:600;color:var(--dim);transition:color .2s;flex:1}.ms.act .mnn{color:var(--ink)}
+.mc{font-size:.55rem;font-weight:700;color:var(--mu);background:var(--s2);padding:.06rem .35rem;border-radius:100px}
+.mchv{color:var(--lt);transition:transform .3s;font-size:.6rem}.ms.act .mchv{transform:rotate(180deg)}
+.mbdy{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}.ms.act .mbdy{max-height:15000px}
+.mbi{padding:0 0 .55rem 1.95rem}
+
+/* OBLIGATION CARDS */
+.ob{background:var(--sf);border-radius:var(--r);padding:.7rem .8rem;margin-bottom:.28rem;position:relative;overflow:hidden;box-shadow:var(--shs);transition:all .2s;border-left:3px solid transparent}
+.ob:hover{box-shadow:var(--sh);transform:translateY(-1px)}
+.ob.c-inc{border-left-color:var(--royal)}.ob.c-biz{border-left-color:var(--green)}.ob.c-wh{border-left-color:var(--purple)}.ob.c-emp{border-left-color:var(--teal)}.ob.c-dst{border-left-color:var(--rose)}.ob.c-adm{border-left-color:var(--amber)}.ob.c-sec{border-left-color:var(--slate)}.ob.dm{opacity:.4}
+.obt{display:flex;align-items:flex-start;justify-content:space-between;gap:.35rem;flex-wrap:wrap}
+.obn{font-family:var(--se);font-size:.75rem;font-weight:600;line-height:1.2;flex:1;min-width:140px;color:var(--ink)}
+.obd{font-size:.58rem;font-weight:600;background:var(--s2);padding:.1rem .35rem;border-radius:4px;color:var(--dim);white-space:nowrap;flex-shrink:0}
+.obm{display:flex;flex-wrap:wrap;gap:.15rem;margin-top:.2rem}
+.obf{font-size:.56rem;font-weight:700;padding:.08rem .3rem;border-radius:4px;background:var(--rs);color:var(--royal)}
+.obpq{margin-top:.2rem;padding:.18rem .38rem;background:var(--ts);border:1px solid rgba(26,138,122,.08);border-radius:var(--rr);font-size:.64rem;color:var(--teal);line-height:1.2}.obpq b{font-weight:700}
+.obds{margin-top:.2rem;font-family:var(--se);font-size:.7rem;line-height:1.35;color:var(--dim)}
+.obat{margin-top:.3rem;padding-top:.25rem;border-top:1px solid var(--s2)}
+.obal{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--lt);margin-bottom:.1rem}
+.al{display:flex;flex-direction:column;gap:.06rem}.ai{font-size:.64rem;color:var(--dim);padding-left:.55rem;position:relative}.ai::before{content:'→';position:absolute;left:0;color:var(--lt);font-size:.5rem}
+.oblg{margin-top:.12rem;font-size:.55rem;color:var(--lt);font-weight:500}
+
+/* TABLE */
+.tv{display:none}.tv.vis{display:block}.tl.hid{display:none}
+.tw{overflow-x:auto;border-radius:var(--r);background:var(--sf);box-shadow:var(--shs)}
+table.ct{width:100%;border-collapse:collapse;font-size:.67rem}
+table.ct thead{background:var(--s2)}
+table.ct th{padding:.38rem .5rem;text-align:left;font-size:.54rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);border-bottom:1px solid var(--bd)}
+table.ct td{padding:.35rem .5rem;border-bottom:1px solid var(--s2);vertical-align:top}
+table.ct tr:last-child td{border-bottom:none}table.ct tr:hover td{background:var(--s2)}
+
+/* ══ FORM REFERENCE TAB ══ */
+.fr-intro{margin-bottom:1.25rem}
+.fr-intro h2{font-family:var(--se);font-size:1.4rem;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:.35rem}
+.fr-intro p{font-family:var(--se);font-size:.85rem;color:var(--dim);line-height:1.5;max-width:650px}
+.fr-search{font-family:var(--sa);font-size:.82rem;font-weight:500;padding:.45rem .8rem;border-radius:var(--rr);border:1.5px solid var(--bd);background:var(--sf);color:var(--ch);width:100%;max-width:400px;outline:none;box-shadow:var(--shs);margin-bottom:1rem}
+.fr-search:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}
+.fr-cats{display:flex;flex-wrap:wrap;gap:.25rem;margin-bottom:1.25rem}
+.fr-cat{font-size:.64rem;font-weight:700;padding:.25rem .55rem;border-radius:100px;border:1.5px solid var(--bd);background:var(--sf);color:var(--mu);cursor:pointer;transition:all .15s}
+.fr-cat:hover{border-color:var(--bl);color:var(--ch)}.fr-cat.act{background:var(--royal);color:#fff;border-color:var(--royal)}
+.fr-group{margin-bottom:1.5rem}
+.fr-group-hdr{font-family:var(--se);font-size:.92rem;font-weight:600;color:var(--ink);margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:2px solid var(--royal);display:inline-block}
+.fr-card{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);margin-bottom:.4rem;overflow:hidden;border-left:3px solid var(--bd);transition:all .2s}
+.fr-card:hover{box-shadow:var(--sh)}
+.fr-card.c-inc{border-left-color:var(--royal)}.fr-card.c-biz{border-left-color:var(--green)}.fr-card.c-wh{border-left-color:var(--purple)}.fr-card.c-emp{border-left-color:var(--teal)}.fr-card.c-dst{border-left-color:var(--rose)}.fr-card.c-adm{border-left-color:var(--amber)}
+.fr-top{display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;cursor:pointer;flex-wrap:wrap}
+.fr-form{font-family:var(--sa);font-size:.72rem;font-weight:700;color:var(--royal);background:var(--rs);padding:.15rem .5rem;border-radius:4px;white-space:nowrap;flex-shrink:0;min-width:55px;text-align:center}
+.fr-name{font-family:var(--se);font-size:.82rem;font-weight:600;color:var(--ink);flex:1;line-height:1.25}
+.fr-brief{font-size:.68rem;color:var(--dim);font-weight:400;margin-left:.15rem}
+.fr-chev{color:var(--lt);font-size:.6rem;transition:transform .3s;flex-shrink:0}
+.fr-card.open .fr-chev{transform:rotate(180deg)}
+.fr-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+.fr-card.open .fr-body{max-height:800px}
+.fr-content{padding:.1rem .85rem .85rem 4.5rem}
+.fr-row{display:grid;grid-template-columns:90px 1fr;gap:.2rem .6rem;padding:.3rem 0;border-bottom:1px solid var(--s2);font-size:.72rem}
+.fr-row:last-child{border-bottom:none}
+.fr-label{font-weight:700;color:var(--mu);font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;padding-top:.1rem}
+.fr-val{color:var(--ch);font-family:var(--se);line-height:1.4}
+.fr-val .hl{color:var(--royal);font-weight:600}
+
+/* ══ CALCULATOR ══ */
+.calc-intro{margin-bottom:1.25rem}
+.calc-intro h2{font-family:var(--se);font-size:1.4rem;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:.35rem}
+.calc-intro p{font-family:var(--se);font-size:.85rem;color:var(--dim);line-height:1.5;max-width:650px}
+.inp{background:var(--sf);border-radius:var(--r);box-shadow:var(--sh);padding:1.3rem;margin-bottom:1.25rem}
+.inp h3{font-family:var(--se);font-size:.95rem;font-weight:600;color:var(--ink);margin-bottom:.85rem}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+.fld{display:flex;flex-direction:column;gap:.2rem}
+.fld label{font-size:.65rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.fld .hn{font-size:.6rem;color:var(--mu);font-weight:400;text-transform:none;letter-spacing:0}
+.fld input,.fld select{font-family:var(--sa);font-size:.9rem;font-weight:600;padding:.45rem .65rem;border:1.5px solid var(--bd);border-radius:var(--rr);background:var(--bg);color:var(--ink);outline:none;transition:border-color .2s}
+.fld input:focus,.fld select:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}
+.fnote{grid-column:1/-1;font-family:var(--se);font-size:.72rem;color:var(--mu);font-style:italic;padding-top:.35rem;border-top:1px solid var(--s2)}
+.crow{margin-top:.85rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.cbtn{font-family:var(--sa);font-size:.75rem;font-weight:700;padding:.5rem 1.3rem;border:none;border-radius:100px;background:var(--royal);color:#fff;cursor:pointer;transition:all .2s}
+.cbtn:hover{background:#3558c8;transform:translateY(-1px);box-shadow:0 4px 12px rgba(65,105,225,.3)}
+.cres{display:none}.cres.vis{display:block}
+.ccards{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-bottom:1rem}
+.ccard{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);padding:1rem;position:relative;overflow:hidden;border-top:3px solid var(--bd);transition:all .3s}
+.ccard.best{border-top-color:var(--green);box-shadow:var(--sh);transform:translateY(-2px)}
+.ccard .bdg{position:absolute;top:.5rem;right:.5rem;font-size:.5rem;font-weight:700;text-transform:uppercase;padding:.1rem .35rem;border-radius:100px;background:var(--gs);color:var(--green)}
+.ccard .rn{font-family:var(--se);font-size:.8rem;font-weight:600;color:var(--ink);margin-bottom:.6rem;padding-right:3rem}
+.ccard .tlbl{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);margin-bottom:.08rem}
+.ccard .tamt{font-family:var(--sa);font-size:1.3rem;font-weight:700;color:var(--ink);letter-spacing:-.02em}.ccard.best .tamt{color:var(--green)}
+.ccard .er{font-size:.67rem;color:var(--dim);margin-top:.08rem}.ccard .er strong{color:var(--ink);font-weight:700}
+.ccard .bkd{margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--s2)}
+.ccard .bkr{display:flex;justify-content:space-between;padding:.12rem 0;font-size:.67rem;color:var(--dim)}.ccard .bkv{font-weight:600;color:var(--ch)}
+.ccard .sv{margin-top:.5rem;padding:.3rem .4rem;border-radius:var(--rr);font-size:.65rem;font-weight:600;text-align:center}
+.ccard.best .sv{background:var(--gs);color:var(--green)}.ccard:not(.best) .sv{background:var(--rds);color:var(--red)}
+.reco{background:var(--sf);border-radius:var(--r);box-shadow:var(--sh);padding:1.1rem;margin-bottom:1rem;border-left:4px solid var(--royal)}
+.reco h3{font-family:var(--se);font-size:.95rem;font-weight:600;color:var(--ink);margin-bottom:.35rem}
+.reco p{font-family:var(--se);font-size:.82rem;color:var(--dim);line-height:1.5}.reco .hl{color:var(--royal);font-weight:600}
+.reco .scall{font-family:var(--sa);font-size:.85rem;font-weight:700;color:var(--green);margin-top:.35rem}
+.qsec{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);overflow:hidden;margin-bottom:1rem}
+.qsec h3{font-family:var(--se);font-size:.85rem;font-weight:600;color:var(--ink);padding:.75rem 1rem;border-bottom:1px solid var(--bd);cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.qbdy{display:none;padding:0 1rem .75rem}.qbdy.vis{display:block}
+table.qt{width:100%;border-collapse:collapse;font-size:.67rem;margin-top:.35rem}
+table.qt th{text-align:left;padding:.3rem .4rem;font-size:.54rem;font-weight:700;text-transform:uppercase;color:var(--mu);border-bottom:1px solid var(--bd);background:var(--s2)}
+table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:last-child td{border-bottom:none}.qt .bc{color:var(--green);font-weight:700}
+
+/* BOTTOM PANELS */
+.bp{max-width:1200px;margin:0 auto;padding:0 2rem 2rem}
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.45rem;margin-bottom:.6rem}
+.pc{background:var(--sf);border-radius:var(--r);padding:.75rem;box-shadow:var(--shs)}
+.pc h4{font-family:var(--se);font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.35rem;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.bsm{font-size:.46rem;font-weight:700;text-transform:uppercase;padding:.06rem .25rem;border-radius:100px}
+.pr{display:flex;justify-content:space-between;align-items:baseline;gap:.25rem;padding:.2rem 0;border-bottom:1px solid var(--s2);font-size:.67rem;color:var(--dim)}.pr:last-child{border-bottom:none}
+.pv{font-weight:700;white-space:nowrap}.pvg{color:var(--green)}.pvr{color:var(--red)}
+.cp{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);overflow:hidden}
+.cph{padding:.55rem .8rem;border-bottom:1px solid var(--bd);cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.cph h3{font-family:var(--se);font-size:.82rem;font-weight:600;color:var(--ink)}
+.cpb{padding:.7rem .8rem;display:none}.cpb.vis{display:block}
+.lr{display:grid;grid-template-columns:1fr 2fr;gap:.2rem;padding:.2rem 0;border-bottom:1px solid var(--s2);font-size:.65rem}.lr:last-child{border-bottom:none}
+.lrt{font-weight:600;color:var(--ch)}.lrc{color:var(--dim);font-size:.6rem}
+.ftr{max-width:1200px;margin:0 auto;padding:.85rem 2rem;border-top:1px solid var(--bd);font-family:var(--se);font-size:.65rem;color:var(--mu);font-style:italic;line-height:1.4}
+
+@media(max-width:768px){.hdr{padding:.7rem 1rem}.mn{padding:.6rem 1rem}.mbi{padding:0 0 .35rem .05rem}.clg{grid-template-columns:1fr}.sb{width:100%}.vc{flex-direction:column;align-items:stretch}.vl{flex-direction:column}.lr{grid-template-columns:1fr}.ccards{grid-template-columns:1fr}.fg{grid-template-columns:1fr}.bp{padding:0 1rem 1.5rem}.fr-content{padding-left:.85rem}.hdr-i{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+
+<header class="hdr"><div class="hdr-i">
+<div class="brand"><a href="index.html" style="display:flex;align-items:center;text-decoration:none"><img src="tpv-wordmark.svg" alt="The Present Value" style="height:30px;width:auto;display:block"></a></div>
+<div class="hdr-r">
+<a href="index.html" style="font-family:var(--sa);font-size:.65rem;font-weight:600;color:var(--mu);text-decoration:none;padding:.3rem .6rem;border-radius:100px;border:1.5px solid var(--bd);transition:all .2s;margin-right:.3rem" onmouseover="this.style.color='var(--royal)';this.style.borderColor='var(--royal)'" onmouseout="this.style.color='var(--mu)';this.style.borderColor='var(--bd)'">← Home</a>
+<nav class="pnav">
+  <button class="active" onclick="showPg('cal',this)">Tax Calendar</button>
+  <button onclick="showPg('ref',this)">Form Reference</button>
+  <button onclick="showPg('calc',this)">Regime Calculator</button>
+</nav>
+</div>
+</div></header>
+
+<!-- ═══ PAGE 1: CALENDAR ═══ -->
+<div class="page vis" id="pgCal">
+<div class="tbar"><div class="tbar-i"><span class="tl-l">Taxpayer</span>
+<button class="tb act" onclick="setType('se')">Self-Employed</button>
+<button class="tb" onclick="setType('mi')">Mixed Income</button>
+<button class="tb" onclick="setType('corp')">Corporation</button>
+<button class="tb" onclick="setType('emp')">Employee</button>
+</div></div>
+<div class="rbar" id="rBar"></div>
+<section class="cls"><div class="clp open" id="clP">
+<div class="clh" onclick="document.getElementById('clP').classList.toggle('open')"><h2>Your Situation</h2>
+<div class="cta"><label class="sat" onclick="event.stopPropagation()"><span>Show all</span><input type="checkbox" id="saT" onchange="ren()"><span class="tt"></span></label><span class="clch">▾</span></div></div>
+<div class="clb"><div class="clg" id="clG"></div></div>
+<div class="csm" id="clS"></div>
+</div></section>
+<main class="mn">
+<div class="vc"><div class="vl">
+<div class="vt"><button class="act" onclick="setV('tl',this)">Timeline</button><button onclick="setV('tb',this)">Table</button></div>
+<input type="text" class="sb" placeholder="Search…" oninput="SQ=this.value.toLowerCase();ren()">
+</div><div class="ft" id="cF"></div></div>
+<div class="stb" id="st"></div>
+<div class="tl" id="tl"></div>
+<div class="tv" id="tv"></div>
+</main></div>
+
+<!-- ═══ PAGE 2: FORM REFERENCE ═══ -->
+<div class="page" id="pgRef">
+<main class="mn">
+<div class="fr-intro">
+  <h2>BIR Form Reference Guide</h2>
+  <p>Every form and attachment a self-employed individual, mixed income earner, corporation, or employee may encounter — explained in plain language. Click any form to expand its full briefer.</p>
+</div>
+<input type="text" class="fr-search" id="frSearch" placeholder="Search forms — try '1701Q', 'SAWT', 'percentage tax'…" oninput="renderForms()">
+<div class="fr-cats" id="frCats"></div>
+<div id="frList"></div>
+</main></div>
+
+<!-- ═══ PAGE 3: CALCULATOR ═══ -->
+<div class="page" id="pgCalc">
+<main class="mn">
+<div class="calc-intro"><h2>Which tax regime saves you the most?</h2>
+<p>Enter your projected annual numbers. The calculator computes your total tax burden under all three regimes side by side.</p></div>
+<div class="inp"><h3>Your Numbers</h3>
+<div class="fg">
+<div class="fld"><label>Annual Gross Sales <span class="hn">(full year)</span></label><input type="text" id="gI" placeholder="e.g. 1,200,000" inputmode="numeric"></div>
+<div class="fld"><label>Annual Actual Expenses <span class="hn">(for itemized)</span></label><input type="text" id="eI" placeholder="e.g. 480,000" inputmode="numeric"></div>
+<div class="fld"><label>Total CWT / 2307 Credits</label><input type="text" id="cI" placeholder="e.g. 50,000" inputmode="numeric" value="0"></div>
+<div class="fld"><label>Taxpayer Type</label><select id="tS"><option value="pure">Purely Self-Employed</option><option value="mixed">Mixed Income Earner</option></select></div>
+<p class="fnote">8% and Non-VAT only available if gross ≤ ₱3,000,000.</p>
+</div>
+<div class="crow"><button class="cbtn" onclick="calc()">Compare All Regimes</button><span style="font-size:.65rem;color:var(--mu)">VAT threshold: ₱3M</span></div>
+</div>
+<div class="cres" id="cRes">
+<div id="rcBox"></div>
+<div class="ccards" id="cCards"></div>
+<div class="qsec"><h3 onclick="document.getElementById('qB').classList.toggle('vis')">Quarterly Breakdown <span style="font-size:.6rem;color:var(--mu)">▾</span></h3><div class="qbdy" id="qB"></div></div>
+</div>
+</main></div>
+
+<!-- ═══ SHARED BOTTOM ═══ -->
+<section class="bp">
+<div class="pg">
+<div class="pc"><h4>Micro &amp; Small <span class="bsm" style="background:var(--gs);color:var(--green)">Gross &lt; ₱20M · EOPT</span></h4>
+<div class="pr"><span>Surcharge (late)</span><span class="pv pvg">10%</span></div><div class="pr"><span>Interest</span><span class="pv pvg">6%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvg">₱500 (max ₱12.5K/yr)</span></div></div>
+<div class="pc"><h4>Medium, Large &amp; Willful <span class="bsm" style="background:var(--rds);color:var(--red)">Standard</span></h4>
+<div class="pr"><span>Surcharge (late)</span><span class="pv pvr">25%</span></div><div class="pr"><span>Surcharge (willful)</span><span class="pv pvr">50%</span></div><div class="pr"><span>Interest</span><span class="pv pvr">12%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvr">₱1K (max ₱25K/yr)</span></div></div>
+</div>
+<div class="cp"><div class="cph" onclick="let b=document.getElementById('lgB'),c=document.getElementById('lgC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Legal Basis</h3><span class="mchv" id="lgC" style="color:var(--lt);font-size:.6rem">▾</span></div>
+<div class="cpb" id="lgB">
+<div class="lr"><span class="lrt">Income Tax</span><span class="lrc">NIRC Sec. 24(A)(2); TRAIN Law (RA 10963)</span></div>
+<div class="lr"><span class="lrt">8% Flat Rate</span><span class="lrc">NIRC Sec. 24(A)(2)(b); RR 8-2018</span></div>
+<div class="lr"><span class="lrt">RCIT 25%/20%</span><span class="lrc">NIRC Sec. 27(A); CREATE; CREATE MORE (RA 12066)</span></div>
+<div class="lr"><span class="lrt">MCIT 2%</span><span class="lrc">NIRC Sec. 27(E); Reverted Jul 2023; RMC 36-2024</span></div>
+<div class="lr"><span class="lrt">Percentage Tax 3%</span><span class="lrc">NIRC Sec. 116; Reverted Jul 2023</span></div>
+<div class="lr"><span class="lrt">VAT 12%</span><span class="lrc">NIRC Secs. 106–108</span></div>
+<div class="lr"><span class="lrt">EWT</span><span class="lrc">RR 2-98; RR 11-2018; RR 24-2025 (TWA rates)</span></div>
+<div class="lr"><span class="lrt">CMEPA</span><span class="lrc">RA 12214 eff. Jul 2025. STT 0.1%; interest FWT 20%; dividends 10%; DST 0.75%</span></div>
+<div class="lr"><span class="lrt">E-Invoicing</span><span class="lrc">RR 11-2025; RR 26-2025 → Dec 31, 2026</span></div>
+<div class="lr"><span class="lrt">De Minimis</span><span class="lrc">RR 29-2025 (expanded ceilings eff. Jan 6, 2026)</span></div>
+<div class="lr"><span class="lrt">EOPT Penalties</span><span class="lrc">NIRC Secs. 248-250; RR 6-2024</span></div>
+</div></div>
+</section>
+
+<footer class="ftr">This suite is for general reference only — not formal tax advice. Verify against the BIR Interactive Tax Calendar at www.bir.gov.ph. Deadlines on weekends/holidays move to the next business day. Rates current as of March 2026.</footer>
+
+<script>
+// ══════════ PAGE NAV ══════════
+function showPg(p,btn){document.querySelectorAll('.page').forEach(e=>e.classList.remove('vis'));document.getElementById({cal:'pgCal',ref:'pgRef',calc:'pgCalc'}[p]).classList.add('vis');document.querySelectorAll('.pnav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+
+// ══════════ FORM REFERENCE DATA ══════════
+const FORMS=[
+  // INCOME TAX
+  {form:"1701Q",name:"Quarterly Income Tax Return",cat:"inc",brief:"Your quarterly income declaration — filed 3× per year (Q1–Q3).",
+   who:"Self-employed, freelancers, professionals, mixed income earners. File even if zero income.",
+   when:"Q1: May 15 · Q2: Aug 15 · Q3: Nov 15",
+   how:"<span class='hl'>8% filers:</span> 8% × (cumulative gross − ₱250K). <span class='hl'>Graduated:</span> apply 0%–35% rates to cumulative net taxable income. Subtract prior quarters' payments and 2307 credits. Uses cumulative method — each quarter reports year-to-date.",
+   attach:"SAWT (.dat) via esubmission · Copies of all BIR Forms 2307 received",
+   legal:"NIRC Sec. 51; Sec. 24(A)(2); RR 8-2018",
+   tip:"Your Q1 filing is when you irrevocably elect the 8% flat rate for the year. If you miss this, you default to graduated rates."},
+  {form:"1701A",name:"Annual ITR — Purely Business/Profession (Simplified)",cat:"inc",brief:"2-page annual return for purely self-employed using 8% or OSD.",
+   who:"Purely self-employed / professionals using <span class='hl'>8% flat rate</span> or <span class='hl'>graduated + OSD</span>. NOT for mixed income or itemized deductions.",
+   when:"April 15 of the following year.",
+   how:"8%: 8% × (full-year gross − ₱250K). OSD: graduated rates on (gross − 40% OSD). Credit all 1701Q payments and 2307s.",
+   attach:"SAWT (.dat) · All signed 2307s · Proof of quarterly payments (TRRC) · Form 2304 if applicable",
+   legal:"NIRC Sec. 51; RR 8-2018"},
+  {form:"1701",name:"Annual ITR — Self-Employed, Estates & Trusts (Full)",cat:"inc",brief:"4-page annual return for itemized deductions or mixed income earners.",
+   who:"Self-employed using <span class='hl'>itemized deductions</span>, all <span class='hl'>mixed income earners</span> (compensation + business), and estates/trusts.",
+   when:"April 15 of the following year.",
+   how:"Graduated rates on net taxable income. Mixed: add compensation + business income. Itemized: subtract actual documented expenses. Credit quarterly payments and 2307s.",
+   attach:"SAWT (.dat) · All 2307s · AFS + Notes (BIR-accredited CPA) · CPA Certificate · SMR · Account Information Form · Form 2316 from employer (mixed income) · Proof of 1701Q payments",
+   legal:"NIRC Sec. 51; Sec. 24(A)(2)"},
+  {form:"1700",name:"Annual ITR — Purely Compensation Income",cat:"inc",brief:"For employees who must file their own return (not substituted).",
+   who:"Employees with 2+ employers, incorrect withholding, spouse disqualified from substituted filing, or other non-business income.",
+   when:"April 15 of the following year.",
+   how:"Sum compensation from all employers. Apply graduated rates. Credit taxes withheld per 2316 from each employer.",
+   attach:"Form 2316 from each employer · Proof of taxes paid/withheld",
+   legal:"NIRC Sec. 51; RR 3-2002 (substituted filing)"},
+  {form:"1702Q",name:"Quarterly Corporate Income Tax Return",cat:"inc",brief:"Corporate quarterly ITR — due on the 60th day after quarter-end.",
+   who:"Domestic corporations, partnerships, OPCs.",
+   when:"Q1: May 30 · Q2: Aug 29 · Q3: Nov 29 (60th day after quarter-end)",
+   how:"25% RCIT on cumulative net taxable income (20% if NTI ≤ ₱5M & assets ≤ ₱100M, or RBE-EDR). From 4th year: compare vs <span class='hl'>2% MCIT</span> on gross income — pay whichever is higher.",
+   attach:"SAWT (.dat) · Copies of 2307s · Form 2304 if applicable",
+   legal:"NIRC Sec. 27(A); Sec. 27(E) MCIT; CREATE Act; CREATE MORE; RMC 36-2024"},
+  {form:"1702-RT",name:"Annual Corporate ITR (Regular Rate)",cat:"inc",brief:"Annual return for corporations subject to regular income tax.",
+   who:"Domestic corporations, partnerships at regular RCIT rate.",
+   when:"April 15 (or 15th of 4th month after fiscal year-end).",
+   how:"25% RCIT (or 20% for qualifying small corps / RBE-EDR per CREATE MORE). Compare vs 2% MCIT. Excess MCIT creditable for next 3 years.",
+   attach:"SAWT (.dat) · AFS + Notes · CPA Certificate · SMR · AIF · All 2307s",
+   legal:"NIRC Sec. 27(A); CREATE Act; CREATE MORE (RA 12066)"},
+
+  // BUSINESS TAX
+  {form:"2551Q",name:"Quarterly Percentage Tax Return",cat:"biz",brief:"3% tax on gross sales — for Non-VAT taxpayers not on 8%.",
+   who:"Non-VAT registered self-employed (gross ≤ ₱3M) under <span class='hl'>graduated rates</span>. NOT filed by 8% filers (exempt) or VAT-registered.",
+   when:"Q1: Apr 25 · Q2: Jul 25 · Q3: Oct 25 · Q4: Jan 25",
+   how:"3% × quarterly gross sales/receipts. No deductions.",
+   attach:"None typically required.",
+   legal:"NIRC Sec. 116; TRAIN Law (reverted from 1% to 3% on Jul 1, 2023)"},
+  {form:"2550M",name:"Monthly VAT Declaration",cat:"biz",brief:"Monthly VAT return for months 1 & 2 of each quarter.",
+   who:"VAT-registered taxpayers (gross > ₱3M or voluntarily registered).",
+   when:"20th of the month following the reporting month. Filed for Jan, Feb, Apr, May, Jul, Aug, Oct, Nov.",
+   how:"Report output VAT (12% on sales) and input VAT (VAT on purchases). Remit any net VAT payable.",
+   attach:"None for the monthly declaration.",
+   legal:"NIRC Secs. 114, 106–108; RR 16-2005"},
+  {form:"2550Q",name:"Quarterly VAT Return",cat:"biz",brief:"Quarterly VAT return that reconciles the full quarter.",
+   who:"VAT-registered taxpayers.",
+   when:"25th of the month after quarter-end. Q1: Apr 25 · Q2: Jul 25 · Q3: Oct 25 · Q4: Jan 25.",
+   how:"Output VAT minus input VAT for the quarter. Credits monthly 2550M payments. Excess input VAT carried over or refundable (zero-rated, per EOPT risk-based audit).",
+   attach:"SLSP (.dat) via esubmission — required even if zero transactions ('No Entry').",
+   legal:"NIRC Secs. 114, 106–108; RR 16-2005; RR 1-2012"},
+
+  // WITHHOLDING — COMPENSATION
+  {form:"1601-C",name:"Monthly WT on Compensation",cat:"emp",brief:"Monthly remittance of taxes withheld from employee salaries.",
+   who:"Every employer. Even minimum wage earners must be reported (zero tax withheld).",
+   when:"10th of the following month. eFPS filers: staggered (Groups A–E, 11th–15th).",
+   how:"Total taxes withheld from all employees' compensation per BIR graduated withholding tax tables. Apply RR 29-2025 expanded de minimis thresholds eff. Jan 6, 2026.",
+   attach:"None for the return. Maintain payroll register as support.",
+   legal:"NIRC Sec. 79; RR 2-98; RR 29-2025"},
+  {form:"1604-C",name:"Annual Info Return — WT on Compensation",cat:"emp",brief:"Year-end reconciliation of all employee withholding — must match 1601-C totals.",
+   who:"Every employer who filed 1601-C during the year.",
+   when:"January 31 of the following year.",
+   how:"Summarizes all compensation taxes withheld. Must reconcile perfectly with the sum of 12 monthly 1601-C filings and each employee's Form 2316.",
+   attach:"Alphalist of Employees (.dat) via esubmission.",
+   legal:"NIRC Sec. 79; RR 2-98",
+   tip:"Most common audit trigger: mismatch between 1604-C totals and 1601-C totals."},
+  {form:"2316",name:"Certificate of Compensation Payment / Tax Withheld",cat:"emp",brief:"The certificate you give each employee — also serves as their ITR if substituted filing applies.",
+   who:"Issued by the employer to each employee.",
+   when:"<span class='hl'>Jan 31</span>: distribute to employees. <span class='hl'>Feb 28</span>: submit duplicate copies to BIR for substituted filers.",
+   how:"Shows total compensation, benefits, deductions, and taxes withheld. Both employer and employee must sign.",
+   attach:"For BIR submission: signed duplicates, USB/scanned copies, alphalist validation printout.",
+   legal:"NIRC Sec. 79(I); RR 2-98; RR 3-2002 (substituted filing)"},
+
+  // WITHHOLDING — EXPANDED
+  {form:"0619-E",name:"Monthly EWT Remittance",cat:"wh",brief:"Monthly remittance of expanded withholding taxes — for months 1 & 2 of each quarter.",
+   who:"Withholding agents making EWT payments to suppliers, contractors, professionals, landlords.",
+   when:"10th of the following month — for months 1 & 2 of each quarter only. Month 3 is covered by 1601-EQ.",
+   how:"Total EWT deducted from payments during the month. Rates depend on payment nature and your classification (regular vs top withholding agent per RR 24-2025).",
+   attach:"None.",
+   legal:"RR 2-98; RR 11-2018; RR 24-2025 (TWA rates eff. Oct 2025)"},
+  {form:"1601-EQ",name:"Quarterly EWT Return",cat:"wh",brief:"Quarterly return consolidating all EWT — credits monthly 0619-E payments.",
+   who:"Withholding agents filing 0619-E.",
+   when:"Last day of the month after quarter-end. Q1: Apr 30 · Q2: Jul 31 · Q3: Oct 31 · Q4: Jan 31.",
+   how:"Total EWT for the quarter minus 0619-E payments for months 1 & 2.",
+   attach:"Quarterly Alphalist of Payees (QAP .dat) via esubmission.",
+   legal:"RR 2-98; RR 11-2018; RR 24-2025"},
+  {form:"1604-E",name:"Annual Info Return — EWT",cat:"wh",brief:"Year-end reconciliation of all expanded withholding — must match 1601-EQ totals.",
+   who:"Withholding agents who filed 1601-EQ during the year.",
+   when:"March 1 of the following year.",
+   how:"Summarizes all EWT. Must reconcile with quarterly 1601-EQ filings.",
+   attach:"Annual Alphalist of Payees (.dat) via esubmission.",
+   legal:"RR 2-98"},
+
+  // WITHHOLDING — FINAL
+  {form:"0619-F",name:"Monthly Final WT Remittance",cat:"wh",brief:"Monthly remittance of final withholding taxes.",
+   who:"Agents making payments subject to final tax (non-resident payments, royalties, etc.).",
+   when:"10th of the following month.",
+   how:"Total final WT deducted. CMEPA (eff. Jul 2025): uniform 20% FWT on interest; 10% on dividends.",
+   attach:"None.",
+   legal:"NIRC Sec. 57(A); RR 2-98; CMEPA (RA 12214); RR 21-2025"},
+  {form:"1601-FQ",name:"Quarterly Final WT Return",cat:"wh",brief:"Quarterly return for final withholding — credits 0619-F payments.",
+   who:"Agents filing 0619-F.",when:"Last day of month after quarter-end (same as 1601-EQ).",
+   how:"Total final WT minus monthly 0619-F payments.",
+   attach:"Alphalist of payees (.dat).",legal:"RR 2-98"},
+  {form:"1604-F",name:"Annual Info Return — Final WT",cat:"wh",brief:"Year-end summary of all final withholding payments.",
+   who:"Agents who filed 1601-FQ during the year.",when:"January 31 of the following year.",
+   attach:"Alphalist of Payees (.dat).",legal:"RR 2-98"},
+
+  // CERTIFICATES
+  {form:"2307",name:"Certificate of Creditable Tax Withheld at Source",cat:"wh",brief:"Issued to payees for EWT withheld — the payee uses this as a tax credit.",
+   who:"<span class='hl'>Issued by:</span> withholding agent. <span class='hl'>Received by:</span> the supplier/contractor/professional you paid.",
+   when:"Within 20 days from close of each quarter.",
+   how:"Shows: withholding agent TIN, payee TIN, ATC code, income payment, tax withheld. The payee claims this as a credit on their 1701Q / 1701 / 1701A.",
+   attach:"N/A — this IS the attachment to the payee's returns.",
+   legal:"RR 2-98, Sec. 2.58",
+   tip:"Collect every 2307 your clients issue you. Missing 2307s = lost tax credits."},
+  {form:"2306",name:"Certificate of Final Tax Withheld",cat:"wh",brief:"Certificate for income subject to final withholding tax — not creditable against other taxes.",
+   who:"Issued by the agent making final WT payments.",
+   when:"Within 20 days from close of each quarter.",
+   how:"The final tax is the payee's complete tax liability on that specific income.",
+   attach:"N/A.",legal:"RR 2-98, Sec. 2.58"},
+
+  // DST
+  {form:"2000",name:"Documentary Stamp Tax Return",cat:"dst",brief:"Return for DST on taxable documents — leases, loans, debt instruments, certain stock transactions.",
+   who:"Any person executing, signing, or transferring DST-liable documents.",
+   when:"Within <span class='hl'>5 days</span> after close of the month when the document was executed.",
+   how:"DST rates vary by document type. Under CMEPA (eff. Jul 2025): share issuances at 0.75% of par value; listed share transfers now DST-exempt; debt instruments at 0.75%.",
+   attach:"Supporting documents per RDO requirements.",
+   legal:"NIRC Secs. 173–201; TRAIN Law; CMEPA (RA 12214); RR 19-2025"},
+
+  // ATTACHMENTS & REPORTS
+  {form:"SAWT",name:"Summary Alphalist of Withholding Taxes",cat:"adm",brief:"Electronic summary of all 2307 certificates received — required when claiming CWT credits.",
+   who:"Any taxpayer claiming tax credits from BIR Forms 2307 on their income tax returns.",
+   when:"E-submit to esubmission@bir.gov.ph with each 1701Q (quarterly) and 1701/1701A (annual).",
+   how:"Use BIR SAWT DEV module or ATSP. Input each 2307: agent TIN, name, ATC, tax base, tax withheld.",
+   attach:"N/A — the SAWT itself is the attachment.",
+   legal:"RR 1-2014"},
+  {form:"SLSP",name:"Summary List of Sales and Purchases",cat:"adm",brief:"Quarterly VAT cross-referencing report — required even for zero transactions.",
+   who:"<span class='hl'>Sales list:</span> All VAT-registered. <span class='hl'>Purchases list:</span> VAT-registered with quarterly purchases > ₱1M (net of VAT).",
+   when:"25th of the month after quarter-end (same as 2550Q).",
+   how:"Use BIR RELIEF or DEV module. Input invoice/receipt details per transaction: counterparty TIN, name, amounts, VAT.",
+   attach:"Validated .dat file via esubmission@bir.gov.ph.",
+   legal:"RR 16-2005; RR 1-2012; RMO 7-2015",
+   tip:"Even zero quarters require a 'No Entry' submission."},
+  {form:"QAP",name:"Quarterly Alphalist of Payees",cat:"adm",brief:"Electronic list of everyone you withheld EWT from — attached to 1601-EQ.",
+   who:"Withholding agents filing 1601-EQ.",
+   when:"Same deadline as 1601-EQ.",
+   how:"Use BIR DEV module. Input: payee TIN, name, ATC, income amount, tax withheld.",
+   attach:"Validated .dat file via esubmission@bir.gov.ph.",
+   legal:"RR 2-98; RR 11-2018"},
+  {form:"1600",name:"Monthly VAT/PT Withheld (Government)",cat:"wh",brief:"Filed by government agencies — track this for your VAT credits.",
+   who:"Filed by the government buyer. As the seller, you don't file this — but ensure you receive your 2307.",
+   when:"10th of the following month (filed by the government payor).",
+   how:"Government withholds 5% final VAT on payments to VAT-registered sellers. The withheld amount is creditable against your output VAT.",
+   attach:"N/A for you — but collect the 2307 from the government agency.",
+   legal:"NIRC Sec. 114(C); RR 16-2005"},
+];
+
+const FR_CATS={inc:"Income Tax",biz:"Business Tax",emp:"Employer / Compensation",wh:"Withholding Tax",dst:"Documentary Stamp Tax",adm:"Attachments & Reports"};
+const FR_COLORS={inc:"c-inc",biz:"c-biz",emp:"c-emp",wh:"c-wh",dst:"c-dst",adm:"c-adm"};
+let frCat='all';
+
+function renderForms(){
+  const q=(document.getElementById('frSearch')?.value||'').toLowerCase();
+  const list=document.getElementById('frList');
+  // Category filters
+  document.getElementById('frCats').innerHTML=`<button class="fr-cat ${frCat==='all'?'act':''}" onclick="frCat='all';renderForms()">All Forms</button>`+Object.entries(FR_CATS).map(([k,v])=>`<button class="fr-cat ${frCat===k?'act':''}" onclick="frCat='${k}';renderForms()">${v}</button>`).join('');
+
+  const filtered=FORMS.filter(f=>{
+    if(frCat!=='all'&&f.cat!==frCat)return false;
+    if(q){const h=(f.form+' '+f.name+' '+f.brief+' '+(f.who||'')+' '+(f.how||'')+' '+(f.attach||'')).toLowerCase();return h.includes(q);}
+    return true;
+  });
+
+  // Group by category
+  const groups={};filtered.forEach(f=>{if(!groups[f.cat])groups[f.cat]=[];groups[f.cat].push(f);});
+
+  let h='';
+  const catOrder=['inc','biz','emp','wh','dst','adm'];
+  catOrder.forEach(cat=>{
+    const items=groups[cat];if(!items)return;
+    h+=`<div class="fr-group"><div class="fr-group-hdr">${FR_CATS[cat]}</div>`;
+    items.forEach((f,i)=>{
+      const id='fr_'+f.form.replace(/[^a-zA-Z0-9]/g,'')+'_'+i;
+      h+=`<div class="fr-card ${FR_COLORS[f.cat]}" id="${id}">
+        <div class="fr-top" onclick="document.getElementById('${id}').classList.toggle('open')">
+          <div class="fr-form">${f.form}</div>
+          <div class="fr-name">${f.name} <span class="fr-brief">— ${f.brief}</span></div>
+          <span class="fr-chev">▾</span>
+        </div>
+        <div class="fr-body"><div class="fr-content">
+          ${f.who?`<div class="fr-row"><div class="fr-label">Who Files</div><div class="fr-val">${f.who}</div></div>`:''}
+          ${f.when?`<div class="fr-row"><div class="fr-label">When</div><div class="fr-val">${f.when}</div></div>`:''}
+          ${f.how?`<div class="fr-row"><div class="fr-label">How</div><div class="fr-val">${f.how}</div></div>`:''}
+          ${f.attach?`<div class="fr-row"><div class="fr-label">Attachments</div><div class="fr-val">${f.attach}</div></div>`:''}
+          ${f.legal?`<div class="fr-row"><div class="fr-label">Legal Basis</div><div class="fr-val" style="font-family:var(--sa);font-size:.65rem;color:var(--mu)">${f.legal}</div></div>`:''}
+          ${f.tip?`<div class="fr-row"><div class="fr-label">Tip</div><div class="fr-val" style="color:var(--royal);font-weight:600">${f.tip}</div></div>`:''}
+        </div></div>
+      </div>`;
+    });
+    h+=`</div>`;
+  });
+  if(!filtered.length)h=`<p style="font-family:var(--se);font-size:.85rem;color:var(--mu);text-align:center;padding:2rem">No forms match your search.</p>`;
+  list.innerHTML=h;
+}
+
+// ══════════ CALENDAR ENGINE ══════════
+const TYPES={se:{name:"Self-Employed",regimes:{se_8:{n:"8% Flat"},se_gnv:{n:"Grad + Non-VAT"},se_gv:{n:"Grad + VAT"}}},mi:{name:"Mixed Income",regimes:{mi_8:{n:"8% on Business"},mi_gnv:{n:"Grad + Non-VAT"},mi_gv:{n:"Grad + VAT"}}},corp:{name:"Corporation",regimes:{corp_nv:{n:"RCIT + Non-VAT"},corp_v:{n:"RCIT + VAT"}}},emp:{name:"Employee",regimes:{emp_s:{n:"Substituted"},emp_f:{n:"File 1700"}}}};
+const SE=['se_8','se_gnv','se_gv'],MI=['mi_8','mi_gnv','mi_gv'],CORP=['corp_nv','corp_v'],EMP=['emp_s','emp_f'];
+const AB=[...SE,...MI,...CORP],NV=['se_gnv','mi_gnv','corp_nv'],VAT=['se_gv','mi_gv','corp_v'],IND=[...SE,...MI];
+const CATS={inc:{l:"Income Tax",c:"var(--royal)"},biz:{l:"Business Tax",c:"var(--green)"},wh:{l:"Withholding",c:"var(--purple)"},emp:{l:"Employer",c:"var(--teal)"},dst:{l:"DST",c:"var(--rose)"},adm:{l:"Admin",c:"var(--amber)"},sec:{l:"SEC",c:"var(--slate)"}};
+const MN=["","January","February","March","April","May","June","July","August","September","October","November","December"];
+const ms=m=>MN[m]?.substring(0,3)||'—';
+const QS={se:[{key:"employees",q:"Do you have employees?",d:"1601-C, 1604-C, 2316, contributions"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ, 2307, 1604-E"},{key:"fwt",q:"Final WT payments?",d:"0619-F, 1601-FQ, 2306, 1604-F"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"cas",q:"Computerized Accounting?",d:"CAS books Jan 30"},{key:"crm",q:"CRM/POS machine?",d:"Monthly reporting"},{key:"govpay",q:"Government payments?",d:"Form 1600"},{key:"lowerewt",q:"Lower EWT rate?",d:"Sworn declaration"},{key:"einv",q:"E-invoicing covered?",d:"Dec 31, 2026"}],
+  mi:[{key:"employees",q:"Have employees?",d:"1601-C, 1604-C, 2316"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ"},{key:"fwt",q:"Final WT?",d:"0619-F, 1601-FQ"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"cas",q:"Computerized Accounting?",d:"CAS books"},{key:"crm",q:"CRM/POS?",d:"Reports"},{key:"govpay",q:"Gov payments?",d:"1600"},{key:"einv",q:"E-invoicing?",d:"Dec 2026"}],
+  corp:[{key:"employees",q:"Have employees?",d:"1601-C, 1604-C, 2316"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ"},{key:"fwt",q:"Final WT?",d:"0619-F, 1601-FQ"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"mcit",q:"4th year+ operations?",d:"2% MCIT"},{key:"rbe",q:"RBE (PEZA/BOI)?",d:"IPA reporting"},{key:"cas",q:"Computerized Accounting?",d:"CAS books"},{key:"crm",q:"CRM/POS?",d:"Reports"},{key:"govpay",q:"Gov payments?",d:"1600"},{key:"einv",q:"E-invoicing?",d:"Dec 2026"}],
+  emp:[{key:"multi_emp",q:"2+ employers?",d:"Must file 1700"},{key:"other_inc",q:"Non-business income?",d:"File 1700"},{key:"spouse_dq",q:"Spouse not qualified?",d:"Disqualifies you"}]};
+let cT='se',cR='se_8',vM='tl',SQ='',cQ=new Set(),aC=new Set(Object.keys(CATS));
+
+function mW(m,fn,r){return[{month:m,day:10,title:`Monthly WT Compensation (${fn})`,form:"1601-C",cat:"emp",r,pq:"employees"},{month:m,day:10,title:`Monthly EWT (${fn})`,form:"0619-E",cat:"wh",r,pq:"ewt"},{month:m,day:10,title:`Monthly Final WT (${fn})`,form:"0619-F",cat:"wh",r,pq:"fwt"}];}
+function gC(m,fn,r){return{month:m,day:15,title:`SSS/PhilHealth/Pag-IBIG (${fn})`,form:"Agency",cat:"emp",r,pq:"employees"};}
+function qC(m,q,r){return[{month:m,day:20,title:`Issue 2307 (${q})`,form:"2307",cat:"wh",r,pq:"ewt"},{month:m,day:20,title:`Issue 2306 (${q})`,form:"2306",cat:"wh",r,pq:"fwt"}];}
+function qE(m,q,d,r){return[{month:m,day:d,title:`Quarterly EWT (${q})`,form:"1601-EQ",cat:"wh",r,pq:"ewt",att:["QAP (.dat)"]},{month:m,day:d,title:`Quarterly Final WT (${q})`,form:"1601-FQ",cat:"wh",r,pq:"fwt",att:["Alphalist (.dat)"]}];}
+
+const B=AB,OB=[];
+const mNm=["","Dec (PY)","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov"];
+for(let m=1;m<=12;m++){OB.push(...mW(m,mNm[m],B),gC(m,mNm[m],B));}
+OB.push({month:1,day:15,title:"Bind Loose-Leaf Books",form:"ORUS",cat:"adm",r:B},{month:1,day:15,title:"Sworn Declaration Lower EWT",form:"—",cat:"wh",r:[...SE,...MI],pq:"lowerewt"},{month:1,day:20,title:"Renew Mayor's Permit",form:"LGU",cat:"adm",r:B},...qC(1,"Q4",B),...qE(1,"Q4",31,B),{month:1,day:25,title:"Percentage Tax Q4",form:"2551Q",cat:"biz",r:NV},{month:1,day:25,title:"VAT Return Q4",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:1,day:25,title:"SLSP Q4",form:"SLSP",cat:"biz",r:VAT},{month:1,day:30,title:"Inventory List",form:"—",cat:"adm",r:B},{month:1,day:30,title:"CAS Books",form:"ORUS",cat:"adm",r:B,pq:"cas"},{month:1,day:31,title:"1604-C (Compensation)",form:"1604-C",cat:"emp",r:B,pq:"employees",att:["Alphalist (.dat)"]},{month:1,day:31,title:"1604-F (Final WT)",form:"1604-F",cat:"wh",r:B,pq:"fwt",att:["Alphalist (.dat)"]},{month:1,day:31,title:"Distribute 2316",form:"2316",cat:"emp",r:B,pq:"employees"});
+OB.push({month:2,day:20,title:"VAT — Jan",form:"2550M",cat:"biz",r:VAT},{month:2,day:28,title:"2316 Duplicates to BIR",form:"2316",cat:"emp",r:B,pq:"employees"});
+OB.push({month:3,day:1,title:"1604-E (EWT Annual)",form:"1604-E",cat:"wh",r:B,pq:"ewt",att:["Alphalist (.dat)"]},{month:3,day:20,title:"VAT — Feb",form:"2550M",cat:"biz",r:VAT});
+OB.push({month:4,day:15,title:"Annual ITR (8%)",form:"1701A",cat:"inc",r:['se_8']},{month:4,day:15,title:"Annual ITR (8% Mixed)",form:"1701",cat:"inc",r:['mi_8']},{month:4,day:15,title:"Annual ITR (Grad+OSD)",form:"1701A",cat:"inc",r:['se_gnv','se_gv']},{month:4,day:15,title:"Annual ITR (Grad+OSD Mixed)",form:"1701",cat:"inc",r:['mi_gnv','mi_gv']},{month:4,day:15,title:"Annual ITR (Itemized)",form:"1701",cat:"inc",r:[...SE,...MI]},{month:4,day:15,title:"Annual Corporate ITR",form:"1702-RT",cat:"inc",r:CORP,desc:"25%/20% RCIT or 2% MCIT"},{month:4,day:15,title:"Form 1700",form:"1700",cat:"inc",r:['emp_f']},{month:4,day:15,title:"Substituted Filing",form:"2316",cat:"inc",r:['emp_s']},{month:4,day:15,title:"AFS to SEC",form:"SEC",cat:"sec",r:CORP},...qC(4,"Q1",B),{month:4,day:25,title:"Percentage Tax Q1",form:"2551Q",cat:"biz",r:NV},{month:4,day:25,title:"VAT Return Q1",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:4,day:25,title:"SLSP Q1",form:"SLSP",cat:"biz",r:VAT},...qE(4,"Q1",30,B));
+OB.push({month:5,day:15,title:"Income Tax Q1",form:"1701Q",cat:"inc",r:IND,att:["SAWT","2307s"]},{month:5,day:30,title:"Corporate ITR Q1",form:"1702Q",cat:"inc",r:CORP},{month:5,day:20,title:"VAT — Apr",form:"2550M",cat:"biz",r:VAT});
+OB.push({month:6,day:20,title:"VAT — May",form:"2550M",cat:"biz",r:VAT},{month:6,day:30,title:"GIS to SEC",form:"SEC",cat:"sec",r:CORP});
+OB.push(...qC(7,"Q2",B),{month:7,day:25,title:"Percentage Tax Q2",form:"2551Q",cat:"biz",r:NV},{month:7,day:25,title:"VAT Return Q2",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:7,day:25,title:"SLSP Q2",form:"SLSP",cat:"biz",r:VAT},...qE(7,"Q2",31,B));
+OB.push({month:8,day:15,title:"Income Tax Q2",form:"1701Q",cat:"inc",r:IND},{month:8,day:29,title:"Corporate ITR Q2",form:"1702Q",cat:"inc",r:CORP},{month:8,day:20,title:"VAT — Jul",form:"2550M",cat:"biz",r:VAT});
+OB.push({month:9,day:20,title:"VAT — Aug",form:"2550M",cat:"biz",r:VAT});
+OB.push(...qC(10,"Q3",B),{month:10,day:25,title:"Percentage Tax Q3",form:"2551Q",cat:"biz",r:NV},{month:10,day:25,title:"VAT Return Q3",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:10,day:25,title:"SLSP Q3",form:"SLSP",cat:"biz",r:VAT},...qE(10,"Q3",31,B));
+OB.push({month:11,day:15,title:"Income Tax Q3",form:"1701Q",cat:"inc",r:IND},{month:11,day:29,title:"Corporate ITR Q3",form:"1702Q",cat:"inc",r:CORP},{month:11,day:20,title:"VAT — Oct",form:"2550M",cat:"biz",r:VAT});
+OB.push({month:12,day:20,title:"VAT — Nov",form:"2550M",cat:"biz",r:VAT},{month:12,day:24,title:"13th Month Pay",form:"—",cat:"emp",r:B,pq:"employees"},{month:12,day:31,title:"Year-End Housekeeping",form:"—",cat:"adm",r:B},{month:12,day:31,title:"Verify 2316",form:"2316",cat:"inc",r:EMP});
+OB.push({month:0,day:5,title:"DST Return",form:"2000",cat:"dst",r:AB,pq:"dst"},{month:0,day:0,title:"Gov't VAT (1600)",form:"1600",cat:"wh",r:VAT,pq:"govpay"},{month:0,day:0,title:"CRM/POS Reports",form:"—",cat:"adm",r:AB,pq:"crm"},{month:0,day:0,title:"SSS/PhilHealth/Pag-IBIG (Self)",form:"Agency",cat:"adm",r:[...SE,...MI]},{month:0,day:0,title:"PEZA/BOI Reporting",form:"IPA",cat:"sec",r:CORP,pq:"rbe"},{month:0,day:0,title:"MCIT Check",form:"—",cat:"inc",r:CORP,pq:"mcit",desc:"2% MCIT on gross vs 25%/20% RCIT from 4th yr."},{month:0,day:0,title:"E-Invoicing (EIS)",form:"Per RR 11-2025",cat:"adm",r:AB,pq:"einv",desc:"Structured e-invoices by Dec 31, 2026."});
+
+function isV(o){if(!o.r.includes(cR))return false;if(!aC.has(o.cat))return false;if(SQ){const h=(o.title+' '+(o.form||'')+' '+(o.desc||'')+' '+(o.pq||'')).toLowerCase();if(!h.includes(SQ))return false;}const sa=document.getElementById('saT')?.checked;if(!sa&&o.pq&&!cQ.has(o.pq))return false;return true;}
+function gF(){return OB.filter(isV);}function cntQ(k){return OB.filter(o=>o.pq===k&&o.r.includes(cR)).length;}
+function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{b.classList.toggle('act',['se','mi','corp','emp'][i]===t)});rRB();rCL();rCF();ren();}
+function setReg(r){cR=r;rRB();rCL();ren();}function setV(v,b){vM=v;document.querySelectorAll('.vt button').forEach(x=>x.classList.remove('act'));b.classList.add('act');ren();}
+function tgQ(k){cQ.has(k)?cQ.delete(k):cQ.add(k);rCL();ren();}function tgC(c){aC.has(c)?aC.delete(c):aC.add(c);rCF();ren();}function tgM(m){document.querySelector(`.ms[data-m="${m}"]`)?.classList.toggle('act');}
+function rRB(){document.getElementById('rBar').innerHTML='<span class="tl-l">Regime</span>'+Object.entries(TYPES[cT].regimes).map(([k,v])=>`<button class="rb ${k===cR?'act':''}" onclick="setReg('${k}')">${v.n}</button>`).join('');}
+function rCL(){const qs=QS[cT]||[];document.getElementById('clG').innerHTML=qs.map(q=>`<div class="ci ${cQ.has(q.key)?'ck':''}" onclick="tgQ('${q.key}')"><div class="cbox"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></div><div><div class="ciq">${q.q}</div><div class="cid">${q.d}</div></div><div class="cic">${cntQ(q.key)>0?'+'+cntQ(q.key):0}</div></div>`).join('');const sa=document.getElementById('saT')?.checked,tot=OB.filter(o=>o.r.includes(cR)).length,hid=OB.filter(o=>o.r.includes(cR)&&o.pq&&!cQ.has(o.pq)).length;document.getElementById('clS').innerHTML=sa?`<strong>${tot}</strong> total`:`<strong>${tot-hid}</strong> shown · <strong style="color:var(--amber)">${hid} hidden</strong>`;}
+function rCF(){document.getElementById('cF').innerHTML=Object.entries(CATS).map(([k,v])=>`<button class="fb ${aC.has(k)?'fba':''}" onclick="tgC('${k}')"><span class="fd" style="background:${v.c}"></span>${v.l}</button>`).join('');}
+function pqL(k){const q=[...Object.values(QS)].flat().find(x=>x.key===k);return q?q.q.replace(/\?$/,''):'Conditional';}
+function rOb(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';let h=`<div class="ob ${cc} ${dm?'dm':''}"><div class="obt"><div class="obn">${o.title}</div><div class="obd">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</div></div><div class="obm">${o.form&&o.form!=='—'?`<span class="obf">${o.form}</span>`:''}</div>`;if(o.pq)h+=`<div class="obpq"><b>If:</b> ${pqL(o.pq)}</div>`;if(o.desc)h+=`<div class="obds">${o.desc}</div>`;if(o.att?.length)h+=`<div class="obat"><div class="obal">Attach</div><div class="al">${o.att.map(a=>`<div class="ai">${a}</div>`).join('')}</div></div>`;return h+'</div>';}
+function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const el=document.getElementById('tl'),bm={};f.forEach(o=>{if(!bm[o.month])bm[o.month]=[];bm[o.month].push(o)});let h='';for(let m=1;m<=12;m++){const it=(bm[m]||[]).sort((a,b)=>a.day-b.day);h+=`<div class="ms ${it.length?'act':''} ${!it.length?'em':''}" data-m="${m}"><div class="mh" onclick="tgM(${m})"><span class="mni">${String(m).padStart(2,'0')}</span><span class="mnn">${MN[m]}</span><span class="mc">${it.length}</span><span class="mchv">▾</span></div><div class="mbdy"><div class="mbi">${it.map(rOb).join('')}</div></div></div>`;}const og=bm[0]||[];if(og.length)h+=`<div class="ms act" data-m="0"><div class="mh" onclick="tgM(0)"><span class="mni">∞</span><span class="mnn">Ongoing</span><span class="mc">${og.length}</span><span class="mchv">▾</span></div><div class="mbdy"><div class="mbi">${og.map(rOb).join('')}</div></div></div>`;el.innerHTML=h;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>(a.month*100+a.day)-(b.month*100+b.day));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>`<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`).join('')}</tbody></table></div>`;el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');}
+
+// ══════════ CALCULATOR ══════════
+function gradTax(ti){ti=Math.max(0,ti);if(ti<=250000)return 0;if(ti<=400000)return(ti-250000)*.15;if(ti<=800000)return 22500+(ti-400000)*.20;if(ti<=2000000)return 102500+(ti-800000)*.25;if(ti<=8000000)return 402500+(ti-2000000)*.30;return 2202500+(ti-8000000)*.35;}
+function fmt(n){return'₱'+Math.round(n).toLocaleString('en-PH');}function pct(n,d){return d>0?(n/d*100).toFixed(2)+'%':'0.00%';}function pN(id){return parseFloat(document.getElementById(id).value.replace(/[^0-9.]/g,''))||0;}
+function calc(){const g=pN('gI'),ex=pN('eI'),cwt=pN('cI'),isPure=document.getElementById('tS').value==='pure';if(g<=0){alert('Enter gross sales.');return;}const over=g>3e6,d250=isPure?250000:0;const aAv=!over,aIG=aAv?Math.max(0,(g-d250)*.08):0,aIN=aAv?Math.max(0,aIG-cwt):0,aT=aAv?aIN:1/0;const bN=g-g*.4,bIG=gradTax(bN),bIN=Math.max(0,bIG-cwt),bP=over?0:g*.03,bT=bIN+bP;const cN=g-ex,cIG=gradTax(cN),cIN=Math.max(0,cIG-cwt),cP=over?0:g*.03,cT=cIN+cP;const R=[{k:'a',n:'8% Flat',iG:aIG,iN:aIN,p:0,t:aT,av:aAv},{k:'b',n:'Grad + OSD',iG:bIG,iN:bIN,p:bP,t:bT,av:true},{k:'c',n:'Grad + Itemized',iG:cIG,iN:cIN,p:cP,t:cT,av:true}];const av=R.filter(r=>r.av),best=av.reduce((a,b)=>a.t<b.t?a:b),worst=av.reduce((a,b)=>a.t>b.t?a:b);
+document.getElementById('cCards').innerHTML=R.map(r=>{const ib=r===best&&r.av,sv=r.av?r.t-best.t:0;return`<div class="ccard ${ib?'best':''}">${ib?'<div class="bdg">Lowest</div>':''}<div class="rn">${r.n}</div>${r.av?`<div class="tlbl">Total Annual Tax</div><div class="tamt">${fmt(r.t)}</div><div class="er">Effective: <strong>${pct(r.t,g)}</strong></div><div class="bkd"><div class="bkr"><span>Income Tax</span><span class="bkv">${fmt(r.iG)}</span></div><div class="bkr"><span>Less CWT</span><span class="bkv">(${fmt(cwt)})</span></div><div class="bkr"><span>Net IT</span><span class="bkv">${fmt(r.iN)}</span></div><div class="bkr"><span>${over?'Pct Tax (N/A)':'3% Pct Tax'}</span><span class="bkv">${fmt(r.p)}</span></div></div>${!ib?`<div class="sv">${fmt(sv)} more</div>`:`<div class="sv">Save ${fmt(worst.t-best.t)}</div>`}`:`<div class="tlbl" style="color:var(--red)">Not Available</div><div style="font-family:var(--se);font-size:.72rem;color:var(--mu);margin-top:.3rem">Exceeds ₱3M</div>`}</div>`;}).join('');
+const eR=g>0?(ex/g*100).toFixed(0):0;let rt='';if(best.k==='a')rt=`The <span class="hl">8% flat rate</span> wins at ${fmt(g)} gross. Expense ratio ${eR}% — 8% is optimal below ~60-70%.`;else if(best.k==='b')rt=`<span class="hl">Graduated + OSD</span> wins. At ${eR}% actual expenses, 40% OSD is a better deduction.`;else rt=`<span class="hl">Graduated + Itemized</span> wins at ${eR}% expense ratio. Requires documentation.`;
+document.getElementById('rcBox').innerHTML=`<div class="reco"><h3>Recommendation</h3><p>${rt}</p><div class="scall">${best.n}: ${fmt(best.t)} (${pct(best.t,g)} effective)</div></div>`;
+let qh=`<table class="qt"><thead><tr><th>Period</th><th>8% Flat</th><th>Grad+OSD</th><th>Grad+Item</th></tr></thead><tbody>`;const qL=['Q1','Q2','Q3','Annual'],qF=[.25,.5,.75,1];for(let q=0;q<4;q++){const f=qF[q],pg=g*f;const qA=aAv?Math.max(0,(pg-d250)*.08-cwt*f):0,pA=q>0?(aAv?Math.max(0,(g*qF[q-1]-d250)*.08-cwt*qF[q-1]):0):0;const qB=Math.max(0,gradTax(pg-pg*.4)-cwt*f),pB=q>0?Math.max(0,gradTax(g*qF[q-1]-g*qF[q-1]*.4)-cwt*qF[q-1]):0;const qC=Math.max(0,gradTax(pg-ex*f)-cwt*f),pC=q>0?Math.max(0,gradTax(g*qF[q-1]-ex*qF[q-1])-cwt*qF[q-1]):0;const dA=Math.max(0,qA-pA),dB=Math.max(0,qB-pB),dC=Math.max(0,qC-pC);const vs=[aAv?dA:null,dB,dC],mn=Math.min(...vs.filter(v=>v!==null));qh+=`<tr><td style="font-weight:600">${qL[q]}</td><td class="${vs[0]===mn&&aAv?'bc':''}">${aAv?fmt(dA):'N/A'}</td><td class="${vs[1]===mn?'bc':''}">${fmt(dB)}</td><td class="${vs[2]===mn?'bc':''}">${fmt(dC)}</td></tr>`;}if(!over)qh+=`<tr style="border-top:2px solid var(--bd)"><td style="font-weight:600">+3% Pct Tax</td><td>${aAv?'Exempt':'N/A'}</td><td>${fmt(g*.03)}</td><td>${fmt(g*.03)}</td></tr>`;qh+=`<tr style="background:var(--s2);font-weight:700"><td>TOTAL</td><td class="${best.k==='a'?'bc':''}">${aAv?fmt(R[0].t):'N/A'}</td><td class="${best.k==='b'?'bc':''}">${fmt(R[1].t)}</td><td class="${best.k==='c'?'bc':''}">${fmt(R[2].t)}</td></tr></tbody></table>`;document.getElementById('qB').innerHTML=qh;document.getElementById('qB').classList.add('vis');document.getElementById('cRes').classList.add('vis');document.getElementById('cRes').scrollIntoView({behavior:'smooth',block:'start'});}
+['gI','eI','cI'].forEach(id=>{document.getElementById(id).addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});});
+
+// ══════════ INIT ══════════
+rRB();rCL();rCF();ren();renderForms();
+</script>
+</body>
+</html>
