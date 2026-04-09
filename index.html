@@ -441,6 +441,9 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .tip-b::after{content:'';position:absolute;top:calc(100% - 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--sf)}
 .tip:hover .tip-b,.tip.on .tip-b{display:block}
 .form-ref{font-family:var(--sa);font-size:.6rem;font-weight:600;color:var(--mu);margin-left:.3rem;vertical-align:middle;white-space:nowrap}
+#plainSummary:not(:empty){background:#fff;border-left:4px solid var(--green);border-radius:var(--rr);padding:.9rem 1.1rem;margin-bottom:.75rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+#plainSummary .ps-action{font-family:var(--se);font-size:1rem;font-weight:700;color:var(--ink);line-height:1.35;margin:0 0 .35rem}
+#plainSummary .ps-savings{font-family:var(--se);font-size:.8rem;color:var(--dim);margin:0}
 </style>
 </head>
 <body>
@@ -571,6 +574,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 
 <div class="cres" id="cRes">
 <div id="warnBox"></div>
+<div id="plainSummary"></div>
 <div id="rcBox"></div>
 <div class="ccards" id="cCards"></div>
 <div id="compSetBox"></div>
@@ -1555,6 +1559,13 @@ function calc(){
   if(best.k==='a')rt=`The <span class="hl">8% flat rate</span> wins at ${fmt(g)} gross${EXP_MODE!=='lump'?` with effective expense ratio ${eR}%`:''}. The 8% regime is optimal when actual expenses are below ~60-70% of gross — yours are at ${eR}%. It also exempts you from filing 2551Q quarterly percentage tax.`;
   else if(best.k==='b')rt=`<span class="hl">Graduated + 40% OSD</span> wins. At ${eR}% actual expenses, the flat 40% OSD gives you a better deduction than your real expenses would. You'll still need to file 2551Q quarterly percentage tax.`;
   else rt=`<span class="hl">Graduated + Itemized</span> wins at ${eR}% expense ratio. Your high actual expenses make itemizing worth the documentation burden — you'll need complete records and possibly Audited Financial Statements.`;
+  const savings=worst.t-best.t;
+  let psAction='';
+  if(best.k==='a')psAction=`Switch to the 8% flat rate — you'll pay ${fmt(savings)} less this year and skip quarterly percentage tax filings.`;
+  else if(best.k==='b')psAction=`Use the standard deduction — it gives you a better deduction than your actual expenses without needing receipts.`;
+  else psAction=`Itemize your expenses — your high expense ratio makes detailed record-keeping worth ${fmt(savings)} in tax savings.`;
+  const psSavings=savings<1000?`All three options are close — the difference is under ₱1,000.`:`You'd save ${fmt(savings)} compared to the most expensive option.`;
+  document.getElementById('plainSummary').innerHTML=`<p class="ps-action">${psAction}</p><p class="ps-savings">${psSavings}</p>`;
   document.getElementById('rcBox').innerHTML=`<div class="reco"><h3>Recommendation</h3><p>${rt}</p><div class="scall">${best.n}: ${fmt(best.t)} (${pct(best.t,g)} effective rate)</div></div>`;
 
   // WARNINGS & CAPS
