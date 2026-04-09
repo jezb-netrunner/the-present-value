@@ -444,6 +444,30 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 #plainSummary:not(:empty){background:#fff;border-left:4px solid var(--green);border-radius:var(--rr);padding:.9rem 1.1rem;margin-bottom:.75rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 #plainSummary .ps-action{font-family:var(--se);font-size:1rem;font-weight:700;color:var(--ink);line-height:1.35;margin:0 0 .35rem}
 #plainSummary .ps-savings{font-family:var(--se);font-size:.8rem;color:var(--dim);margin:0}
+
+/* ══ SIMPLE / PRO MODE ══ */
+.mode-toggle{display:inline-flex;align-items:center;gap:.3rem;background:var(--sf);border:1.5px solid var(--bd);border-radius:100px;padding:.3rem .8rem;font-family:var(--sa);font-size:.65rem;font-weight:700;color:var(--mu);cursor:pointer;box-shadow:var(--shs);transition:all .2s;white-space:nowrap;user-select:none}
+.mode-toggle:hover{background:var(--s2)}
+.mode-toggle .mt-pip{width:7px;height:7px;border-radius:50%;background:var(--mu);flex-shrink:0;transition:background .2s}
+.pro-mode .mode-toggle{border-color:var(--royal);color:var(--royal)}
+.pro-mode .mode-toggle .mt-pip{background:var(--royal)}
+/* Simple mode — hide by default */
+.pnav button:nth-child(2){display:none}
+.cp,.ftr,.oblg{display:none}
+.fr-row-legal{display:none}
+.exp-modes .em-btn:not(:first-child){display:none}
+.qsec{display:none}
+/* Pro mode — restore everything */
+.pro-mode .pnav button:nth-child(2){display:block}
+.pro-mode .cp,.pro-mode .ftr{display:block}
+.pro-mode .oblg{display:inline}
+.pro-mode .fr-row-legal{display:grid}
+.pro-mode .exp-modes .em-btn:not(:first-child){display:inline-block}
+.pro-mode .qsec{display:block}
+/* Pro mode: #plainSummary collapsed */
+.pro-mode #plainSummary:not(:empty){padding:.35rem .75rem;border-left-width:3px}
+.pro-mode #plainSummary .ps-action{font-size:.82rem}
+.pro-mode #plainSummary .ps-savings{font-size:.7rem}
 </style>
 </head>
 <body>
@@ -456,6 +480,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
   <button onclick="showPg('ref',this)">Form Reference</button>
   <button onclick="showPg('calc',this)">Regime Calculator</button>
 </nav>
+<button class="mode-toggle" onclick="tgMode()"><span class="mt-pip"></span><span class="mt-label">Simple</span></button>
 </div>
 </div></header>
 
@@ -857,7 +882,7 @@ function renderForms(){
           ${f.when?`<div class="fr-row"><div class="fr-label">When</div><div class="fr-val">${f.when}</div></div>`:''}
           ${f.how?`<div class="fr-row"><div class="fr-label">How</div><div class="fr-val">${f.how}</div></div>`:''}
           ${f.attach?`<div class="fr-row"><div class="fr-label">Attachments</div><div class="fr-val">${f.attach}</div></div>`:''}
-          ${f.legal?`<div class="fr-row"><div class="fr-label">Legal Basis</div><div class="fr-val" style="font-family:var(--sa);font-size:.65rem;color:var(--mu)">${f.legal}</div></div>`:''}
+          ${f.legal?`<div class="fr-row fr-row-legal"><div class="fr-label">Legal Basis</div><div class="fr-val" style="font-family:var(--sa);font-size:.65rem;color:var(--mu)">${f.legal}</div></div>`:''}
           ${f.tip?`<div class="fr-row"><div class="fr-label">Tip</div><div class="fr-val" style="color:var(--royal);font-weight:600">${f.tip}</div></div>`:''}
         </div></div>
       </div>`;
@@ -1609,8 +1634,32 @@ function initNumberFormatters(){
 
 initMonthGrid();initCatGrid();initNumberFormatters();
 
+// ══════════ SIMPLE / PRO MODE TOGGLE ══════════
+function tgMode(){
+  const isPro=!document.body.classList.contains('pro-mode');
+  document.body.classList.toggle('pro-mode',isPro);
+  document.querySelector('.mode-toggle .mt-label').textContent=isPro?'Pro':'Simple';
+  localStorage.setItem('tpv_mode',isPro?'pro':'simple');
+  if(!isPro){
+    // Switched to Simple — redirect away from hidden Form Reference tab
+    if(document.getElementById('pgRef')?.classList.contains('vis')){
+      showPg('cal',document.querySelector('.pnav button:nth-child(1)'));
+    }
+    // Reset sales/expense modes to lump (non-first buttons are hidden)
+    document.querySelectorAll('.exp-modes').forEach(grp=>{
+      const first=grp.querySelector('.em-btn');
+      if(first&&!first.classList.contains('act'))first.click();
+    });
+  }
+}
+
 // ══════════ INIT ══════════
 rRB();rCL();rCF();ren();renderForms();
+// Restore persisted mode
+(function(){
+  const m=localStorage.getItem('tpv_mode')||'simple';
+  if(m==='pro'){document.body.classList.add('pro-mode');const lbl=document.querySelector('.mode-toggle .mt-label');if(lbl)lbl.textContent='Pro';}
+})();
 </script>
 </body>
 </html>
