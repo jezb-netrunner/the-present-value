@@ -480,9 +480,39 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .wf-sec.collapsed .wf-sec-chev{transform:rotate(-90deg)}
 .wf-sec-body{padding:.35rem}.wf-sec.collapsed .wf-sec-body{display:none}
 .wf-empty{font-family:var(--se);font-size:.8rem;color:var(--mu);text-align:center;padding:2rem}
+
+/* ══ SETUP WIZARD ══ */
+#wzOverlay{position:fixed;inset:0;background:rgba(0,0,0,.46);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem}
+#wzCard{background:var(--sf);border-radius:var(--r);box-shadow:0 8px 40px rgba(0,0,0,.2);width:100%;max-width:480px;overflow:hidden;animation:wzIn .25s ease}
+@keyframes wzIn{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes wzOut{from{transform:translateY(0);opacity:1}to{transform:translateY(28px);opacity:0}}
+.wz-out{animation:wzOut .22s ease forwards}
+#wzProg{height:4px;background:var(--bd)}
+#wzBar{height:100%;background:var(--royal);transition:width .3s ease;width:25%}
+#wzBody{padding:1.8rem 1.8rem 1rem}
+.wz-q{font-family:var(--se);font-size:1.05rem;font-weight:700;color:var(--ink);margin:0 0 1.3rem;line-height:1.4}
+.wz-opts{display:flex;flex-direction:column;gap:.45rem}
+.wz-opt{display:block;width:100%;padding:.75rem 1rem;background:var(--s2);border:1.5px solid var(--bd);border-radius:var(--rr);cursor:pointer;font-family:var(--se);font-size:.88rem;color:var(--ch);transition:border-color .13s,background .13s;text-align:left;line-height:1.3}
+.wz-opt:hover{border-color:var(--royal);background:var(--rs);color:var(--ink)}
+#wzFoot{display:flex;justify-content:flex-end;padding:.65rem 1.8rem 1.1rem}
+.wz-skip{font-family:var(--se);font-size:.72rem;color:var(--mu);text-decoration:none;cursor:pointer;background:none;border:none;padding:0}
+.wz-skip:hover{color:var(--royal)}
+.retake-lnk{font-family:var(--se);font-size:.65rem;color:var(--mu);text-decoration:none;white-space:nowrap;cursor:pointer;background:none;border:none;padding:0}
+.retake-lnk:hover{color:var(--royal)}
 </style>
 </head>
 <body>
+
+<!-- ═══ SETUP WIZARD ═══ -->
+<div id="wzOverlay" style="display:none">
+  <div id="wzCard">
+    <div id="wzProg"><div id="wzBar"></div></div>
+    <div id="wzBody"></div>
+    <div id="wzFoot">
+      <button class="wz-skip" onclick="wzSkip()">Skip setup — use defaults</button>
+    </div>
+  </div>
+</div>
 
 <header class="hdr"><div class="hdr-i">
 <div class="brand"><h1>The Present Value<span>.</span></h1><div class="tl">Markets, Taxes &amp; Daily Life</div></div>
@@ -493,6 +523,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
   <button onclick="showPg('calc',this)">Regime Calculator</button>
 </nav>
 <button class="mode-toggle" onclick="tgMode()"><span class="mt-pip"></span><span class="mt-label">Simple</span></button>
+<button class="retake-lnk" onclick="retakeSetup()">Retake Setup</button>
 </div>
 </div></header>
 
@@ -1704,6 +1735,96 @@ function tgMode(){
   }
 }
 
+// ══════════ SETUP WIZARD ══════════
+const WZ_STEPS=[
+  {q:'How do you earn income?',key:'type',opts:[
+    {label:'Self-employed / Freelancer / Sole proprietor',sub:'You run a business or work independently.',val:'se'},
+    {label:'Mixed income earner',sub:'You have a day job and a side business or freelance income.',val:'mi'},
+    {label:'Corporation / OPC',sub:'Your business is incorporated.',val:'corp'}
+  ]},
+  {q:'Did your total sales or gross receipts exceed ₱3 million last year?',key:'vat',opts:[
+    {label:'Yes — I am VAT-registered',sub:'You charge 12% VAT on sales.',val:'yes'},
+    {label:'No — I am non-VAT',sub:'Under the threshold or opted for non-VAT.',val:'no'}
+  ]},
+  {q:'Do clients or employers withhold tax before paying you?',key:'ewt',opts:[
+    {label:'Yes — clients deduct EWT / BIR 2307s',sub:'They hand you a withholding tax certificate.',val:'yes'},
+    {label:'No — I receive full payment',sub:'No withholding applies to your income.',val:'no'}
+  ]},
+  {q:'Do you have employees on your payroll?',key:'employees',opts:[
+    {label:'Yes — I have at least one employee',sub:'You handle payroll, SSS, PhilHealth, Pag-IBIG.',val:'yes'},
+    {label:'No — it\'s just me (or contractors only)',sub:'No mandatory contribution filings needed.',val:'no'}
+  ]}
+];
+const WZ={step:0,answers:{}};
+
+function renderWzStep(){
+  const s=WZ_STEPS[WZ.step];
+  const pct=Math.round(((WZ.step+1)/WZ_STEPS.length)*100);
+  document.getElementById('wzBar').style.width=pct+'%';
+  let h=`<p class="wz-q">${s.q}</p><div class="wz-opts">`;
+  s.opts.forEach(o=>{
+    h+=`<button class="wz-opt" onclick="wzPick('${s.key}','${o.val}')"><strong>${o.label}</strong>${o.sub?`<br><span style="font-weight:400;font-size:.78rem;color:var(--mu)">${o.sub}</span>`:''}`;
+    h+=`</button>`;
+  });
+  h+=`</div>`;
+  document.getElementById('wzBody').innerHTML=h;
+}
+
+function showWizard(){
+  WZ.step=0;WZ.answers={};
+  renderWzStep();
+  const ov=document.getElementById('wzOverlay');
+  const card=document.getElementById('wzCard');
+  card.classList.remove('wz-out');
+  ov.style.display='flex';
+}
+
+function wzPick(key,val){
+  WZ.answers[key]=val;
+  WZ.step++;
+  if(WZ.step<WZ_STEPS.length){renderWzStep();}
+  else{wzFinish();}
+}
+
+function wzFinish(){
+  const a=WZ.answers;
+  // Apply type
+  const t=a.type||'se';
+  cT=t;
+  // Apply regime (VAT status determines variant)
+  const isVat=a.vat==='yes';
+  const regMap={se:isVat?'se_gv':'se_gnv',mi:isVat?'mi_gv':'mi_gnv',corp:isVat?'corp_v':'corp_nv'};
+  cR=regMap[t]||'se_gnv';
+  // Apply checklist items
+  if(a.ewt==='yes')cQ.add('ewt');else cQ.delete('ewt');
+  if(a.employees==='yes')cQ.add('employees');else cQ.delete('employees');
+  // Sync UI
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('act'));
+  const typeMap={se:0,mi:1,corp:2};
+  const typeBtns=document.querySelectorAll('.tb');
+  if(typeBtns[typeMap[t]])typeBtns[typeMap[t]].classList.add('act');
+  rRB();rCL();ren();
+  localStorage.setItem('tpv_setup',JSON.stringify(a));
+  dismissWizard();
+}
+
+function wzSkip(){
+  localStorage.setItem('tpv_setup','skipped');
+  dismissWizard();
+}
+
+function dismissWizard(){
+  const card=document.getElementById('wzCard');
+  const ov=document.getElementById('wzOverlay');
+  card.classList.add('wz-out');
+  setTimeout(()=>{ov.style.display='none';card.classList.remove('wz-out');},240);
+}
+
+function retakeSetup(){
+  localStorage.removeItem('tpv_setup');
+  showWizard();
+}
+
 // ══════════ INIT ══════════
 rRB();rCL();rCF();ren();renderForms();
 // Restore persisted mode
@@ -1711,6 +1832,8 @@ rRB();rCL();rCF();ren();renderForms();
   const m=localStorage.getItem('tpv_mode')||'simple';
   if(m==='pro'){document.body.classList.add('pro-mode');const lbl=document.querySelector('.mode-toggle .mt-label');if(lbl)lbl.textContent='Pro';}
 })();
+// Show setup wizard on first visit
+if(!localStorage.getItem('tpv_setup'))showWizard();
 </script>
 </body>
 </html>
