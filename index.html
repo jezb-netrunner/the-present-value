@@ -431,9 +431,88 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .ftr{max-width:1200px;margin:0 auto;padding:.85rem 2rem;border-top:1px solid var(--bd);font-family:var(--se);font-size:.65rem;color:var(--mu);font-style:italic;line-height:1.4}
 
 @media(max-width:768px){.hdr{padding:.7rem 1rem}.mn{padding:.6rem 1rem}.mbi{padding:0 0 .35rem .05rem}.clg{grid-template-columns:1fr}.sb{width:100%}.vc{flex-direction:column;align-items:stretch}.vl{flex-direction:column}.lr{grid-template-columns:1fr}.ccards{grid-template-columns:1fr}.fg{grid-template-columns:1fr}.bp{padding:0 1rem 1.5rem}.fr-content{padding-left:.85rem}.hdr-i{flex-direction:column;align-items:flex-start}}
+
+/* ══ INLINE TOOLTIPS ══ */
+.tip{position:relative;display:inline-flex;align-items:center;cursor:default;line-height:1}
+.tip-i{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--s3);color:var(--dim);font-family:var(--sa);font-size:.5rem;font-weight:700;font-style:normal;text-transform:none;letter-spacing:0;margin-left:.22rem;border:1px solid var(--bl);cursor:pointer;transition:all .15s;flex-shrink:0;user-select:none;vertical-align:middle}
+.tip.on .tip-i,.tip:hover .tip-i{background:var(--royal);color:#fff;border-color:var(--royal)}
+.tip-b{display:none;position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);padding:.45rem .6rem;min-width:160px;max-width:240px;font-family:var(--se);font-size:.68rem;font-weight:400;font-style:normal;color:var(--ch);line-height:1.42;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.14);white-space:normal;text-align:left;text-transform:none;letter-spacing:0;pointer-events:none}
+.tip-b::before{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--bd)}
+.tip-b::after{content:'';position:absolute;top:calc(100% - 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--sf)}
+.tip:hover .tip-b,.tip.on .tip-b{display:block}
+.form-ref{font-family:var(--sa);font-size:.6rem;font-weight:600;color:var(--mu);margin-left:.3rem;vertical-align:middle;white-space:nowrap}
+#plainSummary:not(:empty){background:#fff;border-left:4px solid var(--green);border-radius:var(--rr);padding:.9rem 1.1rem;margin-bottom:.75rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+#plainSummary .ps-action{font-family:var(--se);font-size:1rem;font-weight:700;color:var(--ink);line-height:1.35;margin:0 0 .35rem}
+#plainSummary .ps-savings{font-family:var(--se);font-size:.8rem;color:var(--dim);margin:0}
+
+/* ══ SIMPLE / PRO MODE ══ */
+.mode-toggle{display:inline-flex;align-items:center;gap:.3rem;background:var(--sf);border:1.5px solid var(--bd);border-radius:100px;padding:.3rem .8rem;font-family:var(--sa);font-size:.65rem;font-weight:700;color:var(--mu);cursor:pointer;box-shadow:var(--shs);transition:all .2s;white-space:nowrap;user-select:none}
+.mode-toggle:hover{background:var(--s2)}
+.mode-toggle .mt-pip{width:7px;height:7px;border-radius:50%;background:var(--mu);flex-shrink:0;transition:background .2s}
+.pro-mode .mode-toggle{border-color:var(--royal);color:var(--royal)}
+.pro-mode .mode-toggle .mt-pip{background:var(--royal)}
+/* Simple mode — hide by default */
+.pnav button:nth-child(2){display:none}
+.cp,.ftr,.oblg{display:none}
+.fr-row-legal{display:none}
+.exp-modes .em-btn:not(:first-child){display:none}
+.qsec{display:none}
+/* Pro mode — restore everything */
+.pro-mode .pnav button:nth-child(2){display:block}
+.pro-mode .cp,.pro-mode .ftr{display:block}
+.pro-mode .oblg{display:inline}
+.pro-mode .fr-row-legal{display:grid}
+.pro-mode .exp-modes .em-btn:not(:first-child){display:inline-block}
+.pro-mode .qsec{display:block}
+/* Pro mode: #plainSummary collapsed */
+.pro-mode #plainSummary:not(:empty){padding:.35rem .75rem;border-left-width:3px}
+.pro-mode #plainSummary .ps-action{font-size:.82rem}
+.pro-mode #plainSummary .ps-savings{font-size:.7rem}
+
+/* ══ WORKFLOW VIEW ══ */
+.wv{display:none}.wv.vis{display:block}
+.wf-sec{margin-bottom:.55rem;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);overflow:hidden}
+.wf-sec-hdr{display:flex;align-items:center;gap:.5rem;padding:.5rem .8rem;cursor:pointer;background:var(--s2);border-bottom:1px solid var(--bd);user-select:none}
+.wf-sec.collapsed .wf-sec-hdr{border-bottom:none}
+.wf-sec-name{font-family:var(--sa);font-size:.72rem;font-weight:700;color:var(--ink);flex:1}
+.wf-sec-badge{font-family:var(--sa);font-size:.57rem;font-weight:700;background:var(--ink);color:#fff;border-radius:100px;padding:.08rem .4rem;white-space:nowrap}
+.wf-sec-chev{font-size:.58rem;color:var(--mu);transition:transform .18s}
+.wf-sec.collapsed .wf-sec-chev{transform:rotate(-90deg)}
+.wf-sec-body{padding:.35rem}.wf-sec.collapsed .wf-sec-body{display:none}
+.wf-empty{font-family:var(--se);font-size:.8rem;color:var(--mu);text-align:center;padding:2rem}
+
+/* ══ SETUP WIZARD ══ */
+#wzOverlay{position:fixed;inset:0;background:rgba(0,0,0,.46);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem}
+#wzCard{background:var(--sf);border-radius:var(--r);box-shadow:0 8px 40px rgba(0,0,0,.2);width:100%;max-width:480px;overflow:hidden;animation:wzIn .25s ease}
+@keyframes wzIn{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes wzOut{from{transform:translateY(0);opacity:1}to{transform:translateY(28px);opacity:0}}
+.wz-out{animation:wzOut .22s ease forwards}
+#wzProg{height:4px;background:var(--bd)}
+#wzBar{height:100%;background:var(--royal);transition:width .3s ease;width:25%}
+#wzBody{padding:1.8rem 1.8rem 1rem}
+.wz-q{font-family:var(--se);font-size:1.05rem;font-weight:700;color:var(--ink);margin:0 0 1.3rem;line-height:1.4}
+.wz-opts{display:flex;flex-direction:column;gap:.45rem}
+.wz-opt{display:block;width:100%;padding:.75rem 1rem;background:var(--s2);border:1.5px solid var(--bd);border-radius:var(--rr);cursor:pointer;font-family:var(--se);font-size:.88rem;color:var(--ch);transition:border-color .13s,background .13s;text-align:left;line-height:1.3}
+.wz-opt:hover{border-color:var(--royal);background:var(--rs);color:var(--ink)}
+#wzFoot{display:flex;justify-content:flex-end;padding:.65rem 1.8rem 1.1rem}
+.wz-skip{font-family:var(--se);font-size:.72rem;color:var(--mu);text-decoration:none;cursor:pointer;background:none;border:none;padding:0}
+.wz-skip:hover{color:var(--royal)}
+.retake-lnk{font-family:var(--se);font-size:.65rem;color:var(--mu);text-decoration:none;white-space:nowrap;cursor:pointer;background:none;border:none;padding:0}
+.retake-lnk:hover{color:var(--royal)}
 </style>
 </head>
 <body>
+
+<!-- ═══ SETUP WIZARD ═══ -->
+<div id="wzOverlay" style="display:none">
+  <div id="wzCard">
+    <div id="wzProg"><div id="wzBar"></div></div>
+    <div id="wzBody"></div>
+    <div id="wzFoot">
+      <button class="wz-skip" onclick="wzSkip()">Skip setup — use defaults</button>
+    </div>
+  </div>
+</div>
 
 <header class="hdr"><div class="hdr-i">
 <div class="brand"><h1>The Present Value<span>.</span></h1><div class="tl">Markets, Taxes &amp; Daily Life</div></div>
@@ -443,6 +522,8 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
   <button onclick="showPg('ref',this)">Form Reference</button>
   <button onclick="showPg('calc',this)">Regime Calculator</button>
 </nav>
+<button class="mode-toggle" onclick="tgMode()"><span class="mt-pip"></span><span class="mt-label">Simple</span></button>
+<button class="retake-lnk" onclick="retakeSetup()">Retake Setup</button>
 </div>
 </div></header>
 
@@ -463,12 +544,13 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 </div></section>
 <main class="mn">
 <div class="vc"><div class="vl">
-<div class="vt"><button class="act" onclick="setV('tl',this)">Timeline</button><button onclick="setV('tb',this)">Table</button></div>
+<div class="vt"><button class="act" onclick="setV('tl',this)">Timeline</button><button onclick="setV('tb',this)">Table</button><button onclick="setV('wf',this)">By Workflow</button></div>
 <input type="text" class="sb" placeholder="Search…" oninput="SQ=this.value.toLowerCase();ren()">
 </div><div class="ft" id="cF"></div></div>
 <div class="stb" id="st"></div>
 <div class="tl" id="tl"></div>
 <div class="tv" id="tv"></div>
+<div class="wv" id="wv"></div>
 </main></div>
 
 <!-- ═══ PAGE 2: FORM REFERENCE ═══ -->
@@ -493,8 +575,8 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="fg">
 <div class="fld"><label>Taxpayer Type</label><select id="tS"><option value="pure">Purely Self-Employed</option><option value="mixed">Mixed Income Earner</option></select></div>
 <div class="fld"><label>Business Type</label><select id="bizT"><option value="services">Services / Professional</option><option value="goods">Sale of Goods</option></select></div>
-<div class="fld"><label>CWT / 2307 Credits</label><input type="text" id="cI" placeholder="0" inputmode="numeric" value="0"></div>
-<div class="fld"><label>VAT-Registered?</label><select id="vatR"><option value="auto">Auto (based on gross)</option><option value="no">No</option><option value="yes">Yes</option></select></div>
+<div class="fld"><label>CWT / 2307 Credits<span class="tip" onclick="tipTgl(this,event)"><span class="tip-i">i</span><span class="tip-b">Tax your clients deducted before paying you. Check BIR Form 2307 for the amount.</span></span></label><input type="text" id="cI" placeholder="0" inputmode="numeric" value="0"></div>
+<div class="fld"><label>VAT-Registered?<span class="tip" onclick="tipTgl(this,event)"><span class="tip-i">i</span><span class="tip-b">Required if annual gross sales exceed ₱3 million. Check your BIR Certificate of Registration.</span></span></label><select id="vatR"><option value="auto">Auto (based on gross)</option><option value="no">No</option><option value="yes">Yes</option></select></div>
 </div>
 
 <!-- SALES INPUT -->
@@ -534,7 +616,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <button class="em-btn act" onclick="setExpMode('lump',this)">Annual Total</button>
 <button class="em-btn" onclick="setExpMode('q',this)">Quarterly</button>
 <button class="em-btn" onclick="setExpMode('m',this)">Monthly</button>
-<button class="em-btn" onclick="setExpMode('cat',this)">Itemized</button>
+<button class="em-btn" onclick="setExpMode('cat',this)">Itemized<span class="tip" onclick="tipTgl(this,event)"><span class="tip-i">i</span><span class="tip-b">Deduct actual business expenses. Requires complete receipts and records kept all year.</span></span></button>
 </div>
 <div class="exp-panel vis" id="ep-lump">
 <div class="fld"><input type="text" id="eI" placeholder="e.g. 480,000" inputmode="numeric" style="font-size:1rem"></div>
@@ -561,6 +643,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 
 <div class="cres" id="cRes">
 <div id="warnBox"></div>
+<div id="plainSummary"></div>
 <div id="rcBox"></div>
 <div class="ccards" id="cCards"></div>
 <div id="compSetBox"></div>
@@ -600,41 +683,80 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 // ══════════ PAGE NAV ══════════
 function showPg(p,btn){document.querySelectorAll('.page').forEach(e=>e.classList.remove('vis'));document.getElementById({cal:'pgCal',ref:'pgRef',calc:'pgCalc'}[p]).classList.add('vis');document.querySelectorAll('.pnav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 
+// ══════════ TOOLTIP SYSTEM ══════════
+const TIPS={
+  ewt:'Expanded Withholding Tax — withheld by clients on professional fees before paying you.',
+  fwt:'Final Withholding Tax on dividends, royalties, and interest — not creditable against your income tax.',
+  dst:'Documentary Stamp Tax on contracts, leases, promissory notes, and other taxable documents.',
+  cas:'BIR-registered Computerized Accounting System for maintaining digital books of accounts.',
+  crm:'BIR-registered Cash Register Machine or Point-of-Sale system — monthly sales reports required.',
+  mcit:'Minimum Corporate Income Tax — 2% of gross income, applies when it exceeds regular corporate tax.',
+  rbe:'Registered Business Enterprise under PEZA, BOI, or another Investment Promotion Agency.',
+  einv:'Mandatory electronic invoicing under RR 11-2025, required for applicable taxpayers by Dec 31, 2026.',
+  lowerewt:'File this so clients withhold 5% EWT instead of 10%, available when gross sales are below ₱3M.',
+  govpay:'Government agencies withhold 5% final VAT on payments to VAT-registered suppliers.',
+  slsp:'Summary List of Sales and Purchases — quarterly cross-referencing report attached to your VAT return.',
+  sawt:'Summary of creditable withholding taxes received. Attached to quarterly and annual income tax returns.',
+  osd:'Optional Standard Deduction — 40% of gross revenue deducted automatically. No receipts needed.',
+  afs:'Audited Financial Statements — prepared by a BIR-accredited CPA, required for SEC annual filing.',
+  gis:'General Information Sheet — annual corporate disclosure to SEC of officers and shareholders.',
+};
+function mkTip(text){return`<span class="tip" onclick="tipTgl(this,event)"><span class="tip-i">i</span><span class="tip-b">${text}</span></span>`;}
+function tipTgl(el,e){e.stopPropagation();const wasOn=el.classList.contains('on');document.querySelectorAll('.tip.on').forEach(t=>t.classList.remove('on'));if(!wasOn)el.classList.add('on');}
+document.addEventListener('click',()=>{document.querySelectorAll('.tip.on').forEach(t=>t.classList.remove('on'));});
+function cqTip(key){const t={ewt:TIPS.ewt,fwt:TIPS.fwt,dst:TIPS.dst,cas:TIPS.cas,crm:TIPS.crm,mcit:TIPS.mcit,rbe:TIPS.rbe,einv:TIPS.einv,lowerewt:TIPS.lowerewt,govpay:TIPS.govpay}[key];return t?mkTip(t):'';}
+function obTip(title){
+  if(/Expanded Withholding|\bEWT\b/.test(title))return mkTip(TIPS.ewt);
+  if(/Summary List of Sales|SLSP/.test(title))return mkTip(TIPS.slsp);
+  if(/SAWT/.test(title))return mkTip(TIPS.sawt);
+  if(/MCIT/.test(title))return mkTip(TIPS.mcit);
+  if(/Audited Financial|\bAFS\b/.test(title))return mkTip(TIPS.afs);
+  if(/General Information Sheet|\bGIS\b/.test(title))return mkTip(TIPS.gis);
+  if(/Final Withholding Tax|\bFinal WT\b/.test(title))return mkTip(TIPS.fwt);
+  if(/VAT Return/.test(title))return mkTip('Quarterly VAT return — net output VAT (from sales) less input VAT (from purchases).');
+  if(/Percentage Tax/.test(title))return mkTip('3% business tax for non-VAT-registered taxpayers using the graduated rate.');
+  if(/Computerized Accounting Books|CAS Books/.test(title))return mkTip(TIPS.cas);
+  if(/Documentary Stamp Tax/.test(title))return mkTip(TIPS.dst);
+  if(/E-Invoicing/.test(title))return mkTip(TIPS.einv);
+  if(/Annual EWT Summary/.test(title))return mkTip('Annual EWT reconciliation listing all suppliers and contractors you withheld tax from.');
+  return '';
+}
+
 // ══════════ FORM REFERENCE DATA ══════════
 const FORMS=[
   // INCOME TAX
-  {form:"1701Q",name:"Quarterly Income Tax Return",cat:"inc",brief:"Your quarterly income declaration — filed 3× per year (Q1–Q3).",
+  {form:"1701Q",name:"File Quarterly Income Tax Return",cat:"inc",brief:"Your quarterly income declaration — filed 3× per year (Q1–Q3).",
    who:"Self-employed, freelancers, professionals, mixed income earners. File even if zero income.",
    when:"Q1: May 15 · Q2: Aug 15 · Q3: Nov 15",
    how:"<span class='hl'>8% filers:</span> 8% × (cumulative gross − ₱250K). <span class='hl'>Graduated:</span> apply 0%–35% rates to cumulative net taxable income. Subtract prior quarters' payments and 2307 credits. Uses cumulative method — each quarter reports year-to-date.",
    attach:"SAWT (.dat) via esubmission · Copies of all BIR Forms 2307 received",
    legal:"NIRC Sec. 51; Sec. 24(A)(2); RR 8-2018",
    tip:"Your Q1 filing is when you irrevocably elect the 8% flat rate for the year. If you miss this, you default to graduated rates."},
-  {form:"1701A",name:"Annual ITR — Purely Business/Profession (Simplified)",cat:"inc",brief:"2-page annual return for purely self-employed using 8% or OSD.",
+  {form:"1701A",name:"File Annual ITR — Purely Self-Employed (Simplified)",cat:"inc",brief:"2-page annual return for purely self-employed using 8% or OSD.",
    who:"Purely self-employed / professionals using <span class='hl'>8% flat rate</span> or <span class='hl'>graduated + OSD</span>. NOT for mixed income or itemized deductions.",
    when:"April 15 of the following year.",
    how:"8%: 8% × (full-year gross − ₱250K). OSD: graduated rates on (gross − 40% OSD). Credit all 1701Q payments and 2307s.",
    attach:"SAWT (.dat) · All signed 2307s · Proof of quarterly payments (TRRC) · Form 2304 if applicable",
    legal:"NIRC Sec. 51; RR 8-2018"},
-  {form:"1701",name:"Annual ITR — Self-Employed, Estates & Trusts (Full)",cat:"inc",brief:"4-page annual return for itemized deductions or mixed income earners.",
+  {form:"1701",name:"File Annual ITR — Self-Employed / Mixed Income (Full)",cat:"inc",brief:"4-page annual return for itemized deductions or mixed income earners.",
    who:"Self-employed using <span class='hl'>itemized deductions</span>, all <span class='hl'>mixed income earners</span> (compensation + business), and estates/trusts.",
    when:"April 15 of the following year.",
    how:"Graduated rates on net taxable income. Mixed: add compensation + business income. Itemized: subtract actual documented expenses. Credit quarterly payments and 2307s.",
    attach:"SAWT (.dat) · All 2307s · AFS + Notes (BIR-accredited CPA) · CPA Certificate · SMR · Account Information Form · Form 2316 from employer (mixed income) · Proof of 1701Q payments",
    legal:"NIRC Sec. 51; Sec. 24(A)(2)"},
-  {form:"1700",name:"Annual ITR — Purely Compensation Income",cat:"inc",brief:"For employees who must file their own return (not substituted).",
+  {form:"1700",name:"File Annual ITR — Compensation Income",cat:"inc",brief:"For employees who must file their own return (not substituted).",
    who:"Employees with 2+ employers, incorrect withholding, spouse disqualified from substituted filing, or other non-business income.",
    when:"April 15 of the following year.",
    how:"Sum compensation from all employers. Apply graduated rates. Credit taxes withheld per 2316 from each employer.",
    attach:"Form 2316 from each employer · Proof of taxes paid/withheld",
    legal:"NIRC Sec. 51; RR 3-2002 (substituted filing)"},
-  {form:"1702Q",name:"Quarterly Corporate Income Tax Return",cat:"inc",brief:"Corporate quarterly ITR — due on the 60th day after quarter-end.",
+  {form:"1702Q",name:"File Quarterly Corporate Income Tax Return",cat:"inc",brief:"Corporate quarterly ITR — due on the 60th day after quarter-end.",
    who:"Domestic corporations, partnerships, OPCs.",
    when:"Q1: May 30 · Q2: Aug 29 · Q3: Nov 29 (60th day after quarter-end)",
    how:"25% RCIT on cumulative net taxable income (20% if NTI ≤ ₱5M & assets ≤ ₱100M, or RBE-EDR). From 4th year: compare vs <span class='hl'>2% MCIT</span> on gross income — pay whichever is higher.",
    attach:"SAWT (.dat) · Copies of 2307s · Form 2304 if applicable",
    legal:"NIRC Sec. 27(A); Sec. 27(E) MCIT; CREATE Act; CREATE MORE; RMC 36-2024"},
-  {form:"1702-RT",name:"Annual Corporate ITR (Regular Rate)",cat:"inc",brief:"Annual return for corporations subject to regular income tax.",
+  {form:"1702-RT",name:"File Annual Corporate ITR",cat:"inc",brief:"Annual return for corporations subject to regular income tax.",
    who:"Domestic corporations, partnerships at regular RCIT rate.",
    when:"April 15 (or 15th of 4th month after fiscal year-end).",
    how:"25% RCIT (or 20% for qualifying small corps / RBE-EDR per CREATE MORE). Compare vs 2% MCIT. Excess MCIT creditable for next 3 years.",
@@ -642,19 +764,19 @@ const FORMS=[
    legal:"NIRC Sec. 27(A); CREATE Act; CREATE MORE (RA 12066)"},
 
   // BUSINESS TAX
-  {form:"2551Q",name:"Quarterly Percentage Tax Return",cat:"biz",brief:"3% tax on gross sales — for Non-VAT taxpayers not on 8%.",
+  {form:"2551Q",name:"File Quarterly Percentage Tax Return",cat:"biz",brief:"3% tax on gross sales — for Non-VAT taxpayers not on 8%.",
    who:"Non-VAT registered self-employed (gross ≤ ₱3M) under <span class='hl'>graduated rates</span>. NOT filed by 8% filers (exempt) or VAT-registered.",
    when:"Q1: Apr 25 · Q2: Jul 25 · Q3: Oct 25 · Q4: Jan 25",
    how:"3% × quarterly gross sales/receipts. No deductions.",
    attach:"None typically required.",
    legal:"NIRC Sec. 116; TRAIN Law (reverted from 1% to 3% on Jul 1, 2023)"},
-  {form:"2550M",name:"Monthly VAT Declaration",cat:"biz",brief:"Monthly VAT return for months 1 & 2 of each quarter.",
+  {form:"2550M",name:"Declare Monthly VAT",cat:"biz",brief:"Monthly VAT return for months 1 & 2 of each quarter.",
    who:"VAT-registered taxpayers (gross > ₱3M or voluntarily registered).",
    when:"20th of the month following the reporting month. Filed for Jan, Feb, Apr, May, Jul, Aug, Oct, Nov.",
    how:"Report output VAT (12% on sales) and input VAT (VAT on purchases). Remit any net VAT payable.",
    attach:"None for the monthly declaration.",
    legal:"NIRC Secs. 114, 106–108; RR 16-2005"},
-  {form:"2550Q",name:"Quarterly VAT Return",cat:"biz",brief:"Quarterly VAT return that reconciles the full quarter.",
+  {form:"2550Q",name:"File Quarterly VAT Return",cat:"biz",brief:"Quarterly VAT return that reconciles the full quarter.",
    who:"VAT-registered taxpayers.",
    when:"25th of the month after quarter-end. Q1: Apr 25 · Q2: Jul 25 · Q3: Oct 25 · Q4: Jan 25.",
    how:"Output VAT minus input VAT for the quarter. Credits monthly 2550M payments. Excess input VAT carried over or refundable (zero-rated, per EOPT risk-based audit).",
@@ -662,20 +784,20 @@ const FORMS=[
    legal:"NIRC Secs. 114, 106–108; RR 16-2005; RR 1-2012"},
 
   // WITHHOLDING — COMPENSATION
-  {form:"1601-C",name:"Monthly WT on Compensation",cat:"emp",brief:"Monthly remittance of taxes withheld from employee salaries.",
+  {form:"1601-C",name:"Remit Monthly Withholding — Compensation",cat:"emp",brief:"Monthly remittance of taxes withheld from employee salaries.",
    who:"Every employer. Even minimum wage earners must be reported (zero tax withheld).",
    when:"10th of the following month. eFPS filers: staggered (Groups A–E, 11th–15th).",
    how:"Total taxes withheld from all employees' compensation per BIR graduated withholding tax tables. Apply RR 29-2025 expanded de minimis thresholds eff. Jan 6, 2026.",
    attach:"None for the return. Maintain payroll register as support.",
    legal:"NIRC Sec. 79; RR 2-98; RR 29-2025"},
-  {form:"1604-C",name:"Annual Info Return — WT on Compensation",cat:"emp",brief:"Year-end reconciliation of all employee withholding — must match 1601-C totals.",
+  {form:"1604-C",name:"File Annual WT Summary — Compensation",cat:"emp",brief:"Year-end reconciliation of all employee withholding — must match 1601-C totals.",
    who:"Every employer who filed 1601-C during the year.",
    when:"January 31 of the following year.",
    how:"Summarizes all compensation taxes withheld. Must reconcile perfectly with the sum of 12 monthly 1601-C filings and each employee's Form 2316.",
    attach:"Alphalist of Employees (.dat) via esubmission.",
    legal:"NIRC Sec. 79; RR 2-98",
    tip:"Most common audit trigger: mismatch between 1604-C totals and 1601-C totals."},
-  {form:"2316",name:"Certificate of Compensation Payment / Tax Withheld",cat:"emp",brief:"The certificate you give each employee — also serves as their ITR if substituted filing applies.",
+  {form:"2316",name:"Issue Certificate of Compensation & Tax Withheld",cat:"emp",brief:"The certificate you give each employee — also serves as their ITR if substituted filing applies.",
    who:"Issued by the employer to each employee.",
    when:"<span class='hl'>Jan 31</span>: distribute to employees. <span class='hl'>Feb 28</span>: submit duplicate copies to BIR for substituted filers.",
    how:"Shows total compensation, benefits, deductions, and taxes withheld. Both employer and employee must sign.",
@@ -683,19 +805,19 @@ const FORMS=[
    legal:"NIRC Sec. 79(I); RR 2-98; RR 3-2002 (substituted filing)"},
 
   // WITHHOLDING — EXPANDED
-  {form:"0619-E",name:"Monthly EWT Remittance",cat:"wh",brief:"Monthly remittance of expanded withholding taxes — for months 1 & 2 of each quarter.",
+  {form:"0619-E",name:"Remit Monthly Expanded Withholding Tax",cat:"wh",brief:"Monthly remittance of expanded withholding taxes — for months 1 & 2 of each quarter.",
    who:"Withholding agents making EWT payments to suppliers, contractors, professionals, landlords.",
    when:"10th of the following month — for months 1 & 2 of each quarter only. Month 3 is covered by 1601-EQ.",
    how:"Total EWT deducted from payments during the month. Rates depend on payment nature and your classification (regular vs top withholding agent per RR 24-2025).",
    attach:"None.",
    legal:"RR 2-98; RR 11-2018; RR 24-2025 (TWA rates eff. Oct 2025)"},
-  {form:"1601-EQ",name:"Quarterly EWT Return",cat:"wh",brief:"Quarterly return consolidating all EWT — credits monthly 0619-E payments.",
+  {form:"1601-EQ",name:"File Quarterly EWT Return",cat:"wh",brief:"Quarterly return consolidating all EWT — credits monthly 0619-E payments.",
    who:"Withholding agents filing 0619-E.",
    when:"Last day of the month after quarter-end. Q1: Apr 30 · Q2: Jul 31 · Q3: Oct 31 · Q4: Jan 31.",
    how:"Total EWT for the quarter minus 0619-E payments for months 1 & 2.",
    attach:"Quarterly Alphalist of Payees (QAP .dat) via esubmission.",
    legal:"RR 2-98; RR 11-2018; RR 24-2025"},
-  {form:"1604-E",name:"Annual Info Return — EWT",cat:"wh",brief:"Year-end reconciliation of all expanded withholding — must match 1601-EQ totals.",
+  {form:"1604-E",name:"File Annual EWT Summary",cat:"wh",brief:"Year-end reconciliation of all expanded withholding — must match 1601-EQ totals.",
    who:"Withholding agents who filed 1601-EQ during the year.",
    when:"March 1 of the following year.",
    how:"Summarizes all EWT. Must reconcile with quarterly 1601-EQ filings.",
@@ -703,36 +825,36 @@ const FORMS=[
    legal:"RR 2-98"},
 
   // WITHHOLDING — FINAL
-  {form:"0619-F",name:"Monthly Final WT Remittance",cat:"wh",brief:"Monthly remittance of final withholding taxes.",
+  {form:"0619-F",name:"Remit Monthly Final Withholding Tax",cat:"wh",brief:"Monthly remittance of final withholding taxes.",
    who:"Agents making payments subject to final tax (non-resident payments, royalties, etc.).",
    when:"10th of the following month.",
    how:"Total final WT deducted. CMEPA (eff. Jul 2025): uniform 20% FWT on interest; 10% on dividends.",
    attach:"None.",
    legal:"NIRC Sec. 57(A); RR 2-98; CMEPA (RA 12214); RR 21-2025"},
-  {form:"1601-FQ",name:"Quarterly Final WT Return",cat:"wh",brief:"Quarterly return for final withholding — credits 0619-F payments.",
+  {form:"1601-FQ",name:"File Quarterly Final WT Return",cat:"wh",brief:"Quarterly return for final withholding — credits 0619-F payments.",
    who:"Agents filing 0619-F.",when:"Last day of month after quarter-end (same as 1601-EQ).",
    how:"Total final WT minus monthly 0619-F payments.",
    attach:"Alphalist of payees (.dat).",legal:"RR 2-98"},
-  {form:"1604-F",name:"Annual Info Return — Final WT",cat:"wh",brief:"Year-end summary of all final withholding payments.",
+  {form:"1604-F",name:"File Annual Final WT Summary",cat:"wh",brief:"Year-end summary of all final withholding payments.",
    who:"Agents who filed 1601-FQ during the year.",when:"January 31 of the following year.",
    attach:"Alphalist of Payees (.dat).",legal:"RR 2-98"},
 
   // CERTIFICATES
-  {form:"2307",name:"Certificate of Creditable Tax Withheld at Source",cat:"wh",brief:"Issued to payees for EWT withheld — the payee uses this as a tax credit.",
+  {form:"2307",name:"Issue EWT Certificate to Payees",cat:"wh",brief:"Issued to payees for EWT withheld — the payee uses this as a tax credit.",
    who:"<span class='hl'>Issued by:</span> withholding agent. <span class='hl'>Received by:</span> the supplier/contractor/professional you paid.",
    when:"Within 20 days from close of each quarter.",
    how:"Shows: withholding agent TIN, payee TIN, ATC code, income payment, tax withheld. The payee claims this as a credit on their 1701Q / 1701 / 1701A.",
    attach:"N/A — this IS the attachment to the payee's returns.",
    legal:"RR 2-98, Sec. 2.58",
    tip:"Collect every 2307 your clients issue you. Missing 2307s = lost tax credits."},
-  {form:"2306",name:"Certificate of Final Tax Withheld",cat:"wh",brief:"Certificate for income subject to final withholding tax — not creditable against other taxes.",
+  {form:"2306",name:"Issue Final WT Certificate to Payees",cat:"wh",brief:"Certificate for income subject to final withholding tax — not creditable against other taxes.",
    who:"Issued by the agent making final WT payments.",
    when:"Within 20 days from close of each quarter.",
    how:"The final tax is the payee's complete tax liability on that specific income.",
    attach:"N/A.",legal:"RR 2-98, Sec. 2.58"},
 
   // DST
-  {form:"2000",name:"Documentary Stamp Tax Return",cat:"dst",brief:"Return for DST on taxable documents — leases, loans, debt instruments, certain stock transactions.",
+  {form:"2000",name:"File Documentary Stamp Tax Return",cat:"dst",brief:"Return for DST on taxable documents — leases, loans, debt instruments, certain stock transactions.",
    who:"Any person executing, signing, or transferring DST-liable documents.",
    when:"Within <span class='hl'>5 days</span> after close of the month when the document was executed.",
    how:"DST rates vary by document type. Under CMEPA (eff. Jul 2025): share issuances at 0.75% of par value; listed share transfers now DST-exempt; debt instruments at 0.75%.",
@@ -740,26 +862,26 @@ const FORMS=[
    legal:"NIRC Secs. 173–201; TRAIN Law; CMEPA (RA 12214); RR 19-2025"},
 
   // ATTACHMENTS & REPORTS
-  {form:"SAWT",name:"Summary Alphalist of Withholding Taxes",cat:"adm",brief:"Electronic summary of all 2307 certificates received — required when claiming CWT credits.",
+  {form:"SAWT",name:"Submit Withholding Tax Summary (SAWT)",cat:"adm",brief:"Electronic summary of all 2307 certificates received — required when claiming CWT credits.",
    who:"Any taxpayer claiming tax credits from BIR Forms 2307 on their income tax returns.",
    when:"E-submit to esubmission@bir.gov.ph with each 1701Q (quarterly) and 1701/1701A (annual).",
    how:"Use BIR SAWT DEV module or ATSP. Input each 2307: agent TIN, name, ATC, tax base, tax withheld.",
    attach:"N/A — the SAWT itself is the attachment.",
    legal:"RR 1-2014"},
-  {form:"SLSP",name:"Summary List of Sales and Purchases",cat:"adm",brief:"Quarterly VAT cross-referencing report — required even for zero transactions.",
+  {form:"SLSP",name:"Submit Sales & Purchases List (SLSP)",cat:"adm",brief:"Quarterly VAT cross-referencing report — required even for zero transactions.",
    who:"<span class='hl'>Sales list:</span> All VAT-registered. <span class='hl'>Purchases list:</span> VAT-registered with quarterly purchases > ₱1M (net of VAT).",
    when:"25th of the month after quarter-end (same as 2550Q).",
    how:"Use BIR RELIEF or DEV module. Input invoice/receipt details per transaction: counterparty TIN, name, amounts, VAT.",
    attach:"Validated .dat file via esubmission@bir.gov.ph.",
    legal:"RR 16-2005; RR 1-2012; RMO 7-2015",
    tip:"Even zero quarters require a 'No Entry' submission."},
-  {form:"QAP",name:"Quarterly Alphalist of Payees",cat:"adm",brief:"Electronic list of everyone you withheld EWT from — attached to 1601-EQ.",
+  {form:"QAP",name:"Submit Quarterly Alphalist of Payees (QAP)",cat:"adm",brief:"Electronic list of everyone you withheld EWT from — attached to 1601-EQ.",
    who:"Withholding agents filing 1601-EQ.",
    when:"Same deadline as 1601-EQ.",
    how:"Use BIR DEV module. Input: payee TIN, name, ATC, income amount, tax withheld.",
    attach:"Validated .dat file via esubmission@bir.gov.ph.",
    legal:"RR 2-98; RR 11-2018"},
-  {form:"1600",name:"Monthly VAT/PT Withheld (Government)",cat:"wh",brief:"Filed by government agencies — track this for your VAT credits.",
+  {form:"1600",name:"Track Government VAT/PT Withheld",cat:"wh",brief:"Filed by government agencies — track this for your VAT credits.",
    who:"Filed by the government buyer. As the seller, you don't file this — but ensure you receive your 2307.",
    when:"10th of the following month (filed by the government payor).",
    how:"Government withholds 5% final VAT on payments to VAT-registered sellers. The withheld amount is creditable against your output VAT.",
@@ -804,7 +926,7 @@ function renderForms(){
           ${f.when?`<div class="fr-row"><div class="fr-label">When</div><div class="fr-val">${f.when}</div></div>`:''}
           ${f.how?`<div class="fr-row"><div class="fr-label">How</div><div class="fr-val">${f.how}</div></div>`:''}
           ${f.attach?`<div class="fr-row"><div class="fr-label">Attachments</div><div class="fr-val">${f.attach}</div></div>`:''}
-          ${f.legal?`<div class="fr-row"><div class="fr-label">Legal Basis</div><div class="fr-val" style="font-family:var(--sa);font-size:.65rem;color:var(--mu)">${f.legal}</div></div>`:''}
+          ${f.legal?`<div class="fr-row fr-row-legal"><div class="fr-label">Legal Basis</div><div class="fr-val" style="font-family:var(--sa);font-size:.65rem;color:var(--mu)">${f.legal}</div></div>`:''}
           ${f.tip?`<div class="fr-row"><div class="fr-label">Tip</div><div class="fr-val" style="color:var(--royal);font-weight:600">${f.tip}</div></div>`:''}
         </div></div>
       </div>`;
@@ -835,27 +957,65 @@ const MONTH_NOTES=buildMonthNotes(YEAR);
 const GROUP_LABELS={'itr-a':'Annual Income Tax Returns','itr-ac':'Annual Corporate Income Tax','itr-q':'Quarterly Income Tax (Individuals)','itr-qc':'Quarterly Corporate Income Tax','wh-m':'BIR Monthly Returns','wh-a':'Annual Information Returns','wh-q':'Quarterly Withholding Returns','vat-m':'Monthly VAT Declaration','biz-q':'Quarterly Business Tax','contrib':'Mandatory Contributions','sec':'SEC Filings','adm':'Administrative Requirements'};
 const GROUP_ORDER=['itr-a','itr-ac','itr-q','itr-qc','wh-m','wh-a','wh-q','vat-m','biz-q','contrib','sec','adm'];
 
-function mW(m,fn,r){return[{month:m,day:10,title:`Monthly WT Compensation (${fn})`,form:"1601-C",cat:"emp",r,pq:"employees"},{month:m,day:10,title:`Monthly EWT (${fn})`,form:"0619-E",cat:"wh",r,pq:"ewt"},{month:m,day:10,title:`Monthly Final WT (${fn})`,form:"0619-F",cat:"wh",r,pq:"fwt"}];}
-function gC(m,fn,r){return{month:m,day:15,title:`SSS/PhilHealth/Pag-IBIG (${fn})`,form:"Agency",cat:"emp",r,pq:"employees"};}
-function qC(m,q,r){return[{month:m,day:20,title:`Issue 2307 (${q})`,form:"2307",cat:"wh",r,pq:"ewt"},{month:m,day:20,title:`Issue 2306 (${q})`,form:"2306",cat:"wh",r,pq:"fwt"}];}
-function qE(m,q,d,r){return[{month:m,day:d,title:`Quarterly EWT (${q})`,form:"1601-EQ",cat:"wh",r,pq:"ewt",att:["QAP (.dat)"]},{month:m,day:d,title:`Quarterly Final WT (${q})`,form:"1601-FQ",cat:"wh",r,pq:"fwt",att:["Alphalist (.dat)"]}];}
+function mW(m,fn,r){return[{month:m,day:10,title:`Remit Withholding — Compensation (${fn})`,form:"1601-C",cat:"emp",r,pq:"employees"},{month:m,day:10,title:`Remit Expanded Withholding Tax (${fn})`,form:"0619-E",cat:"wh",r,pq:"ewt"},{month:m,day:10,title:`Remit Final Withholding Tax (${fn})`,form:"0619-F",cat:"wh",r,pq:"fwt"}];}
+function gC(m,fn,r){return{month:m,day:15,title:`Pay Mandatory Contributions (${fn})`,form:"Agency",cat:"emp",r,pq:"employees"};}
+function qC(m,q,r){return[{month:m,day:20,title:`Issue EWT Certificates (${q})`,form:"2307",cat:"wh",r,pq:"ewt"},{month:m,day:20,title:`Issue Final WT Certificates (${q})`,form:"2306",cat:"wh",r,pq:"fwt"}];}
+function qE(m,q,d,r){return[{month:m,day:d,title:`File Quarterly EWT Return (${q})`,form:"1601-EQ",cat:"wh",r,pq:"ewt",att:["QAP (.dat)"]},{month:m,day:d,title:`File Quarterly Final WT Return (${q})`,form:"1601-FQ",cat:"wh",r,pq:"fwt",att:["Alphalist (.dat)"]}];}
 
 const B=AB,OB=[];
 const mNm=["","Dec (PY)","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov"];
 for(let m=1;m<=12;m++){OB.push(...mW(m,mNm[m],B),gC(m,mNm[m],B));}
-OB.push({month:1,day:15,title:"Bind Loose-Leaf Books",form:"ORUS",cat:"adm",r:B},{month:1,day:15,title:"Sworn Declaration Lower EWT",form:"—",cat:"wh",r:[...SE,...MI],pq:"lowerewt"},{month:1,day:20,title:"Renew Mayor's Permit",form:"LGU",cat:"adm",r:B},...qC(1,"Q4",B),...qE(1,"Q4",31,B),{month:1,day:25,title:"Percentage Tax Q4",form:"2551Q",cat:"biz",r:NV},{month:1,day:25,title:"VAT Return Q4",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:1,day:25,title:"SLSP Q4",form:"SLSP",cat:"biz",r:VAT},{month:1,day:30,title:"Inventory List",form:"—",cat:"adm",r:B},{month:1,day:30,title:"CAS Books",form:"ORUS",cat:"adm",r:B,pq:"cas"},{month:1,day:31,title:"1604-C (Compensation)",form:"1604-C",cat:"emp",r:B,pq:"employees",att:["Alphalist (.dat)"]},{month:1,day:31,title:"1604-F (Final WT)",form:"1604-F",cat:"wh",r:B,pq:"fwt",att:["Alphalist (.dat)"]},{month:1,day:31,title:"Distribute 2316",form:"2316",cat:"emp",r:B,pq:"employees"});
-OB.push({month:2,day:20,title:"VAT — Jan",form:"2550M",cat:"biz",r:VAT},{month:2,day:28,title:"2316 Duplicates to BIR",form:"2316",cat:"emp",r:B,pq:"employees"});
-OB.push({month:3,day:1,title:"1604-E (EWT Annual)",form:"1604-E",cat:"wh",r:B,pq:"ewt",att:["Alphalist (.dat)"]},{month:3,day:20,title:"VAT — Feb",form:"2550M",cat:"biz",r:VAT});
-OB.push({month:4,day:15,title:"Annual ITR (8%)",form:"1701A",cat:"inc",r:['se_8']},{month:4,day:15,title:"Annual ITR (8% Mixed)",form:"1701",cat:"inc",r:['mi_8']},{month:4,day:15,title:"Annual ITR (Grad+OSD)",form:"1701A",cat:"inc",r:['se_gnv','se_gv']},{month:4,day:15,title:"Annual ITR (Grad+OSD Mixed)",form:"1701",cat:"inc",r:['mi_gnv','mi_gv']},{month:4,day:15,title:"Annual ITR (Itemized)",form:"1701",cat:"inc",r:[...SE,...MI]},{month:4,day:15,title:"Annual Corporate ITR",form:"1702-RT",cat:"inc",r:CORP,desc:"25%/20% RCIT or 2% MCIT"},{month:4,day:15,title:"Form 1700",form:"1700",cat:"inc",r:['emp_f']},{month:4,day:15,title:"Substituted Filing",form:"2316",cat:"inc",r:['emp_s']},{month:4,day:15,title:"AFS to SEC",form:"SEC",cat:"sec",r:CORP},...qC(4,"Q1",B),{month:4,day:25,title:"Percentage Tax Q1",form:"2551Q",cat:"biz",r:NV},{month:4,day:25,title:"VAT Return Q1",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:4,day:25,title:"SLSP Q1",form:"SLSP",cat:"biz",r:VAT},...qE(4,"Q1",30,B));
-OB.push({month:5,day:15,title:"Income Tax Q1",form:"1701Q",cat:"inc",r:IND,att:["SAWT","2307s"]},{month:5,day:30,title:"Corporate ITR Q1",form:"1702Q",cat:"inc",r:CORP},{month:5,day:20,title:"VAT — Apr",form:"2550M",cat:"biz",r:VAT});
-OB.push({month:6,day:20,title:"VAT — May",form:"2550M",cat:"biz",r:VAT},{month:6,day:30,title:"GIS to SEC",form:"SEC",cat:"sec",r:CORP});
-OB.push(...qC(7,"Q2",B),{month:7,day:25,title:"Percentage Tax Q2",form:"2551Q",cat:"biz",r:NV},{month:7,day:25,title:"VAT Return Q2",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:7,day:25,title:"SLSP Q2",form:"SLSP",cat:"biz",r:VAT},...qE(7,"Q2",31,B));
-OB.push({month:8,day:15,title:"Income Tax Q2",form:"1701Q",cat:"inc",r:IND},{month:8,day:29,title:"Corporate ITR Q2",form:"1702Q",cat:"inc",r:CORP},{month:8,day:20,title:"VAT — Jul",form:"2550M",cat:"biz",r:VAT});
-OB.push({month:9,day:20,title:"VAT — Aug",form:"2550M",cat:"biz",r:VAT});
-OB.push(...qC(10,"Q3",B),{month:10,day:25,title:"Percentage Tax Q3",form:"2551Q",cat:"biz",r:NV},{month:10,day:25,title:"VAT Return Q3",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:10,day:25,title:"SLSP Q3",form:"SLSP",cat:"biz",r:VAT},...qE(10,"Q3",31,B));
-OB.push({month:11,day:15,title:"Income Tax Q3",form:"1701Q",cat:"inc",r:IND},{month:11,day:29,title:"Corporate ITR Q3",form:"1702Q",cat:"inc",r:CORP},{month:11,day:20,title:"VAT — Oct",form:"2550M",cat:"biz",r:VAT});
-OB.push({month:12,day:20,title:"VAT — Nov",form:"2550M",cat:"biz",r:VAT},{month:12,day:24,title:"13th Month Pay",form:"—",cat:"emp",r:B,pq:"employees"},{month:12,day:31,title:"Year-End Housekeeping",form:"—",cat:"adm",r:B},{month:12,day:31,title:"Verify 2316",form:"2316",cat:"inc",r:EMP});
-OB.push({month:0,day:5,title:"DST Return",form:"2000",cat:"dst",r:AB,pq:"dst"},{month:0,day:0,title:"Gov't VAT (1600)",form:"1600",cat:"wh",r:VAT,pq:"govpay"},{month:0,day:0,title:"CRM/POS Reports",form:"—",cat:"adm",r:AB,pq:"crm"},{month:0,day:0,title:"SSS/PhilHealth/Pag-IBIG (Self)",form:"Agency",cat:"adm",r:[...SE,...MI]},{month:0,day:0,title:"PEZA/BOI Reporting",form:"IPA",cat:"sec",r:CORP,pq:"rbe"},{month:0,day:0,title:"MCIT Check",form:"—",cat:"inc",r:CORP,pq:"mcit",desc:"2% MCIT on gross vs 25%/20% RCIT from 4th yr."},{month:0,day:0,title:"E-Invoicing (EIS)",form:"Per RR 11-2025",cat:"adm",r:AB,pq:"einv",desc:"Structured e-invoices by Dec 31, 2026."});
+OB.push({month:1,day:15,title:"Bind & Submit Loose-Leaf Books",form:"ORUS",cat:"adm",r:B},{month:1,day:15,title:"File Sworn Declaration for Lower EWT",form:"—",cat:"wh",r:[...SE,...MI],pq:"lowerewt"},{month:1,day:20,title:"Renew Business Permit (Mayor's Permit)",form:"LGU",cat:"adm",r:B},...qC(1,"Q4",B),...qE(1,"Q4",31,B),{month:1,day:25,title:"File Quarterly Percentage Tax — Q4",form:"2551Q",cat:"biz",r:NV},{month:1,day:25,title:"File Quarterly VAT Return — Q4",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:1,day:25,title:"Submit Sales & Purchases List — Q4",form:"SLSP",cat:"biz",r:VAT},{month:1,day:30,title:"Submit Annual Inventory List",form:"—",cat:"adm",r:B},{month:1,day:30,title:"Stamp Computerized Accounting Books",form:"ORUS",cat:"adm",r:B,pq:"cas"},{month:1,day:31,title:"File Annual WT Summary — Compensation",form:"1604-C",cat:"emp",r:B,pq:"employees",att:["Alphalist (.dat)"]},{month:1,day:31,title:"File Annual Final WT Summary",form:"1604-F",cat:"wh",r:B,pq:"fwt",att:["Alphalist (.dat)"]},{month:1,day:31,title:"Distribute Tax Certificates to Employees",form:"2316",cat:"emp",r:B,pq:"employees"});
+OB.push({month:2,day:20,title:"Declare Monthly VAT — January",form:"2550M",cat:"biz",r:VAT},{month:2,day:28,title:"Submit 2316 Duplicates to BIR",form:"2316",cat:"emp",r:B,pq:"employees"});
+OB.push({month:3,day:1,title:"File Annual EWT Summary",form:"1604-E",cat:"wh",r:B,pq:"ewt",att:["Alphalist (.dat)"]},{month:3,day:20,title:"Declare Monthly VAT — February",form:"2550M",cat:"biz",r:VAT});
+OB.push({month:4,day:15,title:"File Annual ITR — 8% Flat Rate",form:"1701A",cat:"inc",r:['se_8']},{month:4,day:15,title:"File Annual ITR — Mixed Income, 8%",form:"1701",cat:"inc",r:['mi_8']},{month:4,day:15,title:"File Annual ITR — Graduated + OSD",form:"1701A",cat:"inc",r:['se_gnv','se_gv']},{month:4,day:15,title:"File Annual ITR — Mixed Income, Grad+OSD",form:"1701",cat:"inc",r:['mi_gnv','mi_gv']},{month:4,day:15,title:"File Annual ITR — Graduated, Itemized",form:"1701",cat:"inc",r:[...SE,...MI]},{month:4,day:15,title:"File Annual Corporate Income Tax Return",form:"1702-RT",cat:"inc",r:CORP,desc:"25%/20% RCIT or 2% MCIT"},{month:4,day:15,title:"File Annual ITR — Compensation Income",form:"1700",cat:"inc",r:['emp_f']},{month:4,day:15,title:"Confirm Substituted Filing (Employee ITR)",form:"2316",cat:"inc",r:['emp_s']},{month:4,day:15,title:"Submit Audited Financial Statements to SEC",form:"SEC",cat:"sec",r:CORP},...qC(4,"Q1",B),{month:4,day:25,title:"File Quarterly Percentage Tax — Q1",form:"2551Q",cat:"biz",r:NV},{month:4,day:25,title:"File Quarterly VAT Return — Q1",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:4,day:25,title:"Submit Sales & Purchases List — Q1",form:"SLSP",cat:"biz",r:VAT},...qE(4,"Q1",30,B));
+OB.push({month:5,day:15,title:"File Quarterly Income Tax — Q1",form:"1701Q",cat:"inc",r:IND,att:["SAWT","2307s"]},{month:5,day:30,title:"File Corporate Quarterly ITR — Q1",form:"1702Q",cat:"inc",r:CORP},{month:5,day:20,title:"Declare Monthly VAT — April",form:"2550M",cat:"biz",r:VAT});
+OB.push({month:6,day:20,title:"Declare Monthly VAT — May",form:"2550M",cat:"biz",r:VAT},{month:6,day:30,title:"Submit General Information Sheet to SEC",form:"SEC",cat:"sec",r:CORP});
+OB.push(...qC(7,"Q2",B),{month:7,day:25,title:"File Quarterly Percentage Tax — Q2",form:"2551Q",cat:"biz",r:NV},{month:7,day:25,title:"File Quarterly VAT Return — Q2",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:7,day:25,title:"Submit Sales & Purchases List — Q2",form:"SLSP",cat:"biz",r:VAT},...qE(7,"Q2",31,B));
+OB.push({month:8,day:15,title:"File Quarterly Income Tax — Q2",form:"1701Q",cat:"inc",r:IND},{month:8,day:29,title:"File Corporate Quarterly ITR — Q2",form:"1702Q",cat:"inc",r:CORP},{month:8,day:20,title:"Declare Monthly VAT — July",form:"2550M",cat:"biz",r:VAT});
+OB.push({month:9,day:20,title:"Declare Monthly VAT — August",form:"2550M",cat:"biz",r:VAT});
+OB.push(...qC(10,"Q3",B),{month:10,day:25,title:"File Quarterly Percentage Tax — Q3",form:"2551Q",cat:"biz",r:NV},{month:10,day:25,title:"File Quarterly VAT Return — Q3",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:10,day:25,title:"Submit Sales & Purchases List — Q3",form:"SLSP",cat:"biz",r:VAT},...qE(10,"Q3",31,B));
+OB.push({month:11,day:15,title:"File Quarterly Income Tax — Q3",form:"1701Q",cat:"inc",r:IND},{month:11,day:29,title:"File Corporate Quarterly ITR — Q3",form:"1702Q",cat:"inc",r:CORP},{month:11,day:20,title:"Declare Monthly VAT — October",form:"2550M",cat:"biz",r:VAT});
+OB.push({month:12,day:20,title:"Declare Monthly VAT — November",form:"2550M",cat:"biz",r:VAT},{month:12,day:24,title:"Release 13th Month Pay to Employees",form:"—",cat:"emp",r:B,pq:"employees"},{month:12,day:31,title:"Complete Year-End Bookkeeping",form:"—",cat:"adm",r:B},{month:12,day:31,title:"Verify 2316 from Employer",form:"2316",cat:"inc",r:EMP});
+OB.push({month:0,day:5,title:"File Documentary Stamp Tax Return",form:"2000",cat:"dst",r:AB,pq:"dst"},{month:0,day:0,title:"Track Government VAT Withheld",form:"1600",cat:"wh",r:VAT,pq:"govpay"},{month:0,day:0,title:"Submit CRM/POS Monthly Sales Report",form:"—",cat:"adm",r:AB,pq:"crm"},{month:0,day:0,title:"Pay Personal Mandatory Contributions",form:"Agency",cat:"adm",r:[...SE,...MI]},{month:0,day:0,title:"Submit IPA Compliance Report",form:"IPA",cat:"sec",r:CORP,pq:"rbe"},{month:0,day:0,title:"Apply MCIT (Minimum Corporate Income Tax) Check",form:"—",cat:"inc",r:CORP,pq:"mcit",desc:"2% MCIT on gross vs 25%/20% RCIT from 4th yr."},{month:0,day:0,title:"Register for E-Invoicing System",form:"Per RR 11-2025",cat:"adm",r:AB,pq:"einv",desc:"Structured e-invoices by Dec 31, 2026."});
+
+// ══ WORKFLOW CLASSIFICATION ══
+function getObWF(o){
+  const f=o.form||'';
+  if(['1601-C','1604-C'].includes(f))return'payroll';
+  if(f==='2316'&&o.cat==='emp')return'payroll';
+  if(o.pq==='employees'&&(f==='—'||o.cat==='emp'))return'payroll';
+  if(f==='Agency')return'government_contributions';
+  if(['2550M','2550Q'].includes(f))return'vat_invoicing';
+  if(o.pq==='einv'||f==='Per RR 11-2025')return'vat_invoicing';
+  if(['0619-E','1601-EQ','1604-E','0619-F','1601-FQ','1604-F','2307','2306'].includes(f))return'client_billing';
+  if(f==='1600'||o.pq==='lowerewt')return'client_billing';
+  if(['2551Q','1701A','1701','1700','1702-RT','1701Q','1702Q'].includes(f))return'business_tax';
+  if(f==='2316'&&o.cat==='inc')return'business_tax';
+  if(o.pq==='mcit'||f==='2000')return'business_tax';
+  return'annual_admin';
+}
+OB.forEach(o=>o.wf=getObWF(o));
+
+const WF_ORDER=['payroll','vat_invoicing','client_billing','business_tax','annual_admin','government_contributions'];
+const WF_LABELS={payroll:'Payroll & Employee Taxes',vat_invoicing:'VAT & E-Invoicing',client_billing:'Client Billing & Creditable Withholding',business_tax:'Business Tax & Income Tax',annual_admin:'Registration, Licenses & Bookkeeping',government_contributions:'Government Contributions (SSS / PhilHealth / Pag-IBIG)'};
+
+function renderWF(f){
+  const grps={};
+  f.forEach(o=>{const wf=o.wf||'annual_admin';if(!grps[wf])grps[wf]=[];grps[wf].push(o);});
+  let h='';
+  WF_ORDER.forEach(wf=>{
+    const obs=grps[wf];if(!obs||!obs.length)return;
+    const sorted=[...obs].sort((a,b)=>(a.month===0?13:a.month)*100+a.day-(((b.month===0?13:b.month)*100)+b.day));
+    const sid='wfs_'+wf;
+    h+=`<div class="wf-sec" id="${sid}">`;
+    h+=`<div class="wf-sec-hdr" onclick="document.getElementById('${sid}').classList.toggle('collapsed')">`;
+    h+=`<span class="wf-sec-name">${WF_LABELS[wf]}</span><span class="wf-sec-badge">${obs.length}</span><span class="wf-sec-chev">&#9662;</span></div>`;
+    h+=`<div class="wf-sec-body">${sorted.map(rObNew).join('')}</div></div>`;
+  });
+  if(!h)h=`<div class="wf-empty">No obligations match your current filters.</div>`;
+  document.getElementById('wv').innerHTML=h;
+}
 
 function isV(o){if(!o.r.includes(cR))return false;if(!aC.has(o.cat))return false;if(SQ){const h=(o.title+' '+(o.form||'')+' '+(o.desc||'')+' '+(o.pq||'')).toLowerCase();if(!h.includes(SQ))return false;}const sa=document.getElementById('saT')?.checked;if(!sa&&o.pq&&!cQ.has(o.pq))return false;return true;}
 function gF(){return OB.filter(isV);}function cntQ(k){return OB.filter(o=>o.pq===k&&o.r.includes(cR)).length;}
@@ -863,7 +1023,7 @@ function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document
 function setReg(r){cR=r;rRB();rCL();ren();}function setV(v,b){vM=v;document.querySelectorAll('.vt button').forEach(x=>x.classList.remove('act'));b.classList.add('act');ren();}
 function tgQ(k){cQ.has(k)?cQ.delete(k):cQ.add(k);rCL();ren();}function tgC(c){aC.has(c)?aC.delete(c):aC.add(c);rCF();ren();}function tgM(m){document.querySelector(`.ms[data-m="${m}"]`)?.classList.toggle('act');}
 function rRB(){document.getElementById('rBar').innerHTML='<span class="tl-l">Regime</span>'+Object.entries(TYPES[cT].regimes).map(([k,v])=>`<button class="rb ${k===cR?'act':''}" onclick="setReg('${k}')">${v.n}</button>`).join('');}
-function rCL(){const qs=QS[cT]||[];document.getElementById('clG').innerHTML=qs.map(q=>`<div class="ci ${cQ.has(q.key)?'ck':''}" onclick="tgQ('${q.key}')"><div class="cbox"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></div><div><div class="ciq">${q.q}</div><div class="cid">${q.d}</div></div><div class="cic">${cntQ(q.key)>0?'+'+cntQ(q.key):0}</div></div>`).join('');const sa=document.getElementById('saT')?.checked,tot=OB.filter(o=>o.r.includes(cR)).length,hid=OB.filter(o=>o.r.includes(cR)&&o.pq&&!cQ.has(o.pq)).length;document.getElementById('clS').innerHTML=sa?`<strong>${tot}</strong> total`:`<strong>${tot-hid}</strong> shown · <strong style="color:var(--amber)">${hid} hidden</strong>`;}
+function rCL(){const qs=QS[cT]||[];document.getElementById('clG').innerHTML=qs.map(q=>`<div class="ci ${cQ.has(q.key)?'ck':''}" onclick="tgQ('${q.key}')"><div class="cbox"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></div><div><div class="ciq">${q.q}${cqTip(q.key)}</div><div class="cid">${q.d}</div></div><div class="cic">${cntQ(q.key)>0?'+'+cntQ(q.key):0}</div></div>`).join('');const sa=document.getElementById('saT')?.checked,tot=OB.filter(o=>o.r.includes(cR)).length,hid=OB.filter(o=>o.r.includes(cR)&&o.pq&&!cQ.has(o.pq)).length;document.getElementById('clS').innerHTML=sa?`<strong>${tot}</strong> total`:`<strong>${tot-hid}</strong> shown · <strong style="color:var(--amber)">${hid} hidden</strong>`;}
 function rCF(){document.getElementById('cF').innerHTML=Object.entries(CATS).map(([k,v])=>`<button class="fb ${aC.has(k)?'fba':''}" onclick="tgC('${k}')"><span class="fd" style="background:${v.c}"></span>${v.l}</button>`).join('');}
 function pqL(k){const q=[...Object.values(QS)].flat().find(x=>x.key===k);return q?q.q.replace(/\?$/,''):'Conditional';}
 // ══ CALENDAR REDESIGN: HELPER FUNCTIONS ══
@@ -871,7 +1031,7 @@ function getDayName(m,d){return['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new D
 function setCalM(m){cMonth=m;if(m>0)cQuarter=Math.ceil(m/3);ren();}
 function setCalQ(q){cQuarter=q;cMonth=(q-1)*3+1;ren();}
 function getObGrp(o){const f=o.form||'';if(['1601-C','0619-E','0619-F','1600'].includes(f))return'wh-m';if(f==='2550M')return'vat-m';if(['1701A','1701','1700'].includes(f)||(f==='2316'&&o.cat==='inc'))return'itr-a';if(f==='1702-RT')return'itr-ac';if(['1604-C','1604-F','1604-E'].includes(f))return'wh-a';if(f==='1701Q')return'itr-q';if(f==='1702Q')return'itr-qc';if(['2550Q','2551Q','SLSP'].includes(f))return'biz-q';if(['1601-EQ','1601-FQ','2307','2306'].includes(f))return'wh-q';if(f==='Agency'||o.cat==='emp')return'contrib';if(f==='SEC'||o.cat==='sec')return'sec';return'adm';}
-function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='ob_'+Math.random().toString(36).substr(2,7);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div>${o.form&&o.form!=='—'?`<span class="ob-row-form">${o.form}</span>`:''}<span class="ob-row-title">${o.title}</span></div><div class="ob-row-meta">${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.45rem;padding-top:.35rem;border-top:1px solid rgba(65,105,225,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.66rem;color:var(--ch);padding:.1rem 0;display:flex;align-items:center;gap:.3rem"><span style="font-size:.6rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<div style="margin-top:.4rem;font-size:.6rem;color:var(--royal);font-weight:600;cursor:pointer" onclick="event.stopPropagation();document.querySelector('.pnav button:nth-child(2)').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">&#8594; View ${o.form} in Form Reference</div>`:''}</div></div></div>`;}
+function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='ob_'+Math.random().toString(36).substr(2,7);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div><span class="ob-row-title">${o.title}${obTip(o.title)}</span>${o.form&&o.form!=='—'?`<span class="form-ref">${o.form}</span>`:''}</div><div class="ob-row-meta">${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.45rem;padding-top:.35rem;border-top:1px solid rgba(65,105,225,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.66rem;color:var(--ch);padding:.1rem 0;display:flex;align-items:center;gap:.3rem"><span style="font-size:.6rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<div style="margin-top:.4rem;font-size:.6rem;color:var(--royal);font-weight:600;cursor:pointer" onclick="event.stopPropagation();document.querySelector('.pnav button:nth-child(2)').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">&#8594; View ${o.form} in Form Reference</div>`:''}</div></div></div>`;}
 function renMon(month,obs){let h='';if(MONTH_NOTES[month])h+=`<div class="cal-note"><span class="cal-note-lbl">Deadline note</span>${MONTH_NOTES[month]}</div>`;const hols=HOLIDAYS[month]||[];if(hols.length){h+=`<div class="cal-holidays"><div class="cal-hol-hdr">Public holidays this month</div>`;hols.forEach(([d,name,type])=>{const dn=getDayName(month,d);h+=`<div class="cal-hol-item"><span class="cal-hol-date">${MN[month].substr(0,3)} ${d}, ${YEAR}</span><span class="cal-hol-name">${dn} &middot; ${name}</span><span class="cal-hol-badge ${type}">${type==='reg'?'Regular holiday':'Special non-working'}</span></div>`;});h+=`</div>`;}if(!obs.length)return h+`<div class="cal-empty">No obligations match your current filters for ${MN[month]}.</div>`;const grps={};[...obs].sort((a,b)=>a.day-b.day).forEach(o=>{const g=getObGrp(o);if(!grps[g])grps[g]=[];grps[g].push(o);});let first=true;GROUP_ORDER.forEach(gk=>{if(!grps[gk])return;h+=`<div class="cal-grp-hdr"${first?' style="margin-top:0"':''}>${GROUP_LABELS[gk]||gk}</div>`;h+=grps[gk].map(rObNew).join('');first=false;});return h;}
 function renPen(ongoingObs){let h=`<p class="cal-pen-intro">Under EOPT (RR 6-2024), penalties for micro and small businesses (gross &lt; &#8369;20M) are substantially reduced. Always verify your BIR classification before computing penalties.</p>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Surcharge on Tax Due</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">10%</div><div class="cal-pen-note">Gross receipts &lt; &#8369;20M &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard — Late Filing/Payment</div><div class="cal-pen-val">25%</div><div class="cal-pen-note">NIRC Sec. 248</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard — Fraud / Willful</div><div class="cal-pen-val">50%</div><div class="cal-pen-note">Fraudulent return or willful neglect</div></div></div>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Interest on Unpaid Tax</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">6% / year</div><div class="cal-pen-note">Double the legal interest rate &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">12% / year</div><div class="cal-pen-note">NIRC Sec. 249 &middot; from due date to payment</div></div></div>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Failure to File (per return)</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">&#8369;500</div><div class="cal-pen-note">Max &#8369;12,500/year &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">&#8369;1,000</div><div class="cal-pen-note">Max &#8369;25,000/year &middot; NIRC Sec. 250</div></div></div>`;if(ongoingObs.length){h+=`<div class="cal-ongoing-hdr">Ongoing &amp; Recurring Obligations</div>`;h+=ongoingObs.map(rObNew).join('');}return h;}
 function renderTL(f){const el=document.getElementById('tl');const bm={};f.forEach(o=>{if(!bm[o.month])bm[o.month]=[];bm[o.month].push(o);});const qm=[[1,2,3],[4,5,6],[7,8,9],[10,11,12]];const qlbl=['Q1 \u2014 January to March','Q2 \u2014 April to June','Q3 \u2014 July to September','Q4 \u2014 October to December'];const months=qm[cQuarter-1];let h=`<div class="cal-qhdr"><span class="cal-qtitle">${YEAR} ${qlbl[cQuarter-1]}</span><div class="cal-qnav">`;['Q1','Q2','Q3','Q4'].forEach((qn,qi)=>{h+=`<button class="cal-qbtn${qi+1===cQuarter?' act':''}" onclick="setCalQ(${qi+1})">${qn}</button>`;});h+=`</div></div>`;h+=`<div class="cal-legend">`;[{l:'Income Tax',c:'var(--royal)'},{l:'Business Tax',c:'var(--green)'},{l:'Withholding',c:'var(--purple)'},{l:'Employer / Contributions',c:'var(--teal)'},{l:'DST',c:'var(--rose)'},{l:'Admin',c:'var(--amber)'},{l:'SEC',c:'var(--slate)'}].forEach(li=>{h+=`<span class="cal-leg-item"><span class="cal-leg-dot" style="background:${li.c}"></span>${li.l}</span>`;});h+=`</div>`;h+=`<div class="cal-tabs">`;months.forEach(m=>{h+=`<button class="cal-tab${m===cMonth?' act':''}" onclick="setCalM(${m})">${MN[m]}</button>`;});h+=`<button class="cal-tab${cMonth===0?' act':''}" onclick="setCalM(0)">Penalties</button></div>`;if(cMonth===0){h+=renPen(bm[0]||[]);}else{h+=renMon(cMonth,bm[cMonth]||[]);}el.innerHTML=h;}
@@ -917,9 +1077,77 @@ function buildMonthNotes(yr){
   [[5,'Q1'],[8,'Q2'],[11,'Q3']].forEach(([m,q])=>{const r=chk(m,15);if(r.s)notes[m]=`${MNX[m]} 15 falls on a ${r.lbl} — Income Tax ${q} (1701Q) shifts to <strong>Monday, ${MNX[m]} ${r.nd}</strong>.`;});
   return notes;
 }
-function rOb(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='ob_'+Math.random().toString(36).substr(2,7);let h=`<div class="ob ${cc} ${dm?'dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="obt"><div class="obn">${o.title}</div><div class="obd">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</div></div><div class="obm">${o.form&&o.form!=='—'?`<span class="obf">${o.form}</span>`:''}${o.pq?`<span class="obpq" style="margin-top:0;display:inline-block;padding:.06rem .3rem;background:var(--ts);color:var(--teal);font-size:.55rem;font-weight:700;border-radius:4px"><b>If:</b> ${pqL(o.pq)}</span>`:''}<span class="ob-chev">▾</span></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this is</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.45rem;padding-top:.35rem;border-top:1px solid rgba(65,105,225,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.66rem;color:var(--ch);padding:.12rem 0;display:flex;align-items:center;gap:.3rem"><span style="font-size:.6rem">📎</span> ${a}</div>`).join('')}</div>`:''}${o.form&&o.form!=='—'&&o.form!=='Agency'&&o.form!=='LGU'&&o.form!=='SEC'&&o.form!=='IPA'&&o.form!=='ORUS'?`<div style="margin-top:.4rem;font-size:.6rem;color:var(--royal);font-weight:600;cursor:pointer" onclick="event.stopPropagation();document.querySelector('.pnav button:nth-child(2)').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">→ View ${o.form} in Form Reference</div>`:''}</div></div></div>`;return h;}
-function getLayman(o){if(o.desc)return o.desc;const t=o.title.toLowerCase();if(t.includes('1601-c'))return'<b>What:</b> Monthly remittance of taxes you withheld from your employees salaries. Even if you withheld zero, you still need to file. <b>Plain version:</b> "I deducted X amount from my employees paychecks for income tax — here is the money."';if(t.includes('1604-c'))return'<b>What:</b> Annual reconciliation of all the monthly 1601-C filings. Confirms total compensation paid and total taxes withheld for the year. <b>Plain version:</b> "Here is the year-end summary of everything I withheld from my employees in compensation tax."';if(t.includes('1604-e'))return'<b>What:</b> Annual reconciliation of all expanded withholding tax (EWT) for the year. Lists every supplier you withheld from. <b>Plain version:</b> "Here is the year-end summary of taxes I withheld from contractors, professionals, and landlords."';if(t.includes('1604-f'))return'<b>What:</b> Annual summary of final withholding taxes you remitted on items like dividends, royalties, and certain interest payments.';if(t.includes('0619-e'))return'<b>What:</b> Monthly remittance of expanded withholding tax (EWT) for months 1 and 2 of each quarter. Filed only if you withhold from suppliers. <b>Plain version:</b> "I withheld tax from my contractors this month — here is the remittance."';if(t.includes('1601-eq'))return'<b>What:</b> Quarterly EWT return. Reconciles the two monthly 0619-E filings + adds month 3 of the quarter. Comes with the QAP attachment.';if(t.includes('0619-f'))return'<b>What:</b> Monthly remittance of final withholding tax for months 1 and 2. Final WT applies to items like royalties, dividends, and non-resident payments.';if(t.includes('1601-fq'))return'<b>What:</b> Quarterly final withholding tax return. Reconciles two monthly 0619-F filings.';if(t.includes('vat')&&t.includes('return'))return'<b>What:</b> Quarterly VAT return for VAT-registered taxpayers (gross above ₱3M or voluntarily registered). Reports output VAT (12% on sales) less input VAT (12% on purchases). <b>Plain version:</b> "I sold X with VAT, I bought Y with VAT — here is the difference I owe."';if(t.includes('vat —'))return'<b>What:</b> Monthly VAT declaration for the first 2 months of each quarter. Pre-payment of VAT before the quarterly return reconciles everything.';if(t.includes('percentage tax'))return'<b>What:</b> Quarterly 3% percentage tax return for non-VAT registered taxpayers under graduated rates. NOT filed if you elect the 8% flat rate (8% filers are exempt). <b>Plain version:</b> "I am not VAT-registered, so I pay 3% of my gross sales as a separate business tax."';if(t.includes('income tax q'))return'<b>What:</b> Quarterly income tax return for self-employed, professionals, and mixed income earners. Filed 3 times a year (Q1, Q2, Q3 — annual replaces Q4). Uses cumulative method — each quarter reports year-to-date. <b>Plain version:</b> "Here is my income for the year so far, and the tax I owe based on it (less what I already paid)."';if(t.includes('annual itr'))return'<b>What:</b> Year-end annual income tax return. Reconciles everything from the 3 quarterly filings + adds Q4. <b>Plain version:</b> "Here is the final, complete year-end version of my income tax return."';if(t.includes('corporate itr q'))return'<b>What:</b> Quarterly corporate income tax return. Due 60 days after each quarter-end. Apply 25% RCIT (or 20% for qualifying small corps).';if(t.includes('annual corporate'))return'<b>What:</b> Annual corporate income tax return. Reports full year RCIT vs MCIT and pays whichever is higher.';if(t.includes('issue 2307'))return'<b>What:</b> Quarterly deadline to issue BIR Form 2307 (Certificate of Creditable Tax Withheld) to the suppliers and contractors you withheld EWT from. They use this as a tax credit. <b>Plain version:</b> "Here is the certificate proving I withheld tax from you — claim this as a credit on your own return."';if(t.includes('issue 2306'))return'<b>What:</b> Quarterly deadline to issue BIR Form 2306 (Certificate of Final Tax Withheld) for any final withholding payments you made.';if(t.includes('distribute 2316'))return'<b>What:</b> Annual deadline to give each employee their BIR Form 2316. This shows compensation paid and taxes withheld for the year. For most rank-and-file employees this also serves as their annual income tax return (substituted filing). <b>Plain version:</b> "Here is your year-end tax certificate — keep this for your records or use it as your ITR."';if(t.includes('2316 duplicates'))return'<b>What:</b> Submit signed duplicate copies of all employee 2316s to the BIR for substituted-filing employees.';if(t.includes('sss/philhealth/pag-ibig')&&t.includes('self'))return'<b>What:</b> Monthly self-employed mandatory contributions to SSS, PhilHealth, and Pag-IBIG. Different agencies have different deadlines. <b>Plain version:</b> "These are my own social security, healthcare, and housing contributions as a self-employed individual."';if(t.includes('sss/philhealth/pag-ibig'))return'<b>What:</b> Monthly remittance of employer + employee shares of mandatory SSS, PhilHealth, and Pag-IBIG contributions. Each agency has its own portal and deadline.';if(t.includes('renew mayor'))return'<b>What:</b> Annual renewal of your business permit at the LGU (city or municipality). Required to legally operate. Different LGUs have different requirements and fees.';if(t.includes('inventory list'))return'<b>What:</b> Annual submission of inventory list of goods on hand as of December 31. Required for businesses dealing in goods. <b>Plain version:</b> "Here is everything I had in stock at year-end — proves no hidden inventory or sales."';if(t.includes('cas books'))return'<b>What:</b> Computerized Accounting System (CAS) deadline. If you use accounting software, books and reports must be submitted electronically.';if(t.includes('bind loose-leaf'))return'<b>What:</b> Annual deadline to bind your loose-leaf books of accounts and have them stamped by the BIR. <b>Plain version:</b> "If you use loose-leaf bookkeeping, bring all your printed pages to BIR to be permanently bound and stamped."';if(t.includes('sworn declaration')&&t.includes('lower'))return'<b>What:</b> Annual sworn declaration to suppliers stating you do not exceed ₱3M gross sales. Lets your customers withhold from you at the lower 5% EWT rate instead of 10%.';if(t.includes('dst return'))return'<b>What:</b> Documentary Stamp Tax return for any taxable documents executed during the month — leases, loans, share issuances, debt instruments. Filed within 5 days after the month-end. <b>Plain version:</b> "I signed a taxable document this month — here is the stamp tax I owe."';if(t.includes('mcit check'))return'<b>What:</b> Ongoing reminder to compare your 25% RCIT vs 2% MCIT starting from the 4th year of operation. You pay whichever is HIGHER, not lower. <b>Plain version:</b> "Even if you have low taxable income, the corporation must pay at least 2% of gross income from year 4 onwards."';if(t.includes('e-invoicing'))return'<b>What:</b> Mandatory shift to structured electronic invoicing. Phased rollout under RR 11-2025 / RR 26-2025 with December 31, 2026 as the final compliance deadline.';if(t.includes('crm/pos'))return'<b>What:</b> Monthly reporting requirement if you use a registered Cash Register Machine or Point-of-Sale system. Must submit sales data per BIR rules.';if(t.includes('govt'))return'<b>What:</b> Filed by the government agency that paid you. As a VAT-registered seller dealing with the government, 5% final VAT is withheld at source on your behalf.';if(t.includes('peza/boi'))return'<b>What:</b> Ongoing reporting to your Investment Promotion Agency (PEZA, BOI, or other) if you are a Registered Business Enterprise enjoying incentives.';if(t.includes('13th month'))return'<b>What:</b> Statutory deadline to release 13th month pay to all rank-and-file employees. Tax-exempt up to ₱90,000 combined with other bonuses. <b>Plain version:</b> "Required December bonus equal to 1/12 of basic annual salary. Mandatory under PD 851."';if(t.includes('year-end housekeeping'))return'<b>What:</b> Reminder to close out the books, reconcile all accounts, prepare for the January-April compliance season, and verify all withholding taxes match payroll records.';if(t.includes('verify 2316'))return'<b>What:</b> Reminder to verify your 2316 from your employer is accurate before filing season. If anything is wrong, request correction now.';if(t.includes('substituted filing'))return'<b>What:</b> If you are an employee with only one employer all year and your tax was correctly withheld, your 2316 acts as your annual ITR — no separate filing needed.';if(t.includes('form 1700'))return'<b>What:</b> Annual income tax return for purely compensation earners who do NOT qualify for substituted filing (e.g., 2+ employers, incorrect withholding, spouse not qualified).';if(t.includes('afs to sec'))return'<b>What:</b> Corporate annual deadline to file Audited Financial Statements with the SEC via the eFAST portal.';if(t.includes('gis to sec'))return'<b>What:</b> Annual General Information Sheet filing with the SEC — basic corporate info, officers, shareholders.';if(t.includes('monthly wt compensation'))return'<b>What:</b> Monthly remittance of taxes you withheld from your employees salaries (BIR Form 1601-C). Even if you withheld zero, you still need to file. <b>Plain version:</b> "I deducted X amount from my employees paychecks for income tax this month — here is the money."';if(t.includes('monthly ewt'))return'<b>What:</b> Monthly remittance of expanded withholding tax (BIR Form 0619-E) for months 1 and 2 of each quarter. Filed only if you withhold from suppliers. <b>Plain version:</b> "I withheld tax from my contractors this month — here is the remittance."';if(t.includes('monthly final wt'))return'<b>What:</b> Monthly remittance of final withholding tax (BIR Form 0619-F). Final WT applies to royalties, dividends, certain interest payments, and non-resident payments.';return'<b>What:</b> '+(o.title)+'. See Form Reference for the full briefer.';}
-function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>(a.month*100+a.day)-(b.month*100+b.day));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>`<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');if(vM==='tl')renderTL(f);}
+function rOb(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='ob_'+Math.random().toString(36).substr(2,7);let h=`<div class="ob ${cc} ${dm?'dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="obt"><div class="obn">${o.title}${obTip(o.title)}</div><div class="obd">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</div></div><div class="obm">${o.form&&o.form!=='—'?`<span class="obf">${o.form}</span>`:''}${o.pq?`<span class="obpq" style="margin-top:0;display:inline-block;padding:.06rem .3rem;background:var(--ts);color:var(--teal);font-size:.55rem;font-weight:700;border-radius:4px"><b>If:</b> ${pqL(o.pq)}</span>`:''}<span class="ob-chev">▾</span></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this is</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.45rem;padding-top:.35rem;border-top:1px solid rgba(65,105,225,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.66rem;color:var(--ch);padding:.12rem 0;display:flex;align-items:center;gap:.3rem"><span style="font-size:.6rem">📎</span> ${a}</div>`).join('')}</div>`:''}${o.form&&o.form!=='—'&&o.form!=='Agency'&&o.form!=='LGU'&&o.form!=='SEC'&&o.form!=='IPA'&&o.form!=='ORUS'?`<div style="margin-top:.4rem;font-size:.6rem;color:var(--royal);font-weight:600;cursor:pointer" onclick="event.stopPropagation();document.querySelector('.pnav button:nth-child(2)').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">→ View ${o.form} in Form Reference</div>`:''}</div></div></div>`;return h;}
+function getLayman(o){
+  if(o.desc)return o.desc;
+  const f=o.form,t=o.title.toLowerCase();
+  // ── Compensation withholding
+  if(f==='1601-C')return'<b>What:</b> Monthly remittance of taxes you withheld from your employees\' salaries. Even if you withheld zero, you still need to file. <b>Plain version:</b> "I deducted X amount from my employees\' paychecks for income tax — here is the money."';
+  if(f==='1604-C')return'<b>What:</b> Annual reconciliation of all the monthly 1601-C filings. Confirms total compensation paid and total taxes withheld for the year. <b>Plain version:</b> "Here is the year-end summary of everything I withheld from my employees in compensation tax."';
+  // ── Expanded withholding tax
+  if(f==='0619-E')return'<b>What:</b> Monthly remittance of expanded withholding tax (EWT) for months 1 and 2 of each quarter. Filed only if you withhold from suppliers. <b>Plain version:</b> "I withheld tax from my contractors this month — here is the remittance."';
+  if(f==='1601-EQ')return'<b>What:</b> Quarterly EWT return. Reconciles the two monthly 0619-E filings + adds month 3 of the quarter. Comes with the QAP attachment.';
+  if(f==='1604-E')return'<b>What:</b> Annual reconciliation of all expanded withholding tax (EWT) for the year. Lists every supplier you withheld from. <b>Plain version:</b> "Here is the year-end summary of taxes I withheld from contractors, professionals, and landlords."';
+  // ── Final withholding tax
+  if(f==='0619-F')return'<b>What:</b> Monthly remittance of final withholding tax for months 1 and 2. Final WT applies to items like royalties, dividends, and non-resident payments.';
+  if(f==='1601-FQ')return'<b>What:</b> Quarterly final withholding tax return. Reconciles two monthly 0619-F filings.';
+  if(f==='1604-F')return'<b>What:</b> Annual summary of final withholding taxes you remitted on items like dividends, royalties, and certain interest payments.';
+  // ── VAT / Business Tax
+  if(f==='2550Q')return'<b>What:</b> Quarterly VAT return for VAT-registered taxpayers (gross above ₱3M or voluntarily registered). Reports output VAT (12% on sales) less input VAT (12% on purchases). <b>Plain version:</b> "I sold X with VAT, I bought Y with VAT — here is the difference I owe."';
+  if(f==='2550M')return'<b>What:</b> Monthly VAT declaration for the first 2 months of each quarter. Pre-payment of VAT before the quarterly return reconciles everything.';
+  if(f==='2551Q')return'<b>What:</b> Quarterly 3% percentage tax return for non-VAT registered taxpayers under graduated rates. NOT filed if you elect the 8% flat rate. <b>Plain version:</b> "I am not VAT-registered, so I pay 3% of my gross sales as a separate business tax."';
+  // ── Income Tax — Individual
+  if(f==='1701Q')return'<b>What:</b> Quarterly income tax return for self-employed, professionals, and mixed income earners. Filed 3 times a year (Q1–Q3; annual return covers Q4). Uses cumulative method — each quarter reports year-to-date. <b>Plain version:</b> "Here is my income for the year so far, and the tax I owe based on it (less what I already paid)."';
+  if(f==='1701A')return'<b>What:</b> Year-end annual income tax return for purely self-employed using the 8% flat rate or graduated + OSD. Reconciles everything from 3 quarterly filings. <b>Plain version:</b> "Here is the final, complete year-end version of my income tax return."';
+  if(f==='1701')return'<b>What:</b> Full-form annual income tax return for itemized deductions or mixed income earners. Reconciles all quarterly filings + adds Q4.';
+  if(f==='1700')return'<b>What:</b> Annual income tax return for purely compensation earners who do NOT qualify for substituted filing (e.g., 2+ employers, incorrect withholding, spouse not qualified).';
+  // ── Income Tax — Corporate
+  if(f==='1702Q')return'<b>What:</b> Quarterly corporate income tax return. Due 60 days after each quarter-end. Apply 25% RCIT (or 20% for qualifying small corps) on cumulative net taxable income.';
+  if(f==='1702-RT')return'<b>What:</b> Annual corporate income tax return. Reports full-year RCIT vs MCIT and pays whichever is higher.';
+  // ── Certificates
+  if(f==='2307')return'<b>What:</b> Issue BIR Form 2307 (Certificate of Creditable Tax Withheld) to each supplier or contractor you withheld EWT from. They use this as a tax credit. <b>Plain version:</b> "Here is the certificate proving I withheld tax from you — claim this as a credit on your own return."';
+  if(f==='2306')return'<b>What:</b> Issue BIR Form 2306 (Certificate of Final Tax Withheld) for any final withholding payments you made this quarter.';
+  // ── Form 2316 — multiple uses, disambiguate by month / cat
+  if(f==='2316'){
+    if(o.month===1&&o.pq==='employees')return'<b>What:</b> Annual deadline to give each employee their BIR Form 2316. Shows compensation paid and taxes withheld for the year. For most rank-and-file employees this also serves as their annual ITR (substituted filing). <b>Plain version:</b> "Here is your year-end tax certificate — keep this for your records or use it as your ITR."';
+    if(o.month===2)return'<b>What:</b> Submit signed duplicate copies of all employee 2316s to the BIR for substituted-filing employees.';
+    if(o.cat==='inc'&&o.month===4)return'<b>What:</b> If you are an employee with only one employer all year and your tax was correctly withheld, your 2316 acts as your annual ITR — no separate filing needed.';
+    if(o.month===12)return'<b>What:</b> Reminder to verify your 2316 from your employer is accurate before filing season. If anything is wrong, request correction now.';
+    return'<b>What:</b> BIR Form 2316 — Certificate of Compensation Payment / Tax Withheld.';
+  }
+  // ── SEC filings — disambiguate by month
+  if(f==='SEC'){
+    if(o.month===4)return'<b>What:</b> Corporate annual deadline to file Audited Financial Statements with the SEC via the eFAST portal.';
+    if(o.month===6)return'<b>What:</b> Annual General Information Sheet filing with the SEC — basic corporate info, officers, shareholders.';
+    return'<b>What:</b> SEC filing requirement for corporations.';
+  }
+  // ── Agency — disambiguate by pq
+  if(f==='Agency'){
+    if(o.pq==='employees')return'<b>What:</b> Monthly remittance of employer + employee shares of mandatory SSS, PhilHealth, and Pag-IBIG contributions. Each agency has its own portal and deadline.';
+    return'<b>What:</b> Monthly self-employed mandatory contributions to SSS, PhilHealth, and Pag-IBIG. Different agencies have different deadlines. <b>Plain version:</b> "These are my own social security, healthcare, and housing contributions as a self-employed individual."';
+  }
+  // ── ORUS — disambiguate by pq
+  if(f==='ORUS'){
+    if(o.pq==='cas')return'<b>What:</b> Computerized Accounting System (CAS) deadline. If you use accounting software, your books and reports must be submitted electronically via ORUS.';
+    return'<b>What:</b> Annual deadline to bind your loose-leaf books of accounts and have them stamped by the BIR. <b>Plain version:</b> "If you use loose-leaf bookkeeping, bring all your printed pages to BIR to be permanently bound and stamped."';
+  }
+  // ── Other specific forms
+  if(f==='LGU')return'<b>What:</b> Annual renewal of your business permit at the LGU (city or municipality). Required to legally operate. Different LGUs have different requirements and fees.';
+  if(f==='SLSP')return'<b>What:</b> Summary List of Sales and Purchases — quarterly e-submission that cross-references your VAT return. Required even for zero transactions ("No Entry").';
+  if(f==='2000')return'<b>What:</b> Documentary Stamp Tax return for any taxable documents executed during the month — leases, loans, share issuances, debt instruments. Filed within 5 days after month-end. <b>Plain version:</b> "I signed a taxable document this month — here is the stamp tax I owe."';
+  if(f==='1600')return'<b>What:</b> Filed by the government agency that paid you. As a VAT-registered seller dealing with the government, 5% final VAT is withheld at source on your behalf.';
+  if(f==='IPA')return'<b>What:</b> Ongoing reporting to your Investment Promotion Agency (PEZA, BOI, or other) if you are a Registered Business Enterprise enjoying incentives.';
+  // ── Blank / special forms — disambiguate by pq or title keywords
+  if(o.pq==='lowerewt')return'<b>What:</b> Annual sworn declaration to suppliers stating you do not exceed ₱3M gross sales. Lets your customers withhold from you at the lower 5% EWT rate instead of 10%.';
+  if(o.pq==='mcit')return'<b>What:</b> Ongoing reminder to compare your 25% RCIT vs 2% MCIT starting from the 4th year of operation. You pay whichever is HIGHER. <b>Plain version:</b> "Even if you have low taxable income, the corporation must pay at least 2% of gross income from year 4 onwards."';
+  if(o.pq==='einv'||f==='Per RR 11-2025')return'<b>What:</b> Mandatory shift to structured electronic invoicing. Phased rollout under RR 11-2025 / RR 26-2025 with December 31, 2026 as the final compliance deadline.';
+  if(o.pq==='crm')return'<b>What:</b> Monthly reporting requirement if you use a registered Cash Register Machine or Point-of-Sale system. Must submit sales data per BIR rules.';
+  if(t.includes('inventory'))return'<b>What:</b> Annual submission of inventory list of goods on hand as of December 31. Required for businesses dealing in goods. <b>Plain version:</b> "Here is everything I had in stock at year-end — proves no hidden inventory or sales."';
+  if(t.includes('13th'))return'<b>What:</b> Statutory deadline to release 13th month pay to all rank-and-file employees. Tax-exempt up to ₱90,000 combined with other bonuses. <b>Plain version:</b> "Required December bonus equal to 1/12 of basic annual salary. Mandatory under PD 851."';
+  if(t.includes('year-end')||t.includes('bookkeeping'))return'<b>What:</b> Reminder to close out the books, reconcile all accounts, prepare for the January-April compliance season, and verify all withholding taxes match payroll records.';
+  return'<b>What:</b> '+(o.title)+'. See Form Reference for the full briefer.';
+}
+function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>(a.month*100+a.day)-(b.month*100+b.day));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>`<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);}
 
 // ══════════ CALCULATOR ══════════
 function gradTax(ti){ti=Math.max(0,ti);if(ti<=250000)return 0;if(ti<=400000)return(ti-250000)*.15;if(ti<=800000)return 22500+(ti-400000)*.20;if(ti<=2000000)return 102500+(ti-800000)*.25;if(ti<=8000000)return 402500+(ti-2000000)*.30;return 2202500+(ti-8000000)*.35;}
@@ -1167,7 +1395,7 @@ function renderComputation(g,expData,R,best,isPure,cwt,over){
   // --- Graduated + OSD ---
   const bN=g-g*.4;
   const bBrk=bracketBreakdown(bN);
-  h+=`<div class="comp-regime ${best.k==='b'?'winner':''}"><div class="comp-regime-hdr"><span class="comp-regime-name">Graduated + 40% OSD</span><span class="comp-regime-total">${fmt(R[1].t)}</span></div><div class="comp-steps">`;
+  h+=`<div class="comp-regime ${best.k==='b'?'winner':''}"><div class="comp-regime-hdr"><span class="comp-regime-name">Graduated + 40% OSD${mkTip(TIPS.osd)}</span><span class="comp-regime-total">${fmt(R[1].t)}</span></div><div class="comp-steps">`;
   h+=`<div class="comp-step"><span class="comp-step-num">1</span><span class="comp-step-desc">Gross sales / receipts</span><span class="comp-step-val">${fmt(g)}</span></div>`;
   h+=`<div class="comp-step"><span class="comp-step-num">2</span><span class="comp-step-desc">Less: 40% Optional Standard Deduction <b>(NIRC Sec. 34(L))</b></span><span class="comp-step-val neg">(${fmt(g*.4)})</span></div>`;
   h+=`<div class="comp-step"><span class="comp-step-num">3</span><span class="comp-step-desc">Taxable income</span><span class="comp-step-val">${fmt(bN)}</span></div>`;
@@ -1438,6 +1666,13 @@ function calc(){
   if(best.k==='a')rt=`The <span class="hl">8% flat rate</span> wins at ${fmt(g)} gross${EXP_MODE!=='lump'?` with effective expense ratio ${eR}%`:''}. The 8% regime is optimal when actual expenses are below ~60-70% of gross — yours are at ${eR}%. It also exempts you from filing 2551Q quarterly percentage tax.`;
   else if(best.k==='b')rt=`<span class="hl">Graduated + 40% OSD</span> wins. At ${eR}% actual expenses, the flat 40% OSD gives you a better deduction than your real expenses would. You'll still need to file 2551Q quarterly percentage tax.`;
   else rt=`<span class="hl">Graduated + Itemized</span> wins at ${eR}% expense ratio. Your high actual expenses make itemizing worth the documentation burden — you'll need complete records and possibly Audited Financial Statements.`;
+  const savings=worst.t-best.t;
+  let psAction='';
+  if(best.k==='a')psAction=`Switch to the 8% flat rate — you'll pay ${fmt(savings)} less this year and skip quarterly percentage tax filings.`;
+  else if(best.k==='b')psAction=`Use the standard deduction — it gives you a better deduction than your actual expenses without needing receipts.`;
+  else psAction=`Itemize your expenses — your high expense ratio makes detailed record-keeping worth ${fmt(savings)} in tax savings.`;
+  const psSavings=savings<1000?`All three options are close — the difference is under ₱1,000.`:`You'd save ${fmt(savings)} compared to the most expensive option.`;
+  document.getElementById('plainSummary').innerHTML=`<p class="ps-action">${psAction}</p><p class="ps-savings">${psSavings}</p>`;
   document.getElementById('rcBox').innerHTML=`<div class="reco"><h3>Recommendation</h3><p>${rt}</p><div class="scall">${best.n}: ${fmt(best.t)} (${pct(best.t,g)} effective rate)</div></div>`;
 
   // WARNINGS & CAPS
@@ -1481,8 +1716,124 @@ function initNumberFormatters(){
 
 initMonthGrid();initCatGrid();initNumberFormatters();
 
+// ══════════ SIMPLE / PRO MODE TOGGLE ══════════
+function tgMode(){
+  const isPro=!document.body.classList.contains('pro-mode');
+  document.body.classList.toggle('pro-mode',isPro);
+  document.querySelector('.mode-toggle .mt-label').textContent=isPro?'Pro':'Simple';
+  localStorage.setItem('tpv_mode',isPro?'pro':'simple');
+  if(!isPro){
+    // Switched to Simple — redirect away from hidden Form Reference tab
+    if(document.getElementById('pgRef')?.classList.contains('vis')){
+      showPg('cal',document.querySelector('.pnav button:nth-child(1)'));
+    }
+    // Reset sales/expense modes to lump (non-first buttons are hidden)
+    document.querySelectorAll('.exp-modes').forEach(grp=>{
+      const first=grp.querySelector('.em-btn');
+      if(first&&!first.classList.contains('act'))first.click();
+    });
+  }
+}
+
+// ══════════ SETUP WIZARD ══════════
+const WZ_STEPS=[
+  {q:'How do you earn income?',key:'type',opts:[
+    {label:'Self-employed / Freelancer / Sole proprietor',sub:'You run a business or work independently.',val:'se'},
+    {label:'Mixed income earner',sub:'You have a day job and a side business or freelance income.',val:'mi'},
+    {label:'Corporation / OPC',sub:'Your business is incorporated.',val:'corp'}
+  ]},
+  {q:'Did your total sales or gross receipts exceed ₱3 million last year?',key:'vat',opts:[
+    {label:'Yes — I am VAT-registered',sub:'You charge 12% VAT on sales.',val:'yes'},
+    {label:'No — I am non-VAT',sub:'Under the threshold or opted for non-VAT.',val:'no'}
+  ]},
+  {q:'Do clients or employers withhold tax before paying you?',key:'ewt',opts:[
+    {label:'Yes — clients deduct EWT / BIR 2307s',sub:'They hand you a withholding tax certificate.',val:'yes'},
+    {label:'No — I receive full payment',sub:'No withholding applies to your income.',val:'no'}
+  ]},
+  {q:'Do you have employees on your payroll?',key:'employees',opts:[
+    {label:'Yes — I have at least one employee',sub:'You handle payroll, SSS, PhilHealth, Pag-IBIG.',val:'yes'},
+    {label:'No — it\'s just me (or contractors only)',sub:'No mandatory contribution filings needed.',val:'no'}
+  ]}
+];
+const WZ={step:0,answers:{}};
+
+function renderWzStep(){
+  const s=WZ_STEPS[WZ.step];
+  const pct=Math.round(((WZ.step+1)/WZ_STEPS.length)*100);
+  document.getElementById('wzBar').style.width=pct+'%';
+  let h=`<p class="wz-q">${s.q}</p><div class="wz-opts">`;
+  s.opts.forEach(o=>{
+    h+=`<button class="wz-opt" onclick="wzPick('${s.key}','${o.val}')"><strong>${o.label}</strong>${o.sub?`<br><span style="font-weight:400;font-size:.78rem;color:var(--mu)">${o.sub}</span>`:''}`;
+    h+=`</button>`;
+  });
+  h+=`</div>`;
+  document.getElementById('wzBody').innerHTML=h;
+}
+
+function showWizard(){
+  WZ.step=0;WZ.answers={};
+  renderWzStep();
+  const ov=document.getElementById('wzOverlay');
+  const card=document.getElementById('wzCard');
+  card.classList.remove('wz-out');
+  ov.style.display='flex';
+}
+
+function wzPick(key,val){
+  WZ.answers[key]=val;
+  WZ.step++;
+  if(WZ.step<WZ_STEPS.length){renderWzStep();}
+  else{wzFinish();}
+}
+
+function wzFinish(){
+  const a=WZ.answers;
+  // Apply type
+  const t=a.type||'se';
+  cT=t;
+  // Apply regime (VAT status determines variant)
+  const isVat=a.vat==='yes';
+  const regMap={se:isVat?'se_gv':'se_gnv',mi:isVat?'mi_gv':'mi_gnv',corp:isVat?'corp_v':'corp_nv'};
+  cR=regMap[t]||'se_gnv';
+  // Apply checklist items
+  if(a.ewt==='yes')cQ.add('ewt');else cQ.delete('ewt');
+  if(a.employees==='yes')cQ.add('employees');else cQ.delete('employees');
+  // Sync UI
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('act'));
+  const typeMap={se:0,mi:1,corp:2};
+  const typeBtns=document.querySelectorAll('.tb');
+  if(typeBtns[typeMap[t]])typeBtns[typeMap[t]].classList.add('act');
+  rRB();rCL();ren();
+  localStorage.setItem('tpv_setup',JSON.stringify(a));
+  dismissWizard();
+}
+
+function wzSkip(){
+  localStorage.setItem('tpv_setup','skipped');
+  dismissWizard();
+}
+
+function dismissWizard(){
+  const card=document.getElementById('wzCard');
+  const ov=document.getElementById('wzOverlay');
+  card.classList.add('wz-out');
+  setTimeout(()=>{ov.style.display='none';card.classList.remove('wz-out');},240);
+}
+
+function retakeSetup(){
+  localStorage.removeItem('tpv_setup');
+  showWizard();
+}
+
 // ══════════ INIT ══════════
 rRB();rCL();rCF();ren();renderForms();
+// Restore persisted mode
+(function(){
+  const m=localStorage.getItem('tpv_mode')||'simple';
+  if(m==='pro'){document.body.classList.add('pro-mode');const lbl=document.querySelector('.mode-toggle .mt-label');if(lbl)lbl.textContent='Pro';}
+})();
+// Show setup wizard on first visit
+if(!localStorage.getItem('tpv_setup'))showWizard();
 </script>
 </body>
 </html>
