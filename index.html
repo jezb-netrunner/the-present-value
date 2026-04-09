@@ -468,6 +468,18 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .pro-mode #plainSummary:not(:empty){padding:.35rem .75rem;border-left-width:3px}
 .pro-mode #plainSummary .ps-action{font-size:.82rem}
 .pro-mode #plainSummary .ps-savings{font-size:.7rem}
+
+/* ══ WORKFLOW VIEW ══ */
+.wv{display:none}.wv.vis{display:block}
+.wf-sec{margin-bottom:.55rem;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);overflow:hidden}
+.wf-sec-hdr{display:flex;align-items:center;gap:.5rem;padding:.5rem .8rem;cursor:pointer;background:var(--s2);border-bottom:1px solid var(--bd);user-select:none}
+.wf-sec.collapsed .wf-sec-hdr{border-bottom:none}
+.wf-sec-name{font-family:var(--sa);font-size:.72rem;font-weight:700;color:var(--ink);flex:1}
+.wf-sec-badge{font-family:var(--sa);font-size:.57rem;font-weight:700;background:var(--ink);color:#fff;border-radius:100px;padding:.08rem .4rem;white-space:nowrap}
+.wf-sec-chev{font-size:.58rem;color:var(--mu);transition:transform .18s}
+.wf-sec.collapsed .wf-sec-chev{transform:rotate(-90deg)}
+.wf-sec-body{padding:.35rem}.wf-sec.collapsed .wf-sec-body{display:none}
+.wf-empty{font-family:var(--se);font-size:.8rem;color:var(--mu);text-align:center;padding:2rem}
 </style>
 </head>
 <body>
@@ -501,12 +513,13 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 </div></section>
 <main class="mn">
 <div class="vc"><div class="vl">
-<div class="vt"><button class="act" onclick="setV('tl',this)">Timeline</button><button onclick="setV('tb',this)">Table</button></div>
+<div class="vt"><button class="act" onclick="setV('tl',this)">Timeline</button><button onclick="setV('tb',this)">Table</button><button onclick="setV('wf',this)">By Workflow</button></div>
 <input type="text" class="sb" placeholder="Search…" oninput="SQ=this.value.toLowerCase();ren()">
 </div><div class="ft" id="cF"></div></div>
 <div class="stb" id="st"></div>
 <div class="tl" id="tl"></div>
 <div class="tv" id="tv"></div>
+<div class="wv" id="wv"></div>
 </main></div>
 
 <!-- ═══ PAGE 2: FORM REFERENCE ═══ -->
@@ -935,6 +948,44 @@ OB.push({month:11,day:15,title:"File Quarterly Income Tax — Q3",form:"1701Q",c
 OB.push({month:12,day:20,title:"Declare Monthly VAT — November",form:"2550M",cat:"biz",r:VAT},{month:12,day:24,title:"Release 13th Month Pay to Employees",form:"—",cat:"emp",r:B,pq:"employees"},{month:12,day:31,title:"Complete Year-End Bookkeeping",form:"—",cat:"adm",r:B},{month:12,day:31,title:"Verify 2316 from Employer",form:"2316",cat:"inc",r:EMP});
 OB.push({month:0,day:5,title:"File Documentary Stamp Tax Return",form:"2000",cat:"dst",r:AB,pq:"dst"},{month:0,day:0,title:"Track Government VAT Withheld",form:"1600",cat:"wh",r:VAT,pq:"govpay"},{month:0,day:0,title:"Submit CRM/POS Monthly Sales Report",form:"—",cat:"adm",r:AB,pq:"crm"},{month:0,day:0,title:"Pay Personal Mandatory Contributions",form:"Agency",cat:"adm",r:[...SE,...MI]},{month:0,day:0,title:"Submit IPA Compliance Report",form:"IPA",cat:"sec",r:CORP,pq:"rbe"},{month:0,day:0,title:"Apply MCIT (Minimum Corporate Income Tax) Check",form:"—",cat:"inc",r:CORP,pq:"mcit",desc:"2% MCIT on gross vs 25%/20% RCIT from 4th yr."},{month:0,day:0,title:"Register for E-Invoicing System",form:"Per RR 11-2025",cat:"adm",r:AB,pq:"einv",desc:"Structured e-invoices by Dec 31, 2026."});
 
+// ══ WORKFLOW CLASSIFICATION ══
+function getObWF(o){
+  const f=o.form||'';
+  if(['1601-C','1604-C'].includes(f))return'payroll';
+  if(f==='2316'&&o.cat==='emp')return'payroll';
+  if(o.pq==='employees'&&(f==='—'||o.cat==='emp'))return'payroll';
+  if(f==='Agency')return'government_contributions';
+  if(['2550M','2550Q'].includes(f))return'vat_invoicing';
+  if(o.pq==='einv'||f==='Per RR 11-2025')return'vat_invoicing';
+  if(['0619-E','1601-EQ','1604-E','0619-F','1601-FQ','1604-F','2307','2306'].includes(f))return'client_billing';
+  if(f==='1600'||o.pq==='lowerewt')return'client_billing';
+  if(['2551Q','1701A','1701','1700','1702-RT','1701Q','1702Q'].includes(f))return'business_tax';
+  if(f==='2316'&&o.cat==='inc')return'business_tax';
+  if(o.pq==='mcit'||f==='2000')return'business_tax';
+  return'annual_admin';
+}
+OB.forEach(o=>o.wf=getObWF(o));
+
+const WF_ORDER=['payroll','vat_invoicing','client_billing','business_tax','annual_admin','government_contributions'];
+const WF_LABELS={payroll:'Payroll & Employee Taxes',vat_invoicing:'VAT & E-Invoicing',client_billing:'Client Billing & Creditable Withholding',business_tax:'Business Tax & Income Tax',annual_admin:'Registration, Licenses & Bookkeeping',government_contributions:'Government Contributions (SSS / PhilHealth / Pag-IBIG)'};
+
+function renderWF(f){
+  const grps={};
+  f.forEach(o=>{const wf=o.wf||'annual_admin';if(!grps[wf])grps[wf]=[];grps[wf].push(o);});
+  let h='';
+  WF_ORDER.forEach(wf=>{
+    const obs=grps[wf];if(!obs||!obs.length)return;
+    const sorted=[...obs].sort((a,b)=>(a.month===0?13:a.month)*100+a.day-(((b.month===0?13:b.month)*100)+b.day));
+    const sid='wfs_'+wf;
+    h+=`<div class="wf-sec" id="${sid}">`;
+    h+=`<div class="wf-sec-hdr" onclick="document.getElementById('${sid}').classList.toggle('collapsed')">`;
+    h+=`<span class="wf-sec-name">${WF_LABELS[wf]}</span><span class="wf-sec-badge">${obs.length}</span><span class="wf-sec-chev">&#9662;</span></div>`;
+    h+=`<div class="wf-sec-body">${sorted.map(rObNew).join('')}</div></div>`;
+  });
+  if(!h)h=`<div class="wf-empty">No obligations match your current filters.</div>`;
+  document.getElementById('wv').innerHTML=h;
+}
+
 function isV(o){if(!o.r.includes(cR))return false;if(!aC.has(o.cat))return false;if(SQ){const h=(o.title+' '+(o.form||'')+' '+(o.desc||'')+' '+(o.pq||'')).toLowerCase();if(!h.includes(SQ))return false;}const sa=document.getElementById('saT')?.checked;if(!sa&&o.pq&&!cQ.has(o.pq))return false;return true;}
 function gF(){return OB.filter(isV);}function cntQ(k){return OB.filter(o=>o.pq===k&&o.r.includes(cR)).length;}
 function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{b.classList.toggle('act',['se','mi','corp','emp'][i]===t)});rRB();rCL();rCF();ren();}
@@ -1065,7 +1116,7 @@ function getLayman(o){
   if(t.includes('year-end')||t.includes('bookkeeping'))return'<b>What:</b> Reminder to close out the books, reconcile all accounts, prepare for the January-April compliance season, and verify all withholding taxes match payroll records.';
   return'<b>What:</b> '+(o.title)+'. See Form Reference for the full briefer.';
 }
-function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>(a.month*100+a.day)-(b.month*100+b.day));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>`<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');if(vM==='tl')renderTL(f);}
+function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>(a.month*100+a.day)-(b.month*100+b.day));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>`<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);}
 
 // ══════════ CALCULATOR ══════════
 function gradTax(ti){ti=Math.max(0,ti);if(ti<=250000)return 0;if(ti<=400000)return(ti-250000)*.15;if(ti<=800000)return 22500+(ti-400000)*.20;if(ti<=2000000)return 102500+(ti-800000)*.25;if(ti<=8000000)return 402500+(ti-2000000)*.30;return 2202500+(ti-8000000)*.35;}
