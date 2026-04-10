@@ -38,7 +38,7 @@ html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);colo
 
 /* CHECKLIST */
 .cls{max-width:1200px;margin:.5rem auto 0;padding:0 2rem;}
-.clp{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);overflow:hidden;}
+.clp{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);}
 .clh{padding:.5rem .9rem;display:flex;align-items:center;justify-content:space-between;gap:.4rem;cursor:pointer;border-bottom:1px solid var(--bd);flex-wrap:wrap;}
 .clh h2{font-family:var(--se);font-size:.88rem;font-weight:600;color:var(--ink);}
 .cta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
@@ -48,7 +48,7 @@ html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);colo
 .sat input:checked+.tt{background:var(--royal);border-color:var(--royal)}.sat input:checked+.tt::after{left:13px;background:#fff}
 .clch{color:var(--mu);transition:transform .3s;font-size:.55rem}
 .clp.open .clch{transform:rotate(180deg)}
-.clb{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}.clp.open .clb{max-height:700px;overflow-y:auto}
+.clb{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}.clp.open .clb{max-height:700px;overflow:visible}
 .clg{padding:.6rem .9rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0 .7rem}
 .ci{display:flex;align-items:flex-start;gap:.45rem;padding:.38rem 0;border-bottom:1px solid var(--s2);cursor:pointer}.ci:last-child{border-bottom:none}
 .cbox{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--bl);background:var(--sf);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:2px}
@@ -536,7 +536,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <button class="tb" onclick="setType('emp')">Employee</button>
 </div></div>
 <div class="rbar" id="rBar"></div>
-<section class="cls"><div class="clp open" id="clP">
+<section class="cls"><div class="clp" id="clP">
 <div class="clh" onclick="document.getElementById('clP').classList.toggle('open')"><h2>Your Situation</h2>
 <div class="cta"><label class="sat" onclick="event.stopPropagation()"><span>Show all</span><input type="checkbox" id="saT" onchange="ren()"><span class="tt"></span></label><span class="clch">▾</span></div></div>
 <div class="clb"><div class="clg" id="clG"></div></div>
