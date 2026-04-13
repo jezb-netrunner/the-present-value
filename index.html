@@ -453,13 +453,13 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .pro-mode .mode-toggle .mt-pip{background:var(--royal)}
 /* Simple mode — hide by default */
 .pnav button:nth-child(2){display:none}
-.cp,.ftr,.oblg{display:none}
+.cp,.oblg{display:none}
 .fr-row-legal{display:none}
 .exp-modes .em-btn:not(:first-child){display:none}
 .qsec{display:none}
 /* Pro mode — restore everything */
 .pro-mode .pnav button:nth-child(2){display:block}
-.pro-mode .cp,.pro-mode .ftr{display:block}
+.pro-mode .cp{display:block}
 .pro-mode .oblg{display:inline}
 .pro-mode .fr-row-legal{display:grid}
 .pro-mode .exp-modes .em-btn:not(:first-child){display:inline-block}
@@ -469,6 +469,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .pro-mode #plainSummary .ps-action{font-size:.82rem}
 .pro-mode #plainSummary .ps-savings{font-size:.7rem}
 /* Simple mode — stricter UI (no .pro-mode) */
+body:not(.pro-mode) .mc{display:none}
 #rBar,.sb,.ft,.stb,.vt,.clp{display:none}
 .sm-bar{font-size:.65rem;color:var(--mu);max-width:1200px;margin:.4rem auto 0;padding:0 2rem}
 .sm-upd{color:var(--royal);cursor:pointer;font-weight:600}
@@ -668,12 +669,13 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 
 <!-- ═══ SHARED BOTTOM ═══ -->
 <section class="bp">
-<div class="pg">
+<div class="cp"><div class="cph" onclick="let b=document.getElementById('penB'),c=document.getElementById('penC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Penalties &amp; Interest Reference</h3><span class="mchv" id="penC" style="color:var(--lt);font-size:.6rem">▾</span></div>
+<div class="cpb" id="penB"><div class="pg">
 <div class="pc"><h4>Micro &amp; Small <span class="bsm" style="background:var(--gs);color:var(--green)">Gross &lt; ₱20M · EOPT</span></h4>
 <div class="pr"><span>Surcharge (late)</span><span class="pv pvg">10%</span></div><div class="pr"><span>Interest</span><span class="pv pvg">6%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvg">₱500 (max ₱12.5K/yr)</span></div></div>
 <div class="pc"><h4>Medium, Large &amp; Willful <span class="bsm" style="background:var(--rds);color:var(--red)">Standard</span></h4>
 <div class="pr"><span>Surcharge (late)</span><span class="pv pvr">25%</span></div><div class="pr"><span>Surcharge (willful)</span><span class="pv pvr">50%</span></div><div class="pr"><span>Interest</span><span class="pv pvr">12%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvr">₱1K (max ₱25K/yr)</span></div></div>
-</div>
+</div></div></div>
 <div class="cp"><div class="cph" onclick="let b=document.getElementById('lgB'),c=document.getElementById('lgC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Legal Basis</h3><span class="mchv" id="lgC" style="color:var(--lt);font-size:.6rem">▾</span></div>
 <div class="cpb" id="lgB">
 <div class="lr"><span class="lrt">Income Tax</span><span class="lrc">NIRC Sec. 24(A)(2); TRAIN Law (RA 10963)</span></div>
