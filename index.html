@@ -508,8 +508,9 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 #wzFoot{display:flex;justify-content:flex-end;padding:.65rem 1.8rem 1.1rem}
 .wz-skip{font-family:var(--se);font-size:.72rem;color:var(--mu);text-decoration:none;cursor:pointer;background:none;border:none;padding:0}
 .wz-skip:hover{color:var(--royal)}
-.retake-lnk{font-family:var(--se);font-size:.65rem;color:var(--mu);text-decoration:none;white-space:nowrap;cursor:pointer;background:none;border:none;padding:0}
-.retake-lnk:hover{color:var(--royal)}
+.wz-opt.sel{border-color:var(--royal);background:var(--rs);color:var(--ink)}
+.upd-setup{font-family:var(--sa);font-size:.65rem;color:var(--mu);background:none;border:none;cursor:pointer;margin-left:auto;padding:0;white-space:nowrap}
+.upd-setup:hover{color:var(--royal)}
 </style>
 </head>
 <body>
@@ -534,7 +535,6 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
   <button onclick="showPg('calc',this)">Regime Calculator</button>
 </nav>
 <button class="mode-toggle" onclick="tgMode()"><span class="mt-pip"></span><span class="mt-label">Simple</span></button>
-<button class="retake-lnk" onclick="retakeSetup()">Retake Setup</button>
 </div>
 </div></header>
 
@@ -545,9 +545,10 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <button class="tb" onclick="setType('mi')">Mixed Income</button>
 <button class="tb" onclick="setType('corp')">Corporation</button>
 <button class="tb" onclick="setType('emp')">Employee</button>
+<button class="upd-setup" onclick="showWizard()">⚙ Update My Setup</button>
 </div></div>
 <div class="rbar" id="rBar"></div>
-<div class="sm-bar" id="smBar">Showing obligations for <strong id="smTpLabel">Self-Employed</strong>. <span class="sm-upd" onclick="retakeSetup()">Update Setup →</span></div>
+<div class="sm-bar" id="smBar">Showing obligations for <strong id="smTpLabel">Self-Employed</strong>. <span class="sm-upd" onclick="showWizard()">Update Setup →</span></div>
 <section class="cls"><div class="clp" id="clP">
 <div class="clh" onclick="document.getElementById('clP').classList.toggle('open')"><h2>Your Situation</h2>
 <div class="cta"><label class="sat" onclick="event.stopPropagation()"><span>Show all</span><input type="checkbox" id="saT" onchange="ren()"><span class="tt"></span></label><span class="clch">▾</span></div></div>
@@ -1778,9 +1779,10 @@ function renderWzStep(){
   const s=WZ_STEPS[WZ.step];
   const pct=Math.round(((WZ.step+1)/WZ_STEPS.length)*100);
   document.getElementById('wzBar').style.width=pct+'%';
+  const cur=WZ.answers[s.key];
   let h=`<p class="wz-q">${s.q}</p><div class="wz-opts">`;
   s.opts.forEach(o=>{
-    h+=`<button class="wz-opt" onclick="wzPick('${s.key}','${o.val}')"><strong>${o.label}</strong>${o.sub?`<br><span style="font-weight:400;font-size:.78rem;color:var(--mu)">${o.sub}</span>`:''}`;
+    h+=`<button class="wz-opt${cur===o.val?' sel':''}" onclick="wzPick('${s.key}','${o.val}')"><strong>${o.label}</strong>${o.sub?`<br><span style="font-weight:400;font-size:.78rem;color:var(--mu)">${o.sub}</span>`:''}`;
     h+=`</button>`;
   });
   h+=`</div>`;
@@ -1788,7 +1790,9 @@ function renderWzStep(){
 }
 
 function showWizard(){
-  WZ.step=0;WZ.answers={};
+  WZ.step=0;
+  const saved=localStorage.getItem('tpv_setup');
+  WZ.answers=(saved&&saved!=='skipped')?JSON.parse(saved):{};
   renderWzStep();
   const ov=document.getElementById('wzOverlay');
   const card=document.getElementById('wzCard');
@@ -1805,22 +1809,17 @@ function wzPick(key,val){
 
 function wzFinish(){
   const a=WZ.answers;
-  // Apply type
   const t=a.type||'se';
-  cT=t;
-  // Apply regime (VAT status determines variant)
+  // Set type via existing setter (handles cT, cR default, cQ clear, UI sync)
+  setType(t);
+  // Override regime from VAT answer
   const isVat=a.vat==='yes';
   const regMap={se:isVat?'se_gv':'se_gnv',mi:isVat?'mi_gv':'mi_gnv',corp:isVat?'corp_v':'corp_nv'};
-  cR=regMap[t]||'se_gnv';
-  // Apply checklist items
+  setReg(regMap[t]||Object.keys(TYPES[t].regimes)[0]);
+  // Set checklist items from answers
   if(a.ewt==='yes')cQ.add('ewt');else cQ.delete('ewt');
   if(a.employees==='yes')cQ.add('employees');else cQ.delete('employees');
-  // Sync UI
-  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('act'));
-  const typeMap={se:0,mi:1,corp:2};
-  const typeBtns=document.querySelectorAll('.tb');
-  if(typeBtns[typeMap[t]])typeBtns[typeMap[t]].classList.add('act');
-  rRB();rCL();ren();
+  rCL();ren();
   localStorage.setItem('tpv_setup',JSON.stringify(a));
   updSmBar();
   dismissWizard();
@@ -1836,11 +1835,6 @@ function dismissWizard(){
   const ov=document.getElementById('wzOverlay');
   card.classList.add('wz-out');
   setTimeout(()=>{ov.style.display='none';card.classList.remove('wz-out');},240);
-}
-
-function retakeSetup(){
-  localStorage.removeItem('tpv_setup');
-  showWizard();
 }
 
 // ══════════ INIT ══════════
