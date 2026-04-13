@@ -116,6 +116,11 @@ html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);colo
 .fv-empty{font-family:var(--se);font-size:.9rem;color:var(--mu);text-align:center;padding:3rem 1rem}
 .fgh{font-family:var(--sa);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);border-bottom:1px solid var(--bd);margin:1rem 0 .4rem;display:flex;align-items:center;justify-content:space-between;padding-bottom:.25rem}
 .fgh-tog{font-family:var(--sa);font-size:.6rem;font-weight:600;color:var(--royal);background:none;border:none;cursor:pointer;padding:0;text-transform:none;letter-spacing:normal;font-weight:500}
+.fprog{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;padding:.6rem .75rem;background:var(--sf);border-radius:var(--r);border:1px solid var(--bd)}
+.fprog-lbl{font-family:var(--sa);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);white-space:nowrap}
+.fprog-track{flex:1;height:5px;border-radius:100px;background:var(--s3);overflow:hidden}
+.fprog-fill{height:100%;border-radius:100px;transition:width .3s ease}
+.fprog-stat{font-family:var(--sa);font-size:.68rem;font-weight:600;color:var(--ink);white-space:nowrap}
 
 /* TABLE */
 .tv{display:none}.tv.vis{display:block}.tl.hid{display:none}
@@ -1066,8 +1071,18 @@ function urgLevel(d){
 }
 function renderFeed(){
   const today=new Date();today.setHours(0,0,0,0);
+  const cm=today.getMonth()+1;
+  const mobs=gF().filter(o=>o.month===cm&&o.day!==0);
+  const Y=mobs.length;
+  let h='';
+  if(Y){
+    const X=mobs.filter(o=>isFiled(o)).length;
+    const pct=X?Math.round(X/Y*100):0;
+    const fc=X===Y?'var(--green)':'var(--royal)';
+    h+=`<div class="fprog"><span class="fprog-lbl">Month Progress</span><div class="fprog-track"><div class="fprog-fill" style="width:${pct}%;background:${fc}"></div></div><span class="fprog-stat">${X} of ${Y} filed this month</span></div>`;
+  }
   const items=gF().filter(o=>o.month!==0&&o.day!==0&&daysUntil(o)<=90);
-  if(!items.length){document.getElementById('fv').innerHTML='<div class="fv-empty">Nothing due in the next 90 days.</div>';return;}
+  if(!items.length){document.getElementById('fv').innerHTML=h+'<div class="fv-empty">Nothing due in the next 90 days.</div>';return;}
   items.sort((a,b)=>{
     const fa=isFiled(a)?1:0,fb=isFiled(b)?1:0;
     if(fa!==fb)return fa-fb;
@@ -1094,7 +1109,6 @@ function renderFeed(){
     c+=`</div>`;
     return c;
   }
-  let h='';
   let first=true;
   [['This Week',grps.tw],['Next Week',grps.nw],['This Month',grps.tm],['Later',grps.lt]].forEach(([label,arr])=>{
     if(!arr.length)return;
