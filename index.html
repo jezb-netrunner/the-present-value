@@ -99,6 +99,22 @@ html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);colo
 .al{display:flex;flex-direction:column;gap:.06rem}.ai{font-size:.64rem;color:var(--dim);padding-left:.55rem;position:relative}.ai::before{content:'→';position:absolute;left:0;color:var(--lt);font-size:.5rem}
 .oblg{margin-top:.12rem;font-size:.55rem;color:var(--lt);font-weight:500}
 
+/* FEED VIEW */
+.fv{display:none}.fv.vis{display:block}
+.fc{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);padding:.85rem;margin-bottom:.5rem;border-left:3px solid transparent;transition:opacity .25s}
+.fc.filed{opacity:.4}
+.fc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem}
+.fc-urg{font-size:.6rem;font-weight:700}
+.fc-dl{font-size:.6rem;color:var(--mu)}
+.fc-title{font-family:var(--se);font-size:.92rem;font-weight:600;color:var(--ink);line-height:1.2;margin-bottom:.12rem}
+.fc-form{font-size:.62rem;color:var(--mu);margin-bottom:.45rem}
+.fc-btm{display:flex;align-items:center;justify-content:space-between;margin-top:.45rem;padding-top:.4rem;border-top:1px solid var(--s2)}
+.fc-mark{font-family:var(--sa);font-size:.62rem;font-weight:700;padding:.22rem .6rem;border-radius:100px;border:1.5px solid var(--royal);background:transparent;color:var(--royal);cursor:pointer;transition:all .15s}
+.fc-mark:hover{background:var(--royal);color:#fff}
+.fc.filed .fc-mark{border-color:var(--green);color:var(--green)}
+.fc-type{font-size:.58rem;font-weight:600;padding:.1rem .35rem;border-radius:100px;background:var(--s2);color:var(--mu)}
+.fv-empty{font-family:var(--se);font-size:.9rem;color:var(--mu);text-align:center;padding:3rem 1rem}
+
 /* TABLE */
 .tv{display:none}.tv.vis{display:block}.tl.hid{display:none}
 .tw{overflow-x:auto;border-radius:var(--r);background:var(--sf);box-shadow:var(--shs)}
@@ -453,13 +469,13 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .pro-mode .mode-toggle .mt-pip{background:var(--royal)}
 /* Simple mode — hide by default */
 .pnav button:nth-child(2){display:none}
-.cp,.ftr,.oblg{display:none}
+.cp,.oblg{display:none}
 .fr-row-legal{display:none}
 .exp-modes .em-btn:not(:first-child){display:none}
 .qsec{display:none}
 /* Pro mode — restore everything */
 .pro-mode .pnav button:nth-child(2){display:block}
-.pro-mode .cp,.pro-mode .ftr{display:block}
+.pro-mode .cp{display:block}
 .pro-mode .oblg{display:inline}
 .pro-mode .fr-row-legal{display:grid}
 .pro-mode .exp-modes .em-btn:not(:first-child){display:inline-block}
@@ -468,6 +484,18 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .pro-mode #plainSummary:not(:empty){padding:.35rem .75rem;border-left-width:3px}
 .pro-mode #plainSummary .ps-action{font-size:.82rem}
 .pro-mode #plainSummary .ps-savings{font-size:.7rem}
+/* Simple mode — stricter UI (no .pro-mode) */
+body:not(.pro-mode) .mc{display:none}
+#rBar,.sb,.ft,.stb,.vt,.clp{display:none}
+.sm-bar{font-size:.65rem;color:var(--mu);max-width:1200px;margin:.4rem auto 0;padding:0 2rem}
+.sm-upd{color:var(--royal);cursor:pointer;font-weight:600}
+.sm-upd:hover{text-decoration:underline}
+/* Pro mode — restore stricter elements */
+.pro-mode #rBar{display:flex}
+.pro-mode .sb{display:block}
+.pro-mode .ft,.pro-mode .stb,.pro-mode .vt{display:flex}
+.pro-mode .clp{display:block}
+.pro-mode .sm-bar{display:none}
 
 /* ══ WORKFLOW VIEW ══ */
 .wv{display:none}.wv.vis{display:block}
@@ -497,8 +525,9 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 #wzFoot{display:flex;justify-content:flex-end;padding:.65rem 1.8rem 1.1rem}
 .wz-skip{font-family:var(--se);font-size:.72rem;color:var(--mu);text-decoration:none;cursor:pointer;background:none;border:none;padding:0}
 .wz-skip:hover{color:var(--royal)}
-.retake-lnk{font-family:var(--se);font-size:.65rem;color:var(--mu);text-decoration:none;white-space:nowrap;cursor:pointer;background:none;border:none;padding:0}
-.retake-lnk:hover{color:var(--royal)}
+.wz-opt.sel{border-color:var(--royal);background:var(--rs);color:var(--ink)}
+.upd-setup{font-family:var(--sa);font-size:.65rem;color:var(--mu);background:none;border:none;cursor:pointer;margin-left:auto;padding:0;white-space:nowrap}
+.upd-setup:hover{color:var(--royal)}
 </style>
 </head>
 <body>
@@ -523,7 +552,6 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
   <button onclick="showPg('calc',this)">Regime Calculator</button>
 </nav>
 <button class="mode-toggle" onclick="tgMode()"><span class="mt-pip"></span><span class="mt-label">Simple</span></button>
-<button class="retake-lnk" onclick="retakeSetup()">Retake Setup</button>
 </div>
 </div></header>
 
@@ -534,8 +562,10 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <button class="tb" onclick="setType('mi')">Mixed Income</button>
 <button class="tb" onclick="setType('corp')">Corporation</button>
 <button class="tb" onclick="setType('emp')">Employee</button>
+<button class="upd-setup" onclick="showWizard()">⚙ Update My Setup</button>
 </div></div>
 <div class="rbar" id="rBar"></div>
+<div class="sm-bar" id="smBar">Showing obligations for <strong id="smTpLabel">Self-Employed</strong>. <span class="sm-upd" onclick="showWizard()">Update Setup →</span></div>
 <section class="cls"><div class="clp" id="clP">
 <div class="clh" onclick="document.getElementById('clP').classList.toggle('open')"><h2>Your Situation</h2>
 <div class="cta"><label class="sat" onclick="event.stopPropagation()"><span>Show all</span><input type="checkbox" id="saT" onchange="ren()"><span class="tt"></span></label><span class="clch">▾</span></div></div>
@@ -544,10 +574,11 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 </div></section>
 <main class="mn">
 <div class="vc"><div class="vl">
-<div class="vt"><button class="act" onclick="setV('tl',this)">Timeline</button><button onclick="setV('tb',this)">Table</button><button onclick="setV('wf',this)">By Workflow</button></div>
+<div class="vt"><button class="act" onclick="setV('fd',this)">Feed</button><button onclick="setV('tl',this)">Timeline</button><button onclick="setV('tb',this)">Table</button><button onclick="setV('wf',this)">By Workflow</button></div>
 <input type="text" class="sb" placeholder="Search…" oninput="SQ=this.value.toLowerCase();ren()">
 </div><div class="ft" id="cF"></div></div>
 <div class="stb" id="st"></div>
+<div class="fv vis" id="fv"></div>
 <div class="tl" id="tl"></div>
 <div class="tv" id="tv"></div>
 <div class="wv" id="wv"></div>
@@ -655,12 +686,13 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 
 <!-- ═══ SHARED BOTTOM ═══ -->
 <section class="bp">
-<div class="pg">
+<div class="cp"><div class="cph" onclick="let b=document.getElementById('penB'),c=document.getElementById('penC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Penalties &amp; Interest Reference</h3><span class="mchv" id="penC" style="color:var(--lt);font-size:.6rem">▾</span></div>
+<div class="cpb" id="penB"><div class="pg">
 <div class="pc"><h4>Micro &amp; Small <span class="bsm" style="background:var(--gs);color:var(--green)">Gross &lt; ₱20M · EOPT</span></h4>
 <div class="pr"><span>Surcharge (late)</span><span class="pv pvg">10%</span></div><div class="pr"><span>Interest</span><span class="pv pvg">6%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvg">₱500 (max ₱12.5K/yr)</span></div></div>
 <div class="pc"><h4>Medium, Large &amp; Willful <span class="bsm" style="background:var(--rds);color:var(--red)">Standard</span></h4>
 <div class="pr"><span>Surcharge (late)</span><span class="pv pvr">25%</span></div><div class="pr"><span>Surcharge (willful)</span><span class="pv pvr">50%</span></div><div class="pr"><span>Interest</span><span class="pv pvr">12%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvr">₱1K (max ₱25K/yr)</span></div></div>
-</div>
+</div></div></div>
 <div class="cp"><div class="cph" onclick="let b=document.getElementById('lgB'),c=document.getElementById('lgC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Legal Basis</h3><span class="mchv" id="lgC" style="color:var(--lt);font-size:.6rem">▾</span></div>
 <div class="cpb" id="lgB">
 <div class="lr"><span class="lrt">Income Tax</span><span class="lrc">NIRC Sec. 24(A)(2); TRAIN Law (RA 10963)</span></div>
@@ -948,7 +980,7 @@ const QS={se:[{key:"employees",q:"Do you have employees?",d:"1601-C, 1604-C, 231
   mi:[{key:"employees",q:"Have employees?",d:"1601-C, 1604-C, 2316"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ"},{key:"fwt",q:"Final WT?",d:"0619-F, 1601-FQ"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"cas",q:"Computerized Accounting?",d:"CAS books"},{key:"crm",q:"CRM/POS?",d:"Reports"},{key:"govpay",q:"Gov payments?",d:"1600"},{key:"einv",q:"E-invoicing?",d:"Dec 2026"}],
   corp:[{key:"employees",q:"Have employees?",d:"1601-C, 1604-C, 2316"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ"},{key:"fwt",q:"Final WT?",d:"0619-F, 1601-FQ"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"mcit",q:"4th year+ operations?",d:"2% MCIT"},{key:"rbe",q:"RBE (PEZA/BOI)?",d:"IPA reporting"},{key:"cas",q:"Computerized Accounting?",d:"CAS books"},{key:"crm",q:"CRM/POS?",d:"Reports"},{key:"govpay",q:"Gov payments?",d:"1600"},{key:"einv",q:"E-invoicing?",d:"Dec 2026"}],
   emp:[{key:"multi_emp",q:"2+ employers?",d:"Must file 1700"},{key:"other_inc",q:"Non-business income?",d:"File 1700"},{key:"spouse_dq",q:"Spouse not qualified?",d:"Disqualifies you"}]};
-let cT='se',cR='se_8',vM='tl',SQ='',cQ=new Set(),aC=new Set(Object.keys(CATS));
+let cT='se',cR='se_8',vM='fd',SQ='',cQ=new Set(),aC=new Set(Object.keys(CATS));
 // ══ CALENDAR REDESIGN: STATE & DATA ══
 const _now=new Date();const YEAR=_now.getFullYear();
 let cMonth=_now.getMonth()+1,cQuarter=Math.ceil((_now.getMonth()+1)/3);
@@ -1017,9 +1049,46 @@ function renderWF(f){
   document.getElementById('wv').innerHTML=h;
 }
 
+// ══ FEED VIEW ══
+function obsId(o){return(o.month+'_'+o.day+'_'+(o.form||'').replace(/[^a-zA-Z0-9]/g,'')+'_'+o.title.replace(/[^a-zA-Z0-9]/g,'').toLowerCase().substring(0,16));}
+function daysUntil(o){const today=new Date();today.setHours(0,0,0,0);return Math.floor((new Date(YEAR,o.month-1,o.day)-today)/86400000);}
+function isFiled(o){return localStorage.getItem('tpv_filed_'+obsId(o)+'_'+YEAR)==='1';}
+function tgFiled(id,cardId){const key='tpv_filed_'+id+'_'+YEAR;if(localStorage.getItem(key)==='1')localStorage.removeItem(key);else localStorage.setItem(key,'1');renderFeed();}
+function urgLevel(d){
+  if(d<0)return{c:'var(--red)',t:'Overdue'};
+  if(d===0)return{c:'var(--red)',t:'Due today'};
+  if(d===1)return{c:'var(--red)',t:'Due tomorrow'};
+  if(d<=7)return{c:'var(--red)',t:'Due in '+d+' days'};
+  if(d<=30)return{c:'var(--amber)',t:'Due this month'};
+  return{c:'var(--royal)',t:'Upcoming'};
+}
+function renderFeed(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const items=gF().filter(o=>o.month!==0&&o.day!==0&&daysUntil(o)<=90);
+  if(!items.length){document.getElementById('fv').innerHTML='<div class="fv-empty">Nothing due in the next 90 days.</div>';return;}
+  items.sort((a,b)=>{
+    const fa=isFiled(a)?1:0,fb=isFiled(b)?1:0;
+    if(fa!==fb)return fa-fb;
+    return(a.month*100+a.day)-(b.month*100+b.day);
+  });
+  const tname=TYPES[cT].name;
+  let h='';
+  items.forEach(o=>{
+    const id=obsId(o);const filed=isFiled(o);const d=daysUntil(o);const u=urgLevel(d);
+    const dl=ms(o.month)+' '+o.day+', '+YEAR;
+    h+=`<div class="fc${filed?' filed':''}" id="fc_${id}" style="border-left-color:${u.c}">`;
+    h+=`<div class="fc-top"><span class="fc-urg" style="color:${u.c}">${u.t}</span><span class="fc-dl">${dl}</span></div>`;
+    h+=`<div class="fc-title">${o.title}</div>`;
+    if(o.form&&o.form!=='—')h+=`<div class="fc-form">${o.form}</div>`;
+    h+=`<div class="fc-btm"><button class="fc-mark" onclick="tgFiled('${id}','fc_${id}')">${filed?'✓ Filed':'Mark as Filed →'}</button><span class="fc-type">${tname}</span></div>`;
+    h+=`</div>`;
+  });
+  document.getElementById('fv').innerHTML=h;
+}
+
 function isV(o){if(!o.r.includes(cR))return false;if(!aC.has(o.cat))return false;if(SQ){const h=(o.title+' '+(o.form||'')+' '+(o.desc||'')+' '+(o.pq||'')).toLowerCase();if(!h.includes(SQ))return false;}const sa=document.getElementById('saT')?.checked;if(!sa&&o.pq&&!cQ.has(o.pq))return false;return true;}
 function gF(){return OB.filter(isV);}function cntQ(k){return OB.filter(o=>o.pq===k&&o.r.includes(cR)).length;}
-function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{b.classList.toggle('act',['se','mi','corp','emp'][i]===t)});rRB();rCL();rCF();ren();}
+function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{b.classList.toggle('act',['se','mi','corp','emp'][i]===t)});rRB();rCL();rCF();ren();updSmBar();}
 function setReg(r){cR=r;rRB();rCL();ren();}function setV(v,b){vM=v;document.querySelectorAll('.vt button').forEach(x=>x.classList.remove('act'));b.classList.add('act');ren();}
 function tgQ(k){cQ.has(k)?cQ.delete(k):cQ.add(k);rCL();ren();}function tgC(c){aC.has(c)?aC.delete(c):aC.add(c);rCF();ren();}function tgM(m){document.querySelector(`.ms[data-m="${m}"]`)?.classList.toggle('act');}
 function rRB(){document.getElementById('rBar').innerHTML='<span class="tl-l">Regime</span>'+Object.entries(TYPES[cT].regimes).map(([k,v])=>`<button class="rb ${k===cR?'act':''}" onclick="setReg('${k}')">${v.n}</button>`).join('');}
@@ -1147,7 +1216,7 @@ function getLayman(o){
   if(t.includes('year-end')||t.includes('bookkeeping'))return'<b>What:</b> Reminder to close out the books, reconcile all accounts, prepare for the January-April compliance season, and verify all withholding taxes match payroll records.';
   return'<b>What:</b> '+(o.title)+'. See Form Reference for the full briefer.';
 }
-function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>(a.month*100+a.day)-(b.month*100+b.day));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>`<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);}
+function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>(a.month*100+a.day)-(b.month*100+b.day));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>`<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');const fe=document.getElementById('fv');fe.classList.toggle('vis',vM==='fd');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);else if(vM==='fd')renderFeed();}
 
 // ══════════ CALCULATOR ══════════
 function gradTax(ti){ti=Math.max(0,ti);if(ti<=250000)return 0;if(ti<=400000)return(ti-250000)*.15;if(ti<=800000)return 22500+(ti-400000)*.20;if(ti<=2000000)return 102500+(ti-800000)*.25;if(ti<=8000000)return 402500+(ti-2000000)*.30;return 2202500+(ti-8000000)*.35;}
@@ -1717,6 +1786,7 @@ function initNumberFormatters(){
 initMonthGrid();initCatGrid();initNumberFormatters();
 
 // ══════════ SIMPLE / PRO MODE TOGGLE ══════════
+function updSmBar(){const el=document.getElementById('smTpLabel');if(el)el.textContent=TYPES[cT].name;}
 function tgMode(){
   const isPro=!document.body.classList.contains('pro-mode');
   document.body.classList.toggle('pro-mode',isPro);
@@ -1732,7 +1802,11 @@ function tgMode(){
       const first=grp.querySelector('.em-btn');
       if(first&&!first.classList.contains('act'))first.click();
     });
+    // Default to Feed view in Simple mode
+    const fdBtn=document.querySelector('.vt button:first-child');
+    if(fdBtn)setV('fd',fdBtn);
   }
+  updSmBar();
 }
 
 // ══════════ SETUP WIZARD ══════════
@@ -1761,9 +1835,10 @@ function renderWzStep(){
   const s=WZ_STEPS[WZ.step];
   const pct=Math.round(((WZ.step+1)/WZ_STEPS.length)*100);
   document.getElementById('wzBar').style.width=pct+'%';
+  const cur=WZ.answers[s.key];
   let h=`<p class="wz-q">${s.q}</p><div class="wz-opts">`;
   s.opts.forEach(o=>{
-    h+=`<button class="wz-opt" onclick="wzPick('${s.key}','${o.val}')"><strong>${o.label}</strong>${o.sub?`<br><span style="font-weight:400;font-size:.78rem;color:var(--mu)">${o.sub}</span>`:''}`;
+    h+=`<button class="wz-opt${cur===o.val?' sel':''}" onclick="wzPick('${s.key}','${o.val}')"><strong>${o.label}</strong>${o.sub?`<br><span style="font-weight:400;font-size:.78rem;color:var(--mu)">${o.sub}</span>`:''}`;
     h+=`</button>`;
   });
   h+=`</div>`;
@@ -1771,7 +1846,9 @@ function renderWzStep(){
 }
 
 function showWizard(){
-  WZ.step=0;WZ.answers={};
+  WZ.step=0;
+  const saved=localStorage.getItem('tpv_setup');
+  WZ.answers=(saved&&saved!=='skipped')?JSON.parse(saved):{};
   renderWzStep();
   const ov=document.getElementById('wzOverlay');
   const card=document.getElementById('wzCard');
@@ -1788,23 +1865,20 @@ function wzPick(key,val){
 
 function wzFinish(){
   const a=WZ.answers;
-  // Apply type
   const t=a.type||'se';
-  cT=t;
-  // Apply regime (VAT status determines variant)
+  // Set type via existing setter (handles cT, cR default, cQ clear, UI sync)
+  setType(t);
+  // Override regime from VAT answer
   const isVat=a.vat==='yes';
   const regMap={se:isVat?'se_gv':'se_gnv',mi:isVat?'mi_gv':'mi_gnv',corp:isVat?'corp_v':'corp_nv'};
-  cR=regMap[t]||'se_gnv';
-  // Apply checklist items
+  setReg(regMap[t]||Object.keys(TYPES[t].regimes)[0]);
+  // Set checklist items from answers
   if(a.ewt==='yes')cQ.add('ewt');else cQ.delete('ewt');
   if(a.employees==='yes')cQ.add('employees');else cQ.delete('employees');
-  // Sync UI
-  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('act'));
-  const typeMap={se:0,mi:1,corp:2};
-  const typeBtns=document.querySelectorAll('.tb');
-  if(typeBtns[typeMap[t]])typeBtns[typeMap[t]].classList.add('act');
-  rRB();rCL();ren();
+  rCL();ren();
   localStorage.setItem('tpv_setup',JSON.stringify(a));
+  updSmBar();
+  if(!document.body.classList.contains('pro-mode')){const fdBtn=document.querySelector('.vt button:first-child');if(fdBtn)setV('fd',fdBtn);}
   dismissWizard();
 }
 
@@ -1820,17 +1894,18 @@ function dismissWizard(){
   setTimeout(()=>{ov.style.display='none';card.classList.remove('wz-out');},240);
 }
 
-function retakeSetup(){
-  localStorage.removeItem('tpv_setup');
-  showWizard();
-}
-
 // ══════════ INIT ══════════
 rRB();rCL();rCF();ren();renderForms();
 // Restore persisted mode
 (function(){
   const m=localStorage.getItem('tpv_mode')||'simple';
-  if(m==='pro'){document.body.classList.add('pro-mode');const lbl=document.querySelector('.mode-toggle .mt-label');if(lbl)lbl.textContent='Pro';}
+  if(m==='pro'){
+    document.body.classList.add('pro-mode');
+    const lbl=document.querySelector('.mode-toggle .mt-label');if(lbl)lbl.textContent='Pro';
+    // Pro mode default: Timeline
+    const tlBtn=document.querySelector('.vt button:nth-child(2)');if(tlBtn)setV('tl',tlBtn);
+  }
+  updSmBar();
 })();
 // Show setup wizard on first visit
 if(!localStorage.getItem('tpv_setup'))showWizard();
