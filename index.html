@@ -108,6 +108,7 @@ html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);colo
 .fc-dl{font-size:.6rem;color:var(--mu)}
 .fc-title{font-family:var(--se);font-size:.92rem;font-weight:600;color:var(--ink);line-height:1.2;margin-bottom:.12rem}
 .fc-form{font-size:.62rem;color:var(--mu);margin-bottom:.45rem}
+.fc-ctx{font-family:var(--se);font-size:.72rem;color:var(--dim);font-style:italic;margin:.1rem 0 .35rem}
 .fc-btm{display:flex;align-items:center;justify-content:space-between;margin-top:.45rem;padding-top:.4rem;border-top:1px solid var(--s2)}
 .fc-mark{font-family:var(--sa);font-size:.62rem;font-weight:700;padding:.22rem .6rem;border-radius:100px;border:1.5px solid var(--royal);background:transparent;color:var(--royal);cursor:pointer;transition:all .15s}
 .fc-mark:hover{background:var(--royal);color:#fff}
@@ -1011,6 +1012,62 @@ OB.push({month:11,day:15,title:"File Quarterly Income Tax — Q3",form:"1701Q",c
 OB.push({month:12,day:20,title:"Declare Monthly VAT — November",form:"2550M",cat:"biz",r:VAT},{month:12,day:24,title:"Release 13th Month Pay to Employees",form:"—",cat:"emp",r:B,pq:"employees"},{month:12,day:31,title:"Complete Year-End Bookkeeping",form:"—",cat:"adm",r:B},{month:12,day:31,title:"Verify 2316 from Employer",form:"2316",cat:"inc",r:EMP});
 OB.push({month:0,day:5,title:"File Documentary Stamp Tax Return",form:"2000",cat:"dst",r:AB,pq:"dst"},{month:0,day:0,title:"Track Government VAT Withheld",form:"1600",cat:"wh",r:VAT,pq:"govpay"},{month:0,day:0,title:"Submit CRM/POS Monthly Sales Report",form:"—",cat:"adm",r:AB,pq:"crm"},{month:0,day:0,title:"Pay Personal Mandatory Contributions",form:"Agency",cat:"adm",r:[...SE,...MI]},{month:0,day:0,title:"Submit IPA Compliance Report",form:"IPA",cat:"sec",r:CORP,pq:"rbe"},{month:0,day:0,title:"Apply MCIT (Minimum Corporate Income Tax) Check",form:"—",cat:"inc",r:CORP,pq:"mcit",desc:"2% MCIT on gross vs 25%/20% RCIT from 4th yr."},{month:0,day:0,title:"Register for E-Invoicing System",form:"Per RR 11-2025",cat:"adm",r:AB,pq:"einv",desc:"Structured e-invoices by Dec 31, 2026."});
 
+// ── ctx: plain-English reason for each obligation (Feed view) ──
+(function(){
+  const TF={
+    "Bind & Submit Loose-Leaf Books":"Annual submission of your official accounting books to BIR for authentication.",
+    "File Sworn Declaration for Lower EWT":"Declare your income level to qualify for reduced withholding on professional fees.",
+    "Renew Business Permit (Mayor's Permit)":"Your local government requires annual renewal to legally operate your business.",
+    "Submit Annual Inventory List":"BIR requires a year-end count of all goods and materials on hand.",
+    "Stamp Computerized Accounting Books":"BIR must certify your digital accounting records are authentic each year.",
+    "Distribute Tax Certificates to Employees":"Employees need their annual tax certificate to file their own returns.",
+    "Submit 2316 Duplicates to BIR":"Submit employee tax certificate copies so BIR can verify payroll records.",
+    "File Annual ITR — 8% Flat Rate":"Pay 8% flat tax on gross receipts; simpler than the graduated rates.",
+    "File Annual ITR — Mixed Income, 8%":"Your business income is taxed at 8% flat; compensation at graduated rates.",
+    "File Annual ITR — Graduated + OSD":"Report annual income using 40% standard deduction under the graduated tax table.",
+    "File Annual ITR — Mixed Income, Grad+OSD":"Mixed earners deduct 40% from business income; rest taxed at graduated rates.",
+    "File Annual ITR — Graduated, Itemized":"Claim all actual business expenses to reduce taxable income under graduated rates.",
+    "Confirm Substituted Filing (Employee ITR)":"Your employer filed on your behalf; confirm the 2316 is your return.",
+    "Submit Audited Financial Statements to SEC":"Corporations must submit BIR-stamped financial statements to the SEC annually.",
+    "Submit General Information Sheet to SEC":"Annual corporate update on officers and stockholders filed with the SEC.",
+    "Release 13th Month Pay to Employees":"Law requires 13th month pay for all rank-and-file employees by Dec 24.",
+    "Complete Year-End Bookkeeping":"Close your annual accounts to prepare accurate tax filings and statements.",
+    "Verify 2316 from Employer":"Your tax certificate shows income and withholding; needed if you file an ITR.",
+    "Submit CRM/POS Monthly Sales Report":"BIR requires monthly uploads of sales data from your registered POS system.",
+    "Pay Personal Mandatory Contributions":"Self-employed individuals pay both employer and employee portions of SSS and PhilHealth.",
+    "Apply MCIT (Minimum Corporate Income Tax) Check":"From year four, your company's tax floor is 2% of gross income.",
+    "Register for E-Invoicing System":"BIR requires qualifying businesses to issue electronic invoices by end of 2026."
+  };
+  const FF={
+    "1601-C":"Remit last month's income tax withheld from employee salaries to the BIR.",
+    "0619-E":"Send last month's expanded withholding tax collections to the BIR.",
+    "0619-F":"Send last month's final withholding tax deductions to the BIR.",
+    "2550M":"Monthly VAT report keeps your output and input tax records current.",
+    "2551Q":"Non-VAT businesses pay 3% tax on quarterly gross receipts here.",
+    "2550Q":"Compute and pay your net VAT position for the quarter.",
+    "SLSP":"BIR requires a full list of VAT buyers and suppliers each quarter.",
+    "1601-EQ":"Quarterly filing consolidates all expanded withholding taxes you collected.",
+    "1601-FQ":"Quarterly filing consolidates all final withholding taxes you deducted.",
+    "2307":"Vendors need this certificate to prove you deducted tax from their payment.",
+    "2306":"Recipients need this certificate for taxes finally withheld from their income.",
+    "Agency":"SSS, PhilHealth, and Pag-IBIG contributions for your workers are due monthly.",
+    "1701Q":"Quarterly income tax installment based on your business earnings so far.",
+    "1702Q":"Quarterly corporate income tax installment on year-to-date profit.",
+    "1604-E":"Annual report of all expanded withholding taxes you collected last year.",
+    "1604-C":"Annual summary of income taxes withheld from all employee compensation.",
+    "1604-F":"Annual summary of final withholding taxes deducted from all payments.",
+    "1700":"File your annual income tax return if all income comes from employment.",
+    "1701A":"Annual income tax return filed under the simplified flat-rate method.",
+    "1701":"Your annual income tax return covers all income sources for the year.",
+    "1702-RT":"Annual corporate income tax return; pay whichever is higher, RCIT or MCIT.",
+    "2000":"Documentary stamp tax is owed on contracts and financial instruments.",
+    "1600":"Government agencies withhold VAT on payments to you; track those credits here.",
+    "IPA":"Your tax incentives depend on reporting compliance to your investment authority.",
+    "LGU":"Your local government requires annual renewal to legally operate your business."
+  };
+  OB.forEach(o=>{if(TF[o.title])o.ctx=TF[o.title];else if(FF[o.form||''])o.ctx=FF[o.form||''];});
+})();
+
 // ══ WORKFLOW CLASSIFICATION ══
 function getObWF(o){
   const f=o.form||'';
@@ -1079,6 +1136,7 @@ function renderFeed(){
     h+=`<div class="fc${filed?' filed':''}" id="fc_${id}" style="border-left-color:${u.c}">`;
     h+=`<div class="fc-top"><span class="fc-urg" style="color:${u.c}">${u.t}</span><span class="fc-dl">${dl}</span></div>`;
     h+=`<div class="fc-title">${o.title}</div>`;
+    if(o.ctx)h+=`<div class="fc-ctx">${o.ctx}</div>`;
     if(o.form&&o.form!=='—')h+=`<div class="fc-form">${o.form}</div>`;
     h+=`<div class="fc-btm"><button class="fc-mark" onclick="tgFiled('${id}','fc_${id}')">${filed?'✓ Filed':'Mark as Filed →'}</button><span class="fc-type">${tname}</span></div>`;
     h+=`</div>`;
