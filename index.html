@@ -468,6 +468,17 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .pro-mode #plainSummary:not(:empty){padding:.35rem .75rem;border-left-width:3px}
 .pro-mode #plainSummary .ps-action{font-size:.82rem}
 .pro-mode #plainSummary .ps-savings{font-size:.7rem}
+/* Simple mode — stricter UI (no .pro-mode) */
+#rBar,.sb,.ft,.stb,.vt,.clp{display:none}
+.sm-bar{font-size:.65rem;color:var(--mu);max-width:1200px;margin:.4rem auto 0;padding:0 2rem}
+.sm-upd{color:var(--royal);cursor:pointer;font-weight:600}
+.sm-upd:hover{text-decoration:underline}
+/* Pro mode — restore stricter elements */
+.pro-mode #rBar{display:flex}
+.pro-mode .sb{display:block}
+.pro-mode .ft,.pro-mode .stb,.pro-mode .vt{display:flex}
+.pro-mode .clp{display:block}
+.pro-mode .sm-bar{display:none}
 
 /* ══ WORKFLOW VIEW ══ */
 .wv{display:none}.wv.vis{display:block}
@@ -536,6 +547,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <button class="tb" onclick="setType('emp')">Employee</button>
 </div></div>
 <div class="rbar" id="rBar"></div>
+<div class="sm-bar" id="smBar">Showing obligations for <strong id="smTpLabel">Self-Employed</strong>. <span class="sm-upd" onclick="retakeSetup()">Update Setup →</span></div>
 <section class="cls"><div class="clp" id="clP">
 <div class="clh" onclick="document.getElementById('clP').classList.toggle('open')"><h2>Your Situation</h2>
 <div class="cta"><label class="sat" onclick="event.stopPropagation()"><span>Show all</span><input type="checkbox" id="saT" onchange="ren()"><span class="tt"></span></label><span class="clch">▾</span></div></div>
@@ -1019,7 +1031,7 @@ function renderWF(f){
 
 function isV(o){if(!o.r.includes(cR))return false;if(!aC.has(o.cat))return false;if(SQ){const h=(o.title+' '+(o.form||'')+' '+(o.desc||'')+' '+(o.pq||'')).toLowerCase();if(!h.includes(SQ))return false;}const sa=document.getElementById('saT')?.checked;if(!sa&&o.pq&&!cQ.has(o.pq))return false;return true;}
 function gF(){return OB.filter(isV);}function cntQ(k){return OB.filter(o=>o.pq===k&&o.r.includes(cR)).length;}
-function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{b.classList.toggle('act',['se','mi','corp','emp'][i]===t)});rRB();rCL();rCF();ren();}
+function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{b.classList.toggle('act',['se','mi','corp','emp'][i]===t)});rRB();rCL();rCF();ren();updSmBar();}
 function setReg(r){cR=r;rRB();rCL();ren();}function setV(v,b){vM=v;document.querySelectorAll('.vt button').forEach(x=>x.classList.remove('act'));b.classList.add('act');ren();}
 function tgQ(k){cQ.has(k)?cQ.delete(k):cQ.add(k);rCL();ren();}function tgC(c){aC.has(c)?aC.delete(c):aC.add(c);rCF();ren();}function tgM(m){document.querySelector(`.ms[data-m="${m}"]`)?.classList.toggle('act');}
 function rRB(){document.getElementById('rBar').innerHTML='<span class="tl-l">Regime</span>'+Object.entries(TYPES[cT].regimes).map(([k,v])=>`<button class="rb ${k===cR?'act':''}" onclick="setReg('${k}')">${v.n}</button>`).join('');}
@@ -1717,6 +1729,7 @@ function initNumberFormatters(){
 initMonthGrid();initCatGrid();initNumberFormatters();
 
 // ══════════ SIMPLE / PRO MODE TOGGLE ══════════
+function updSmBar(){const el=document.getElementById('smTpLabel');if(el)el.textContent=TYPES[cT].name;}
 function tgMode(){
   const isPro=!document.body.classList.contains('pro-mode');
   document.body.classList.toggle('pro-mode',isPro);
@@ -1732,7 +1745,11 @@ function tgMode(){
       const first=grp.querySelector('.em-btn');
       if(first&&!first.classList.contains('act'))first.click();
     });
+    // Default to Timeline view in Simple mode
+    const tlBtn=document.querySelector('.vt button:first-child');
+    if(tlBtn&&vM!=='tl')setV('tl',tlBtn);
   }
+  updSmBar();
 }
 
 // ══════════ SETUP WIZARD ══════════
@@ -1805,6 +1822,7 @@ function wzFinish(){
   if(typeBtns[typeMap[t]])typeBtns[typeMap[t]].classList.add('act');
   rRB();rCL();ren();
   localStorage.setItem('tpv_setup',JSON.stringify(a));
+  updSmBar();
   dismissWizard();
 }
 
@@ -1831,6 +1849,7 @@ rRB();rCL();rCF();ren();renderForms();
 (function(){
   const m=localStorage.getItem('tpv_mode')||'simple';
   if(m==='pro'){document.body.classList.add('pro-mode');const lbl=document.querySelector('.mode-toggle .mt-label');if(lbl)lbl.textContent='Pro';}
+  updSmBar();
 })();
 // Show setup wizard on first visit
 if(!localStorage.getItem('tpv_setup'))showWizard();
