@@ -1925,9 +1925,23 @@ const WZ_STEPS=[
     {label:'Mixed income earner',sub:'You have a day job and a side business or freelance income.',val:'mi'},
     {label:'Corporation / OPC',sub:'Your business is incorporated.',val:'corp'}
   ]},
-  {q:'Did your total sales or gross receipts exceed ₱3 million last year?',key:'vat',opts:[
+  {q:'Which income tax rate applies to you?',key:'rate',
+   show:a=>['se','mi'].includes(a.type),
+   opts:[
+    {label:'Graduated rates',sub:'Tax rate increases with income level. The standard choice for most professionals and businesses.',val:'grad'},
+    {label:'8% flat rate',sub:'8% on gross receipts above ₱250K. Only available if non-VAT registered and under the ₱3M threshold.',val:'8pct'}
+  ]},
+  {q:'Did your total sales or gross receipts exceed ₱3 million last year?',key:'vat',
+   show:a=>a.rate!=='8pct',
+   opts:[
     {label:'Yes — I am VAT-registered',sub:'You charge 12% VAT on sales.',val:'yes'},
     {label:'No — I am non-VAT',sub:'Under the threshold or opted for non-VAT.',val:'no'}
+  ]},
+  {q:'Which deduction method will you use on your annual ITR?',key:'deduction',
+   show:a=>['se','mi'].includes(a.type)&&a.rate!=='8pct',
+   opts:[
+    {label:'OSD — Optional Standard Deduction',sub:'40% of gross revenue deducted automatically. No receipts needed. Simpler for most.',val:'osd'},
+    {label:'Itemized deductions',sub:'Deduct actual documented expenses. Better if your costs exceed 40% of revenue.',val:'itemized'}
   ]},
   {q:'Do clients or employers withhold tax before paying you?',key:'ewt',opts:[
     {label:'Yes — clients deduct EWT / BIR 2307s',sub:'They hand you a withholding tax certificate.',val:'yes'},
@@ -1940,9 +1954,12 @@ const WZ_STEPS=[
 ];
 const WZ={step:0,answers:{}};
 
+function wzVisSteps(){return WZ_STEPS.filter(s=>!s.show||s.show(WZ.answers));}
 function renderWzStep(){
   const s=WZ_STEPS[WZ.step];
-  const pct=Math.round(((WZ.step+1)/WZ_STEPS.length)*100);
+  const vis=wzVisSteps();
+  const visIdx=vis.indexOf(s);
+  const pct=Math.round(((visIdx+1)/vis.length)*100);
   document.getElementById('wzBar').style.width=pct+'%';
   const cur=WZ.answers[s.key];
   let h=`<p class="wz-q">${s.q}</p><div class="wz-opts">`;
@@ -1968,6 +1985,7 @@ function showWizard(){
 function wzPick(key,val){
   WZ.answers[key]=val;
   WZ.step++;
+  while(WZ.step<WZ_STEPS.length&&WZ_STEPS[WZ.step].show&&!WZ_STEPS[WZ.step].show(WZ.answers))WZ.step++;
   if(WZ.step<WZ_STEPS.length){renderWzStep();}
   else{wzFinish();}
 }
@@ -1975,15 +1993,18 @@ function wzPick(key,val){
 function wzFinish(){
   const a=WZ.answers;
   const t=a.type||'se';
-  // Set type via existing setter (handles cT, cR default, cQ clear, UI sync)
   setType(t);
-  // Override regime from VAT answer
-  const isVat=a.vat==='yes';
-  const regMap={se:isVat?'se_gv':'se_gnv',mi:isVat?'mi_gv':'mi_gnv',corp:isVat?'corp_v':'corp_nv'};
-  setReg(regMap[t]||Object.keys(TYPES[t].regimes)[0]);
+  // Set regime from rate + VAT answers
+  const is8=(a.rate==='8pct');
+  const isVat=(a.vat==='yes');
+  let reg;
+  if(is8){reg=(t==='se'?'se_8':t==='mi'?'mi_8':null);}
+  else{const m={se:isVat?'se_gv':'se_gnv',mi:isVat?'mi_gv':'mi_gnv',corp:isVat?'corp_v':'corp_nv'};reg=m[t]||Object.keys(TYPES[t].regimes)[0];}
+  if(reg)setReg(reg);
   // Set checklist items from answers
   if(a.ewt==='yes')cQ.add('ewt');else cQ.delete('ewt');
   if(a.employees==='yes')cQ.add('employees');else cQ.delete('employees');
+  if(!is8&&['se','mi'].includes(t)&&a.deduction==='itemized'){cQ.add('itemized');}else{cQ.delete('itemized');}
   rCL();ren();
   localStorage.setItem('tpv_setup',JSON.stringify(a));
   if(!localStorage.getItem('tpv_setup_date'))localStorage.setItem('tpv_setup_date',new Date().toISOString().split('T')[0]);
