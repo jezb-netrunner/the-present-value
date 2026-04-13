@@ -1141,7 +1141,15 @@ function renderFeed(){
     const stat=X===Y?`All ${Y} filed ✓`:`${X} of ${Y} filed`;
     h+=`<div class="fprog"><span class="fprog-lbl">${MN[cm]} Filings</span><div class="fprog-track"><div class="fprog-fill" style="width:${pct}%;background:${fc}"></div></div><span class="fprog-stat">${stat}</span></div>`;
   }
-  const items=all.filter(o=>o.month!==0&&o.day!==0&&daysUntil(o)<=90);
+  const _sdStr=localStorage.getItem('tpv_setup_date');
+  const _sd=_sdStr?new Date(_sdStr):null;if(_sd)_sd.setHours(0,0,0,0);
+  const items=all.filter(o=>{
+    if(o.month===0||o.day===0)return false;
+    const d=daysUntil(o);
+    if(d>90)return false;
+    if(_sd&&new Date(YEAR,o.month-1,o.day)<_sd)return false;
+    return true;
+  });
   if(!items.length){document.getElementById('fv').innerHTML=h+'<div class="fv-empty">You\'re all clear for the next 90 days.<div class="fv-empty-sub">If this looks wrong, check your taxpayer type and checklist filters above.</div></div>';return;}
   items.sort((a,b)=>{
     const fa=isFiled(a)?1:0,fb=isFiled(b)?1:0;
@@ -1978,6 +1986,7 @@ function wzFinish(){
   if(a.employees==='yes')cQ.add('employees');else cQ.delete('employees');
   rCL();ren();
   localStorage.setItem('tpv_setup',JSON.stringify(a));
+  if(!localStorage.getItem('tpv_setup_date'))localStorage.setItem('tpv_setup_date',new Date().toISOString().split('T')[0]);
   updSmBar();
   if(!document.body.classList.contains('pro-mode')){const fdBtn=document.querySelector('.vt button:first-child');if(fdBtn)setV('fd',fdBtn);}
   dismissWizard();
@@ -1985,6 +1994,7 @@ function wzFinish(){
 
 function wzSkip(){
   localStorage.setItem('tpv_setup','skipped');
+  if(!localStorage.getItem('tpv_setup_date'))localStorage.setItem('tpv_setup_date',new Date().toISOString().split('T')[0]);
   dismissWizard();
 }
 
