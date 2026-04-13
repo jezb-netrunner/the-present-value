@@ -1177,7 +1177,7 @@ function renderFeed(){
   });
   if(grps.done.length){
     const n=grps.done.length;
-    h+=`<div class="fgh" style="margin-top:1.4rem">Completed <button class="fgh-tog" onclick="var s=document.getElementById('fv-done');var shown=s.style.display!=='none';s.style.display=shown?'none':'block';this.textContent=(shown?'Show ':'Hide ')+${n}+' completed'">Show ${n} completed</button></div>`;
+    h+=`<div class="fgh" style="margin-top:${first?'0':'1.4rem'}">Completed <button class="fgh-tog" onclick="var s=document.getElementById('fv-done');var shown=s.style.display!=='none';s.style.display=shown?'none':'block';this.textContent=(shown?'Show ':'Hide ')+${n}+' completed'">Show ${n} completed</button></div>`;
     h+=`<div id="fv-done" style="display:none">`;
     grps.done.forEach(o=>{h+=renderCard(o);});
     h+=`</div>`;
