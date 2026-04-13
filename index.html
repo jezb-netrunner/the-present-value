@@ -114,6 +114,8 @@ html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);colo
 .fc.filed .fc-mark{border-color:var(--green);color:var(--green)}
 .fc-type{font-size:.58rem;font-weight:600;padding:.1rem .35rem;border-radius:100px;background:var(--s2);color:var(--mu)}
 .fv-empty{font-family:var(--se);font-size:.9rem;color:var(--mu);text-align:center;padding:3rem 1rem}
+.fgh{font-family:var(--sa);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);border-bottom:1px solid var(--bd);margin:1rem 0 .4rem;display:flex;align-items:center;justify-content:space-between;padding-bottom:.25rem}
+.fgh-tog{font-family:var(--sa);font-size:.6rem;font-weight:600;color:var(--royal);background:none;border:none;cursor:pointer;padding:0;text-transform:none;letter-spacing:normal;font-weight:500}
 
 /* TABLE */
 .tv{display:none}.tv.vis{display:block}.tl.hid{display:none}
@@ -1072,17 +1074,41 @@ function renderFeed(){
     return(a.month*100+a.day)-(b.month*100+b.day);
   });
   const tname=TYPES[cT].name;
-  let h='';
+  const grps={tw:[],nw:[],tm:[],lt:[],done:[]};
   items.forEach(o=>{
+    if(isFiled(o)){grps.done.push(o);return;}
+    const d=daysUntil(o);
+    if(d<=7)grps.tw.push(o);
+    else if(d<=14)grps.nw.push(o);
+    else if(d<=30)grps.tm.push(o);
+    else grps.lt.push(o);
+  });
+  function renderCard(o){
     const id=obsId(o);const filed=isFiled(o);const d=daysUntil(o);const u=urgLevel(d);
     const dl=ms(o.month)+' '+o.day+', '+YEAR;
-    h+=`<div class="fc${filed?' filed':''}" id="fc_${id}" style="border-left-color:${u.c}">`;
-    h+=`<div class="fc-top"><span class="fc-urg" style="color:${u.c}">${u.t}</span><span class="fc-dl">${dl}</span></div>`;
-    h+=`<div class="fc-title">${o.title}</div>`;
-    if(o.form&&o.form!=='—')h+=`<div class="fc-form">${o.form}</div>`;
-    h+=`<div class="fc-btm"><button class="fc-mark" onclick="tgFiled('${id}','fc_${id}')">${filed?'✓ Filed':'Mark as Filed →'}</button><span class="fc-type">${tname}</span></div>`;
-    h+=`</div>`;
+    let c=`<div class="fc${filed?' filed':''}" id="fc_${id}" style="border-left-color:${u.c}">`;
+    c+=`<div class="fc-top"><span class="fc-urg" style="color:${u.c}">${u.t}</span><span class="fc-dl">${dl}</span></div>`;
+    c+=`<div class="fc-title">${o.title}</div>`;
+    if(o.form&&o.form!=='—')c+=`<div class="fc-form">${o.form}</div>`;
+    c+=`<div class="fc-btm"><button class="fc-mark" onclick="tgFiled('${id}','fc_${id}')">${filed?'✓ Filed':'Mark as Filed →'}</button><span class="fc-type">${tname}</span></div>`;
+    c+=`</div>`;
+    return c;
+  }
+  let h='';
+  let first=true;
+  [['This Week',grps.tw],['Next Week',grps.nw],['This Month',grps.tm],['Later',grps.lt]].forEach(([label,arr])=>{
+    if(!arr.length)return;
+    h+=`<div class="fgh"${first?' style="margin-top:0"':''}>${label}</div>`;
+    first=false;
+    arr.forEach(o=>{h+=renderCard(o);});
   });
+  if(grps.done.length){
+    const n=grps.done.length;
+    h+=`<div class="fgh" style="margin-top:1.4rem">Completed <button class="fgh-tog" onclick="var s=document.getElementById('fv-done');var shown=s.style.display!=='none';s.style.display=shown?'none':'block';this.textContent=(shown?'Show ':'Hide ')+${n}+' completed'">Show ${n} completed</button></div>`;
+    h+=`<div id="fv-done" style="display:none">`;
+    grps.done.forEach(o=>{h+=renderCard(o);});
+    h+=`</div>`;
+  }
   document.getElementById('fv').innerHTML=h;
 }
 
