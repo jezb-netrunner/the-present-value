@@ -1119,12 +1119,18 @@ function obsId(o){return(o.month+'_'+o.day+'_'+(o.form||'').replace(/[^a-zA-Z0-9
 function daysUntil(o){const today=new Date();today.setHours(0,0,0,0);return Math.floor((new Date(YEAR,o.month-1,o.day)-today)/86400000);}
 function isFiled(o){return localStorage.getItem('tpv_filed_'+obsId(o)+'_'+YEAR)==='1';}
 function tgFiled(id,cardId){const key='tpv_filed_'+id+'_'+YEAR;if(localStorage.getItem(key)==='1')localStorage.removeItem(key);else localStorage.setItem(key,'1');renderFeed();}
-function urgLevel(d){
+function urgLevel(d,o){
   if(d<0)return{c:'var(--red)',t:'Overdue'};
   if(d===0)return{c:'var(--red)',t:'Due today'};
   if(d===1)return{c:'var(--red)',t:'Due tomorrow'};
   if(d<=7)return{c:'var(--red)',t:'Due in '+d+' days'};
-  if(d<=30)return{c:'var(--amber)',t:'Due this month'};
+  if(o){
+    const cm=new Date().getMonth()+1;
+    if(o.month===cm)return{c:'var(--amber)',t:'Due this month'};
+    const abbr=MN[cm].substring(0,3);
+    if(o.month===(cm%12)+1&&(o.title.includes(abbr)||o.title.includes(MN[cm])))
+      return{c:'var(--amber)',t:'Due next month'};
+  }
   return{c:'var(--royal)',t:'Upcoming'};
 }
 function renderFeed(){
@@ -1157,17 +1163,24 @@ function renderFeed(){
     return(a.month*100+a.day)-(b.month*100+b.day);
   });
   const tname=TYPES[cT].name;
-  const grps={tw:[],nw:[],tm:[],lt:[],done:[]};
+  const grps={tw:[],nw:[],tm:[],ip:[],lt:[],done:[]};
   items.forEach(o=>{
     if(isFiled(o)){grps.done.push(o);return;}
     const d=daysUntil(o);
     if(d<=7)grps.tw.push(o);
     else if(d<=14)grps.nw.push(o);
-    else if(d<=30)grps.tm.push(o);
-    else grps.lt.push(o);
+    else{
+      const dm=new Date(YEAR,o.month-1,o.day).getMonth();
+      const cur=today.getMonth();
+      const nxt=(cur+1)%12;
+      const abbr=MN[cur+1].substring(0,3);
+      if(dm===cur)grps.tm.push(o);
+      else if(dm===nxt&&(o.title.includes(abbr)||o.title.includes(MN[cur+1])))grps.ip.push(o);
+      else grps.lt.push(o);
+    }
   });
   function renderCard(o){
-    const id=obsId(o);const filed=isFiled(o);const d=daysUntil(o);const u=urgLevel(d);
+    const id=obsId(o);const filed=isFiled(o);const d=daysUntil(o);const u=urgLevel(d,o);
     const dl=ms(o.month)+' '+o.day+', '+YEAR;
     let c=`<div class="fc${filed?' filed':''}" id="fc_${id}" style="border-left-color:${u.c}">`;
     c+=`<div class="fc-top"><span class="fc-urg" style="color:${u.c}">${u.t}</span><span class="fc-dl">${dl}</span></div>`;
@@ -1179,7 +1192,7 @@ function renderFeed(){
     return c;
   }
   let first=true;
-  [['This Week',grps.tw],['Next Week',grps.nw],['This Month',grps.tm],['Later',grps.lt]].forEach(([label,arr])=>{
+  [['This Week',grps.tw],['Next Week',grps.nw],['This Month',grps.tm],['In Progress',grps.ip],['Later',grps.lt]].forEach(([label,arr])=>{
     if(!arr.length)return;
     h+=`<div class="fgh"${first?' style="margin-top:0"':''}>${label}</div>`;
     first=false;
