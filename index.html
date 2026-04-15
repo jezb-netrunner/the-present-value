@@ -2289,23 +2289,24 @@ function wzPick(key,val){
   else{wzFinish();}
 }
 
-function wzFinish(){
-  const a=WZ.answers;
+function applySetup(a){
   const t=a.type||'se';
   setType(t);
-  // Set regime from rate + VAT answers
   const is8=(a.rate==='8pct');
   const isVat=(a.vat==='yes');
   let reg;
   if(is8){reg=(t==='se'?'se_8':t==='mi'?'mi_8':null);}
   else{const m={se:isVat?'se_gv':'se_gnv',mi:isVat?'mi_gv':'mi_gnv',corp:isVat?'corp_v':'corp_nv'};reg=m[t]||Object.keys(TYPES[t].regimes)[0];}
   if(reg)setReg(reg);
-  // Set checklist items from answers
   if(a.ewt==='yes')cQ.add('ewt');else cQ.delete('ewt');
   if(a.employees==='yes')cQ.add('employees');else cQ.delete('employees');
   if(!is8&&['se','mi'].includes(t)&&a.deduction==='itemized'){cQ.add('itemized');}else{cQ.delete('itemized');}
   rCL();ren();
-  localStorage.setItem('tpv_setup',JSON.stringify(a));
+}
+
+function wzFinish(){
+  applySetup(WZ.answers);
+  localStorage.setItem('tpv_setup',JSON.stringify(WZ.answers));
   if(!localStorage.getItem('tpv_setup_date'))localStorage.setItem('tpv_setup_date',new Date().toISOString().split('T')[0]);
   updSmBar();
   if(!document.body.classList.contains('pro-mode')){const fdBtn=document.querySelector('.vt button:first-child');if(fdBtn)setV('fd',fdBtn);}
@@ -2338,8 +2339,10 @@ rRB();rCL();rCF();ren();renderForms();
   }
   updSmBar();
 })();
-// Show setup wizard on first visit
-if(!localStorage.getItem('tpv_setup'))showWizard();
+// Show setup wizard on first visit; restore saved setup on return visits
+const _setup=localStorage.getItem('tpv_setup');
+if(!_setup){showWizard();}
+else if(_setup!=='skipped'){try{applySetup(JSON.parse(_setup));}catch(e){}}
 
 // ══════════ PUSH NOTIFICATIONS ══════════
 function toggleNotifications(){
