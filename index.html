@@ -2201,8 +2201,8 @@ function tgMode(){
   document.querySelector('.mode-toggle .mt-label').textContent=isPro?'Pro':'Simple';
   localStorage.setItem('tpv_mode',isPro?'pro':'simple');
   if(!isPro){
-    // Switched to Simple — redirect away from hidden Form Reference tab
-    if(document.getElementById('pgRef')?.classList.contains('vis')){
+    // Switched to Simple — redirect away from tabs hidden in Simple mode (Form Reference and Tools & Guides)
+    if(document.getElementById('pgRef')?.classList.contains('vis')||document.getElementById('pgTools')?.classList.contains('vis')){
       showPg('cal',document.querySelector('.pnav button:nth-child(1)'));
     }
     // Reset sales/expense modes to lump (non-first buttons are hidden)
@@ -2423,9 +2423,9 @@ function compromisePenalty(tax){
 // ══════════ COMPENSATION WITHHOLDING ══════════
 // TRAIN Law monthly withholding brackets (NIRC Sec. 79, RR 29-2025)
 const WH_BRACKETS={
-  monthly:[[0,20833,0,0],[20833,33333,0.15,20833],[33333,66667,1875,33333],[66667,166667,8541.80,66667],[166667,666667,33541.80,166667],[666667,Infinity,183541.80,666667]],
-  semimonthly:[[0,10417,0,0],[10417,16667,0.15,10417],[16667,33333,937.50,16667],[33333,83333,4270.83,33333],[83333,333333,16770.83,83333],[333333,Infinity,91770.83,333333]],
-  weekly:[[0,4808,0,0],[4808,7692,0.15,4808],[7692,15385,432.69,7692],[15385,38462,1971.15,15385],[38462,153846,7740.38,38462],[153846,Infinity,42325.00,153846]]
+  monthly:[[0,20833,0,0],[20833,33333,0,20833],[33333,66667,1875,33333],[66667,166667,8541.80,66667],[166667,666667,33541.80,166667],[666667,Infinity,183541.80,666667]],
+  semimonthly:[[0,10417,0,0],[10417,16667,0,10417],[16667,33333,937.50,16667],[33333,83333,4270.83,33333],[83333,333333,16770.83,83333],[333333,Infinity,91770.83,333333]],
+  weekly:[[0,4808,0,0],[4808,7692,0,4808],[7692,15385,432.69,7692],[15385,38462,1971.15,15385],[38462,153846,7740.38,38462],[153846,Infinity,42325.00,153846]]
 };
 const WH_RATE=[0.15,0.20,0.25,0.30,0.35];
 function calcWithholding(){
