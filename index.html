@@ -772,12 +772,19 @@ body:not(.pro-mode) .mc{display:none}
 <div class="calc-intro"><h2>Which tax regime saves you the most?</h2>
 <p>Compare all three tax regimes side by side with full supporting computations and BIR form previews.</p></div>
 
+<div id="corpCalcGuard" style="display:none;background:var(--as);border:1px solid rgba(212,133,10,.25);border-left:3px solid var(--amber);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:1rem;font-family:var(--se);color:#5a3a00;line-height:1.55">
+  <strong style="color:#3d2700">This calculator is for individuals (self-employed or mixed income).</strong> Corporations are taxed under RCIT (25%/20%) or the 2% MCIT from the 4th year (NIRC §27). Use Form 1702-RT guidance in <em>Form Reference</em> instead — the 8% and OSD-40% regimes shown below do not apply to corporations.
+</div>
 <div class="inp"><h3>Your Numbers</h3>
 <div class="fg">
-<div class="fld"><label for="tS">Taxpayer Type</label><select id="tS"><option value="pure">Purely Self-Employed</option><option value="mixed">Mixed Income Earner</option></select></div>
+<div class="fld"><label for="tS">Taxpayer Type</label><select id="tS" onchange="onTaxpayerTypeChange()"><option value="pure">Purely Self-Employed</option><option value="mixed">Mixed Income Earner</option></select></div>
 <div class="fld"><label for="bizT">Business Type</label><select id="bizT"><option value="services">Services / Professional</option><option value="goods">Sale of Goods</option></select></div>
 <div class="fld"><label for="cI">CWT / 2307 Credits<span class="tip"><button type="button" class="tip-i" aria-label="Help: CWT / 2307 Credits" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Tax your clients deducted before paying you. Check BIR Form 2307 for the amount.</span></span></label><input type="text" id="cI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="vatR">VAT-Registered?<span class="tip"><button type="button" class="tip-i" aria-label="Help: VAT registration threshold" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Required if annual gross sales exceed ₱3 million. Check your BIR Certificate of Registration.</span></span></label><select id="vatR"><option value="auto">Auto (based on gross)</option><option value="no">No</option><option value="yes">Yes</option></select></div>
+<div class="fld"><label for="vatR">VAT-Registered?<span class="tip"><button type="button" class="tip-i" aria-label="Help: VAT registration threshold" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Required if annual gross sales + non-operating income exceed ₱3 million. You can also voluntarily register.</span></span></label><select id="vatR"><option value="auto">Auto (based on gross + non-op)</option><option value="no">No</option><option value="yes">Yes</option></select></div>
+<div class="fld" id="fldComp" style="display:none"><label for="compI">Annual Compensation Income (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Compensation income for mixed earners" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">For mixed income earners: your full-year taxable compensation from employment (after 90K 13th-month exclusion). Needed because graduated rates stack business income on top of compensation.</span></span></label><input type="text" id="compI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="nopI">Non-Operating Income (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Non-operating income" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Rental, interest, miscellaneous income not part of your main business. Per RR 8-2018, this is added to gross sales when testing the ₱3M VAT / 8% threshold.</span></span></label><input type="text" id="nopI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="eightElect">8% Election on Q1 1701Q?<span class="tip"><button type="button" class="tip-i" aria-label="Help: 8% election status" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">The 8% option must be signified on Q1 1701Q (due May 15) or at BIR registration. Irrevocable for the entire taxable year. Missing the election defaults you to graduated rates.</span></span></label><select id="eightElect"><option value="yes">Yes — I elected 8% on Q1</option><option value="no">No / I'm not sure</option></select></div>
+<div class="fld"><label for="otherPt">Other Percentage Tax?<span class="tip"><button type="button" class="tip-i" aria-label="Help: Other percentage tax" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Amusement, common carrier, banking, overseas dispatch, life insurance and similar payors subject to Title V, Chapter III (§117–§127) of the NIRC. Any such tax disqualifies you from 8%.</span></span></label><select id="otherPt"><option value="no">No — only §116 (3%)</option><option value="yes">Yes — amusement / carrier / banking / etc.</option></select></div>
 </div>
 
 <!-- SALES INPUT -->
@@ -869,8 +876,8 @@ body:not(.pro-mode) .mc{display:none}
 <div class="fld"><label for="penDue">Due Date</label><input type="date" id="penDue"></div>
 <div class="fld"><label for="penPay">Payment Date</label><input type="date" id="penPay"></div>
 <div class="fld"><label for="penTax">Tax Due (₱)</label><input type="text" id="penTax" placeholder="e.g. 25,000" inputmode="numeric" autocomplete="off"></div>
-<div class="fld"><label for="penSize">Taxpayer Size<span class="tip"><button type="button" class="tip-i" aria-label="Help: Taxpayer size penalty rates" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">EOPT (RR 6-2024): Micro/Small with gross &lt; ₱20M. Surcharge 10%, interest 6%/yr. Standard: 25% surcharge, 12%/yr interest.</span></span></label>
-<select id="penSize"><option value="eopt">Micro/Small — EOPT (gross &lt; ₱20M)</option><option value="std">Standard (medium/large/willful)</option></select></div>
+<div class="fld"><label for="penSize">Taxpayer Classification<span class="tip"><button type="button" class="tip-i" aria-label="Help: EOPT taxpayer classifications" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">EOPT Act (RA 11976) §47 and RR 6-2024 classify taxpayers by annual gross sales. Micro: &lt;₱3M. Small: ₱3M–&lt;₱20M. Medium: ₱20M–&lt;₱1B. Large: ≥₱1B. Micro/Small get reduced penalties (10% surcharge, 6%/yr interest); their failure-to-file cap differs (₱500/return for Micro, ₱1,000 for Small).</span></span></label>
+<select id="penSize"><option value="micro">Micro — gross &lt; ₱3M (EOPT)</option><option value="small">Small — gross ₱3M – &lt;₱20M (EOPT)</option><option value="std">Medium / Large / Willful (Standard)</option></select></div>
 <div class="fld"><label for="penType">Surcharge Type</label>
 <select id="penType"><option value="late">Late Filing / Payment (25% or 10%)</option><option value="willful">Fraud / Willful Neglect (50%)</option></select></div>
 </div>
@@ -917,7 +924,7 @@ body:not(.pro-mode) .mc{display:none}
 <p class="tool-intro">Track BIR Form 2307 certificates received from clients and employers. Running totals are available for use in your quarterly and annual income tax returns.</p>
 <div class="fg" style="max-width:700px;margin-bottom:.75rem">
 <div class="fld"><label for="logPayor">Payor / Client Name</label><input type="text" id="logPayor" placeholder="e.g. ABC Corporation" autocomplete="organization"></div>
-<div class="fld"><label for="logAtc">ATC Code<span class="tip"><button type="button" class="tip-i" aria-label="Help: Alphanumeric Tax Code" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Alphanumeric Tax Code on the 2307. Common: WC158 (10% prof fees), WC157 (15% top withholding), WI160 (5% rent).</span></span></label><input type="text" id="logAtc" placeholder="e.g. WC158" autocomplete="off"></div>
+<div class="fld"><label for="logAtc">ATC Code<span class="tip"><button type="button" class="tip-i" aria-label="Help: Alphanumeric Tax Code" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Alphanumeric Tax Code printed on the 2307. Common individual-payee ATCs: WI158 — professional fees (5% ≤₱3M with sworn dec / 10% otherwise); WI160 — rent on real property (5%). For corporate payees of Top Withholding Agents: WC157 — services (2%); WC158 — goods (1%). Verify against your 2307 — the printed ATC is authoritative.</span></span></label><input type="text" id="logAtc" placeholder="e.g. WI158" autocomplete="off"></div>
 <div class="fld"><label for="logAmt">Amount Withheld (₱)</label><input type="text" id="logAmt" placeholder="0" inputmode="numeric" autocomplete="off"></div>
 <div class="fld"><label for="logQ">Quarter</label>
 <select id="logQ"><option value="Q1">Q1 (Jan–Mar)</option><option value="Q2">Q2 (Apr–Jun)</option><option value="Q3">Q3 (Jul–Sep)</option><option value="Q4">Q4 (Oct–Dec)</option></select></div>
@@ -976,7 +983,7 @@ body:not(.pro-mode) .mc{display:none}
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
 <div class="guide-step amber"><div class="guide-step-num">1</div><div class="guide-step-body"><div class="guide-step-title">Determine if RA 9653 (Rent Control) applies</div><div class="guide-step-desc"><b>Covered:</b> Residential units with monthly rent ≤ ₱10,000 in Metro Manila; ≤ ₱5,000 in other areas (as of the most recent IRR). <b>Effect:</b> Annual rent increase capped at 7%. You cannot legally charge above this cap — but you must still report and pay tax on actual rent received.<br><b>Not covered:</b> Commercial units and residential units above the ceiling rent are not subject to RA 9653.</div></div></div>
-<div class="guide-step"><div class="guide-step-num">2</div><div class="guide-step-body"><div class="guide-step-title">Register with BIR and determine your tax treatment</div><div class="guide-step-desc"><b>If total annual gross receipts ≤ ₱3M (non-VAT):</b> File quarterly percentage tax (2551Q) at 3% + income tax (1701Q / 1701A). <b>If gross receipts &gt; ₱3M:</b> Must register for VAT. Charge 12% VAT on rent, file 2550M/2550Q.<br><b>Note:</b> EWT on rent is <b>5%</b> (ATC: WC120). Your tenant (if a corporation or top withholding agent) must withhold 5% of rent and issue you a BIR Form 2307.</div></div></div>
+<div class="guide-step"><div class="guide-step-num">2</div><div class="guide-step-body"><div class="guide-step-title">Register with BIR and determine your tax treatment</div><div class="guide-step-desc"><b>If total annual gross receipts ≤ ₱3M (non-VAT):</b> File quarterly percentage tax (2551Q) at 3% + income tax (1701Q / 1701A). <b>If gross receipts &gt; ₱3M:</b> Must register for VAT. Charge 12% VAT on rent, file 2550Q (monthly 2550M was abolished by EOPT).<br><b>Note:</b> EWT on rent is <b>5%</b> (ATC: WC120). Your tenant (if a corporation or top withholding agent) must withhold 5% of rent and issue you a BIR Form 2307.</div></div></div>
 <div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-body"><div class="guide-step-title">Issue Official Receipts and maintain records</div><div class="guide-step-desc">Issue a BIR-registered OR for every monthly rental payment. Keep a rent ledger per unit. CAS or manual books accepted. If you have 5+ units or mixed rental/other income, consider a separate BIR registration per business address.</div></div></div>
 <div class="guide-step amber"><div class="guide-step-num">4</div><div class="guide-step-body"><div class="guide-step-title">File Sworn Declaration if requesting lower EWT</div><div class="guide-step-desc">If your gross receipts are &lt; ₱3M and you want your tenants to withhold at a lower rate, file a <b>Sworn Declaration</b> (BIR prescribed form) on or before January 15 each year. Submit to each withholding agent (tenant). Without this, corporate tenants will withhold at the standard rate.<br><b>Deadline:</b> January 15 of every taxable year. Failure to file means the payer must withhold at the higher EWT rate.</div></div></div>
 <div class="guide-step"><div class="guide-step-num">5</div><div class="guide-step-body"><div class="guide-step-title">Include rental income in quarterly and annual ITR</div><div class="guide-step-desc">Rental income is reported as business income on <b>1701Q</b> (quarterly) and <b>1701A or 1701</b> (annual). Creditable withholding (from Form 2307) is applied against income tax due. Excess CWT may be refunded or carried over.</div></div></div>
@@ -987,7 +994,7 @@ body:not(.pro-mode) .mc{display:none}
 <div class="guide-hdr-l"><span class="guide-title">Freelancer &amp; Professional Tax Flow — Gross Receipts → EWT → Net Tax Due</span><span class="guide-sub">Self-employed professionals · NIRC Sec. 24(A) · BIR Form 1701Q</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
-<div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-body"><div class="guide-step-title">Receive payment — client withholds EWT and issues Form 2307</div><div class="guide-step-desc">When a corporate client or top withholding agent pays you, they <b>deduct EWT before releasing your fee</b>. Standard rate: <b>10%</b> (regular professional). Rate drops to <b>5%</b> if you file a sworn declaration of income below ₱3M.<br>They issue BIR Form 2307 quarterly. <b>Collect every 2307 — each one is a tax credit.</b></div></div></div>
+<div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-body"><div class="guide-step-title">Receive payment — client withholds EWT and issues Form 2307</div><div class="guide-step-desc">When a corporate client or top withholding agent pays you, they <b>deduct EWT before releasing your fee</b>. Rates per RR 11-2018 §2.57.2(A):<br><b>Individual payees:</b> 5% if prior-year gross &lt; ₱3M and you filed a sworn declaration; 10% otherwise. ATC: <b>WI158</b>.<br><b>Corporate payees (professional partnerships, etc.):</b> 10% if current-year gross income ≤ ₱720K; 15% once it exceeds ₱720K. ATC: <b>WC158</b> for goods or analogous code per the payor's classification.<br>They issue BIR Form 2307 within 20 days after quarter-end. <b>Collect every 2307 — each one is a tax credit.</b></div></div></div>
 <div class="guide-step teal"><div class="guide-step-num">2</div><div class="guide-step-body"><div class="guide-step-title">File quarterly income tax return (1701Q) — cumulative method</div><div class="guide-step-desc">Each 1701Q reports <b>year-to-date gross receipts</b>, not just the quarter's. Q2 reports Q1+Q2, Q3 reports Q1+Q2+Q3.<br><b>Tax computation:</b> Apply 8% or graduated rate to cumulative income → subtract prior quarterly payments → subtract 2307 credits → result is the installment due this quarter.<br><b>Deadlines:</b> Q1: May 15 · Q2: Aug 15 · Q3: Nov 15</div></div></div>
 <div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-body"><div class="guide-step-title">Attach SAWT (.dat file) and all 2307s</div><div class="guide-step-desc">The <b>SAWT (Summary of Alphalist of Withholding Taxes)</b> is a .dat file generated from your 2307s using BIR's eSubmission software. You must submit it before or with each 1701Q and your annual return.<br><b>Steps:</b> Encode all 2307s → generate SAWT → submit via eSubmission portal → attach validation to your return.</div></div></div>
 <div class="guide-step amber"><div class="guide-step-num">4</div><div class="guide-step-body"><div class="guide-step-title">File annual return (1701A or 1701) — reconcile everything</div><div class="guide-step-desc">The annual return covers the full year (including Q4 which has no separate quarterly filing). It reconciles all three quarterly payments and all 2307 credits.<br><b>Use 1701A</b> if: purely self-employed, using 8% or OSD.<br><b>Use 1701</b> if: itemized deductions or mixed income.<br><b>Deadline:</b> April 15 of the following year.</div></div></div>
@@ -1018,13 +1025,15 @@ body:not(.pro-mode) .mc{display:none}
 
 <!-- ═══ SHARED BOTTOM ═══ -->
 <section class="bp">
-<div class="cp"><div class="cph" onclick="let b=document.getElementById('penB'),c=document.getElementById('penC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Penalties &amp; Interest Reference</h3><span class="mchv" id="penC" style="color:var(--lt);font-size:.6rem">▾</span></div>
+<div class="cp"><div class="cph" onclick="let b=document.getElementById('penB'),c=document.getElementById('penC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Penalties &amp; Interest Reference <span style="font-family:var(--sa);font-size:.7rem;font-weight:600;color:var(--mu)">(EOPT classifications)</span></h3><span class="mchv" id="penC" style="color:var(--lt);font-size:.6rem">▾</span></div>
 <div class="cpb" id="penB"><div class="pg">
-<div class="pc"><h4>Micro &amp; Small <span class="bsm" style="background:var(--gs);color:var(--green)">Gross &lt; ₱20M · EOPT</span></h4>
+<div class="pc"><h4>Micro <span class="bsm" style="background:var(--gs);color:var(--green)">Gross &lt; ₱3M · EOPT</span></h4>
 <div class="pr"><span>Surcharge (late)</span><span class="pv pvg">10%</span></div><div class="pr"><span>Interest</span><span class="pv pvg">6%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvg">₱500 (max ₱12.5K/yr)</span></div></div>
+<div class="pc"><h4>Small <span class="bsm" style="background:var(--gs);color:var(--green)">₱3M – &lt;₱20M · EOPT</span></h4>
+<div class="pr"><span>Surcharge (late)</span><span class="pv pvg">10%</span></div><div class="pr"><span>Interest</span><span class="pv pvg">6%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvg">₱1,000 (max ₱25K/yr)</span></div></div>
 <div class="pc"><h4>Medium, Large &amp; Willful <span class="bsm" style="background:var(--rds);color:var(--red)">Standard</span></h4>
-<div class="pr"><span>Surcharge (late)</span><span class="pv pvr">25%</span></div><div class="pr"><span>Surcharge (willful)</span><span class="pv pvr">50%</span></div><div class="pr"><span>Interest</span><span class="pv pvr">12%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvr">₱1K (max ₱25K/yr)</span></div></div>
-</div></div></div>
+<div class="pr"><span>Surcharge (late)</span><span class="pv pvr">25%</span></div><div class="pr"><span>Surcharge (willful)</span><span class="pv pvr">50%</span></div><div class="pr"><span>Interest</span><span class="pv pvr">12%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvr">₱1,000 (max ₱25K/yr)</span></div></div>
+</div><p style="font-family:var(--se);font-size:.75rem;color:var(--mu);padding:.6rem .75rem;line-height:1.5">EOPT thresholds: Medium = ₱20M – &lt;₱1B · Large = ≥₱1B (RA 11976 §47). Willful neglect / fraud imposes the 50% surcharge regardless of size.</p></div></div>
 <div class="cp"><div class="cph" onclick="let b=document.getElementById('lgB'),c=document.getElementById('lgC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Legal Basis</h3><span class="mchv" id="lgC" style="color:var(--lt);font-size:.6rem">▾</span></div>
 <div class="cpb" id="lgB">
 <div class="lr"><span class="lrt">Income Tax</span><span class="lrc">NIRC Sec. 24(A)(2); TRAIN Law (RA 10963)</span></div>
@@ -1057,7 +1066,8 @@ function debounce(fn,ms){let t;return function(){clearTimeout(t);const a=argumen
 const applySearchDebounced=debounce(function(v){SQ=(v||'').toLowerCase();ren();},140);
 
 // ══════════ PAGE NAV ══════════
-function showPg(p,btn){document.querySelectorAll('.page').forEach(e=>e.classList.remove('vis'));document.getElementById({cal:'pgCal',ref:'pgRef',calc:'pgCalc',tools:'pgTools'}[p]).classList.add('vis');document.querySelectorAll('.pnav button').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});btn.classList.add('active');btn.setAttribute('aria-current','page');}
+function showPg(p,btn){document.querySelectorAll('.page').forEach(e=>e.classList.remove('vis'));document.getElementById({cal:'pgCal',ref:'pgRef',calc:'pgCalc',tools:'pgTools'}[p]).classList.add('vis');document.querySelectorAll('.pnav button').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});btn.classList.add('active');btn.setAttribute('aria-current','page');if(p==='calc')refreshCorpGuard();}
+function refreshCorpGuard(){const g=document.getElementById('corpCalcGuard');if(!g)return;const isCorp=(typeof cT!=='undefined'&&cT==='corp')||(window._tpvSetup&&window._tpvSetup.type==='corp');g.style.display=isCorp?'block':'none';}
 
 // ══════════ TOOLTIP SYSTEM ══════════
 const TIPS={
@@ -1090,7 +1100,7 @@ function obTip(title){
   if(/Audited Financial|\bAFS\b/.test(title))return mkTip(TIPS.afs);
   if(/General Information Sheet|\bGIS\b/.test(title))return mkTip(TIPS.gis);
   if(/Final Withholding Tax|\bFinal WT\b/.test(title))return mkTip(TIPS.fwt);
-  if(/VAT Return/.test(title))return mkTip('Quarterly VAT return — net output VAT (from sales) less input VAT (from purchases).');
+  if(/VAT Return/.test(title))return mkTip('Quarterly VAT return — net output VAT (from sales) less input VAT (from purchases). Monthly 2550M was abolished by EOPT (RA 11976).');
   if(/Percentage Tax/.test(title))return mkTip('3% business tax for non-VAT-registered taxpayers using the graduated rate.');
   if(/Computerized Accounting Books|CAS Books/.test(title))return mkTip(TIPS.cas);
   if(/Documentary Stamp Tax/.test(title))return mkTip(TIPS.dst);
@@ -1147,18 +1157,13 @@ const FORMS=[
    how:"3% × quarterly gross sales/receipts. No deductions.",
    attach:"None typically required.",
    legal:"NIRC Sec. 116; TRAIN Law (reverted from 1% to 3% on Jul 1, 2023)"},
-  {form:"2550M",name:"Declare Monthly VAT",cat:"biz",brief:"Monthly VAT return for months 1 & 2 of each quarter.",
+  {form:"2550Q",name:"File Quarterly VAT Return",cat:"biz",brief:"Quarterly VAT return — the only VAT filing since EOPT abolished 2550M.",
    who:"VAT-registered taxpayers (gross > ₱3M or voluntarily registered).",
-   when:"20th of the month following the reporting month. Filed for Jan, Feb, Apr, May, Jul, Aug, Oct, Nov.",
-   how:"Report output VAT (12% on sales) and input VAT (VAT on purchases). Remit any net VAT payable.",
-   attach:"None for the monthly declaration.",
-   legal:"NIRC Secs. 114, 106–108; RR 16-2005"},
-  {form:"2550Q",name:"File Quarterly VAT Return",cat:"biz",brief:"Quarterly VAT return that reconciles the full quarter.",
-   who:"VAT-registered taxpayers.",
    when:"25th of the month after quarter-end. Q1: Apr 25 · Q2: Jul 25 · Q3: Oct 25 · Q4: Jan 25.",
-   how:"Output VAT minus input VAT for the quarter. Credits monthly 2550M payments. Excess input VAT carried over or refundable (zero-rated, per EOPT risk-based audit).",
+   how:"Output VAT (12% on sales) minus input VAT (VAT on purchases) for the full quarter. Remit any net VAT payable. Excess input VAT carried over or refundable (zero-rated, per EOPT risk-based audit).",
    attach:"SLSP (.dat) via esubmission — required even if zero transactions ('No Entry').",
-   legal:"NIRC Secs. 114, 106–108; RR 16-2005; RR 1-2012"},
+   legal:"NIRC Secs. 114, 106–108; EOPT (RA 11976) §37; RR 4-2024",
+   tip:"Form 2550M (monthly VAT) was abolished by RA 11976 (EOPT) effective 22 Jan 2024. VAT is now quarterly-only."},
 
   // WITHHOLDING — COMPENSATION
   {form:"1601-C",name:"Remit Monthly Withholding — Compensation",cat:"emp",brief:"Monthly remittance of taxes withheld from employee salaries.",
@@ -1331,8 +1336,8 @@ const _now=new Date();const YEAR=_now.getFullYear();
 let cMonth=_now.getMonth()+1,cQuarter=Math.ceil((_now.getMonth()+1)/3);
 const HOLIDAYS=buildHolidays(YEAR);
 const MONTH_NOTES=buildMonthNotes(YEAR);
-const GROUP_LABELS={'itr-a':'Annual Income Tax Returns','itr-ac':'Annual Corporate Income Tax','itr-q':'Quarterly Income Tax (Individuals)','itr-qc':'Quarterly Corporate Income Tax','wh-m':'BIR Monthly Returns','wh-a':'Annual Information Returns','wh-q':'Quarterly Withholding Returns','vat-m':'Monthly VAT Declaration','biz-q':'Quarterly Business Tax','contrib':'Mandatory Contributions','sec':'SEC Filings','adm':'Administrative Requirements'};
-const GROUP_ORDER=['itr-a','itr-ac','itr-q','itr-qc','wh-m','wh-a','wh-q','vat-m','biz-q','contrib','sec','adm'];
+const GROUP_LABELS={'itr-a':'Annual Income Tax Returns','itr-ac':'Annual Corporate Income Tax','itr-q':'Quarterly Income Tax (Individuals)','itr-qc':'Quarterly Corporate Income Tax','wh-m':'BIR Monthly Returns','wh-a':'Annual Information Returns','wh-q':'Quarterly Withholding Returns','biz-q':'Quarterly Business Tax','contrib':'Mandatory Contributions','sec':'SEC Filings','adm':'Administrative Requirements'};
+const GROUP_ORDER=['itr-a','itr-ac','itr-q','itr-qc','wh-m','wh-a','wh-q','biz-q','contrib','sec','adm'];
 
 function mW(m,fn,r){return[{month:m,day:10,title:`Remit Withholding — Compensation (${fn})`,form:"1601-C",cat:"emp",r,pq:"employees"},{month:m,day:10,title:`Remit Expanded Withholding Tax (${fn})`,form:"0619-E",cat:"wh",r,pq:"ewt"},{month:m,day:10,title:`Remit Final Withholding Tax (${fn})`,form:"0619-F",cat:"wh",r,pq:"fwt"}];}
 function gC(m,fn,r){return{month:m,day:15,title:`Pay Mandatory Contributions (${fn})`,form:"Agency",cat:"emp",r,pq:"employees"};}
@@ -1343,17 +1348,16 @@ const B=AB,OB=[];
 const mNm=["","Dec (PY)","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov"];
 for(let m=1;m<=12;m++){OB.push(...mW(m,mNm[m],B),gC(m,mNm[m],B));}
 OB.push({month:1,day:15,title:"Bind & Submit Loose-Leaf Books",form:"ORUS",cat:"adm",r:B},{month:1,day:15,title:"File Sworn Declaration for Lower EWT",form:"—",cat:"wh",r:[...SE,...MI],pq:"lowerewt"},{month:1,day:20,title:"Renew Business Permit (Mayor's Permit)",form:"LGU",cat:"adm",r:B},...qC(1,"Q4",B),...qE(1,"Q4",31,B),{month:1,day:25,title:"File Quarterly Percentage Tax — Q4",form:"2551Q",cat:"biz",r:NV},{month:1,day:25,title:"File Quarterly VAT Return — Q4",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:1,day:25,title:"Submit Sales & Purchases List — Q4",form:"SLSP",cat:"biz",r:VAT},{month:1,day:30,title:"Submit Annual Inventory List",form:"—",cat:"adm",r:B},{month:1,day:30,title:"Stamp Computerized Accounting Books",form:"ORUS",cat:"adm",r:B,pq:"cas"},{month:1,day:31,title:"File Annual WT Summary — Compensation",form:"1604-C",cat:"emp",r:B,pq:"employees",att:["Alphalist (.dat)"]},{month:1,day:31,title:"File Annual Final WT Summary",form:"1604-F",cat:"wh",r:B,pq:"fwt",att:["Alphalist (.dat)"]},{month:1,day:31,title:"Distribute Tax Certificates to Employees",form:"2316",cat:"emp",r:B,pq:"employees"});
-OB.push({month:2,day:20,title:"Declare Monthly VAT — January",form:"2550M",cat:"biz",r:VAT},{month:2,day:28,title:"Submit 2316 Duplicates to BIR",form:"2316",cat:"emp",r:B,pq:"employees"});
-OB.push({month:3,day:1,title:"File Annual EWT Summary",form:"1604-E",cat:"wh",r:B,pq:"ewt",att:["Alphalist (.dat)"]},{month:3,day:20,title:"Declare Monthly VAT — February",form:"2550M",cat:"biz",r:VAT});
-OB.push({month:4,day:15,title:"File Annual ITR — 8% Flat Rate",form:"1701A",cat:"inc",r:['se_8']},{month:4,day:15,title:"File Annual ITR — Mixed Income, 8%",form:"1701",cat:"inc",r:['mi_8']},{month:4,day:15,title:"File Annual ITR — Graduated + OSD",form:"1701A",cat:"inc",r:['se_gnv','se_gv'],npq:'itemized'},{month:4,day:15,title:"File Annual ITR — Mixed Income, Grad+OSD",form:"1701",cat:"inc",r:['mi_gnv','mi_gv'],npq:'itemized'},{month:4,day:15,title:"File Annual ITR — Graduated, Itemized",form:"1701",cat:"inc",r:['se_gnv','se_gv','mi_gnv','mi_gv'],pq:'itemized'},{month:4,day:15,title:"File Annual Corporate Income Tax Return",form:"1702-RT",cat:"inc",r:CORP,desc:"25%/20% RCIT or 2% MCIT"},{month:4,day:15,title:"File Annual ITR — Compensation Income",form:"1700",cat:"inc",r:['emp_f']},{month:4,day:15,title:"Confirm Substituted Filing (Employee ITR)",form:"2316",cat:"inc",r:['emp_s']},{month:4,day:15,title:"Submit Audited Financial Statements to SEC",form:"SEC",cat:"sec",r:CORP},...qC(4,"Q1",B),{month:4,day:25,title:"File Quarterly Percentage Tax — Q1",form:"2551Q",cat:"biz",r:NV},{month:4,day:25,title:"File Quarterly VAT Return — Q1",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:4,day:25,title:"Submit Sales & Purchases List — Q1",form:"SLSP",cat:"biz",r:VAT},...qE(4,"Q1",30,B));
-OB.push({month:5,day:15,title:"File Quarterly Income Tax — Q1",form:"1701Q",cat:"inc",r:IND,att:["SAWT","2307s"]},{month:5,day:30,title:"File Corporate Quarterly ITR — Q1",form:"1702Q",cat:"inc",r:CORP},{month:5,day:20,title:"Declare Monthly VAT — April",form:"2550M",cat:"biz",r:VAT});
-OB.push({month:6,day:20,title:"Declare Monthly VAT — May",form:"2550M",cat:"biz",r:VAT},{month:6,day:30,title:"Submit General Information Sheet to SEC",form:"SEC",cat:"sec",r:CORP});
+OB.push({month:2,day:28,title:"Submit 2316 Duplicates to BIR",form:"2316",cat:"emp",r:B,pq:"employees"});
+OB.push({month:3,day:1,title:"File Annual EWT Summary",form:"1604-E",cat:"wh",r:B,pq:"ewt",att:["Alphalist (.dat)"]});
+OB.push({month:4,day:15,title:"File Annual ITR — 8% Flat Rate",form:"1701A",cat:"inc",r:['se_8']},{month:4,day:15,title:"File Annual ITR — Mixed Income, 8%",form:"1701",cat:"inc",r:['mi_8']},{month:4,day:15,title:"File Annual ITR — Graduated + OSD",form:"1701A",cat:"inc",r:['se_gnv','se_gv'],npq:'itemized'},{month:4,day:15,title:"File Annual ITR — Mixed Income, Grad+OSD",form:"1701",cat:"inc",r:['mi_gnv','mi_gv'],npq:'itemized'},{month:4,day:15,title:"File Annual ITR — Graduated, Itemized",form:"1701",cat:"inc",r:['se_gnv','se_gv','mi_gnv','mi_gv'],pq:'itemized'},{month:4,day:15,title:"File Annual Corporate Income Tax Return",form:"1702-RT",cat:"inc",r:CORP,desc:"25%/20% RCIT or 2% MCIT"},{month:4,day:15,title:"File Annual ITR — Compensation Income",form:"1700",cat:"inc",r:['emp_f']},{month:4,day:15,title:"Confirm Substituted Filing (Employee ITR)",form:"2316",cat:"inc",r:['emp_s']},{month:4,day:15,title:"Attach AFS to Annual ITR (BIR)",form:"—",cat:"sec",r:CORP,desc:"The BIR-stamped AFS is an attachment to the 1702-RT filing on April 15. The SEC filing is a separate, staggered schedule (see below)."},{month:0,day:0,title:"File AFS with SEC (staggered schedule)",form:"SEC",cat:"sec",r:CORP,desc:"SEC AFS filing is staggered by the LAST digit of your SEC registration number. Typically Apr–Jul per the annual SEC Memorandum Circular. Not a fixed April 15 date."},...qC(4,"Q1",B),{month:4,day:25,title:"File Quarterly Percentage Tax — Q1",form:"2551Q",cat:"biz",r:NV},{month:4,day:25,title:"File Quarterly VAT Return — Q1",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:4,day:25,title:"Submit Sales & Purchases List — Q1",form:"SLSP",cat:"biz",r:VAT},...qE(4,"Q1",30,B));
+OB.push({month:5,day:15,title:"File Quarterly Income Tax — Q1",form:"1701Q",cat:"inc",r:IND,att:["SAWT","2307s"]},{month:5,day:30,title:"File Corporate Quarterly ITR — Q1",form:"1702Q",cat:"inc",r:CORP});
+OB.push({month:0,day:0,title:"File General Information Sheet to SEC",form:"SEC",cat:"sec",r:CORP,desc:"Within 30 calendar days after your annual stockholders' meeting (Revised Corporation Code § 177). Date depends on your by-laws, not a fixed June 30."});
 OB.push(...qC(7,"Q2",B),{month:7,day:25,title:"File Quarterly Percentage Tax — Q2",form:"2551Q",cat:"biz",r:NV},{month:7,day:25,title:"File Quarterly VAT Return — Q2",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:7,day:25,title:"Submit Sales & Purchases List — Q2",form:"SLSP",cat:"biz",r:VAT},...qE(7,"Q2",31,B));
-OB.push({month:8,day:15,title:"File Quarterly Income Tax — Q2",form:"1701Q",cat:"inc",r:IND},{month:8,day:29,title:"File Corporate Quarterly ITR — Q2",form:"1702Q",cat:"inc",r:CORP},{month:8,day:20,title:"Declare Monthly VAT — July",form:"2550M",cat:"biz",r:VAT});
-OB.push({month:9,day:20,title:"Declare Monthly VAT — August",form:"2550M",cat:"biz",r:VAT});
+OB.push({month:8,day:15,title:"File Quarterly Income Tax — Q2",form:"1701Q",cat:"inc",r:IND},{month:8,day:29,title:"File Corporate Quarterly ITR — Q2",form:"1702Q",cat:"inc",r:CORP});
 OB.push(...qC(10,"Q3",B),{month:10,day:25,title:"File Quarterly Percentage Tax — Q3",form:"2551Q",cat:"biz",r:NV},{month:10,day:25,title:"File Quarterly VAT Return — Q3",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:10,day:25,title:"Submit Sales & Purchases List — Q3",form:"SLSP",cat:"biz",r:VAT},...qE(10,"Q3",31,B));
-OB.push({month:11,day:15,title:"File Quarterly Income Tax — Q3",form:"1701Q",cat:"inc",r:IND},{month:11,day:29,title:"File Corporate Quarterly ITR — Q3",form:"1702Q",cat:"inc",r:CORP},{month:11,day:20,title:"Declare Monthly VAT — October",form:"2550M",cat:"biz",r:VAT});
-OB.push({month:12,day:20,title:"Declare Monthly VAT — November",form:"2550M",cat:"biz",r:VAT},{month:12,day:24,title:"Release 13th Month Pay to Employees",form:"—",cat:"emp",r:B,pq:"employees"},{month:12,day:31,title:"Complete Year-End Bookkeeping",form:"—",cat:"adm",r:B},{month:12,day:31,title:"Verify 2316 from Employer",form:"2316",cat:"inc",r:EMP});
+OB.push({month:11,day:15,title:"File Quarterly Income Tax — Q3",form:"1701Q",cat:"inc",r:IND},{month:11,day:29,title:"File Corporate Quarterly ITR — Q3",form:"1702Q",cat:"inc",r:CORP});
+OB.push({month:12,day:24,title:"Release 13th Month Pay to Employees",form:"—",cat:"emp",r:B,pq:"employees"},{month:12,day:31,title:"Complete Year-End Bookkeeping",form:"—",cat:"adm",r:B},{month:12,day:31,title:"Verify 2316 from Employer",form:"2316",cat:"inc",r:EMP});
 OB.push({month:0,day:5,title:"File Documentary Stamp Tax Return",form:"2000",cat:"dst",r:AB,pq:"dst"},{month:0,day:0,title:"Track Government VAT Withheld",form:"1600",cat:"wh",r:VAT,pq:"govpay"},{month:0,day:0,title:"Submit CRM/POS Monthly Sales Report",form:"—",cat:"adm",r:AB,pq:"crm"},{month:0,day:0,title:"Pay Personal Mandatory Contributions",form:"Agency",cat:"adm",r:[...SE,...MI]},{month:0,day:0,title:"Submit IPA Compliance Report",form:"IPA",cat:"sec",r:CORP,pq:"rbe"},{month:0,day:0,title:"Apply MCIT (Minimum Corporate Income Tax) Check",form:"—",cat:"inc",r:CORP,pq:"mcit",desc:"2% MCIT on gross vs 25%/20% RCIT from 4th yr."},{month:0,day:0,title:"Register for E-Invoicing System",form:"Per RR 11-2025",cat:"adm",r:AB,pq:"einv",desc:"Structured e-invoices by Dec 31, 2026."});
 
 // ── ctx: plain-English reason for each obligation (Feed view) ──
@@ -1386,7 +1390,6 @@ OB.push({month:0,day:5,title:"File Documentary Stamp Tax Return",form:"2000",cat
     "1601-C":"Remit last month's income tax withheld from employee salaries to the BIR.",
     "0619-E":"Send last month's expanded withholding tax collections to the BIR.",
     "0619-F":"Send last month's final withholding tax deductions to the BIR.",
-    "2550M":"Monthly VAT report keeps your output and input tax records current.",
     "2551Q":"Non-VAT businesses pay 3% tax on quarterly gross receipts here.",
     "2550Q":"Compute and pay your net VAT position for the quarter.",
     "SLSP":"BIR requires a full list of VAT buyers and suppliers each quarter.",
@@ -1419,7 +1422,7 @@ function getObWF(o){
   if(f==='2316'&&o.cat==='emp')return'payroll';
   if(o.pq==='employees'&&(f==='—'||o.cat==='emp'))return'payroll';
   if(f==='Agency')return'government_contributions';
-  if(['2550M','2550Q'].includes(f))return'vat_invoicing';
+  if(f==='2550Q')return'vat_invoicing';
   if(o.pq==='einv'||f==='Per RR 11-2025')return'vat_invoicing';
   if(['0619-E','1601-EQ','1604-E','0619-F','1601-FQ','1604-F','2307','2306'].includes(f))return'client_billing';
   if(f==='1600'||o.pq==='lowerewt')return'client_billing';
@@ -1627,7 +1630,7 @@ function pqL(k){const q=[...Object.values(QS)].flat().find(x=>x.key===k);return 
 function getDayName(m,d){return['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(YEAR,m-1,d).getDay()];}
 function setCalM(m){cMonth=m;if(m>0)cQuarter=Math.ceil(m/3);ren();}
 function setCalQ(q){cQuarter=q;cMonth=(q-1)*3+1;ren();}
-function getObGrp(o){const f=o.form||'';if(['1601-C','0619-E','0619-F','1600'].includes(f))return'wh-m';if(f==='2550M')return'vat-m';if(['1701A','1701','1700'].includes(f)||(f==='2316'&&o.cat==='inc'))return'itr-a';if(f==='1702-RT')return'itr-ac';if(['1604-C','1604-F','1604-E'].includes(f))return'wh-a';if(f==='1701Q')return'itr-q';if(f==='1702Q')return'itr-qc';if(['2550Q','2551Q','SLSP'].includes(f))return'biz-q';if(['1601-EQ','1601-FQ','2307','2306'].includes(f))return'wh-q';if(f==='Agency'||o.cat==='emp')return'contrib';if(f==='SEC'||o.cat==='sec')return'sec';return'adm';}
+function getObGrp(o){const f=o.form||'';if(['1601-C','0619-E','0619-F','1600'].includes(f))return'wh-m';if(['1701A','1701','1700'].includes(f)||(f==='2316'&&o.cat==='inc'))return'itr-a';if(f==='1702-RT')return'itr-ac';if(['1604-C','1604-F','1604-E'].includes(f))return'wh-a';if(f==='1701Q')return'itr-q';if(f==='1702Q')return'itr-qc';if(['2550Q','2551Q','SLSP'].includes(f))return'biz-q';if(['1601-EQ','1601-FQ','2307','2306'].includes(f))return'wh-q';if(f==='Agency'||o.cat==='emp')return'contrib';if(f==='SEC'||o.cat==='sec')return'sec';return'adm';}
 function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='obn_'+obsId(o);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);const shift=shiftedDeadlineNote(o);return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div><span class="ob-row-title">${o.title}${obTip(o.title)}</span>${o.form&&o.form!=='—'?`<span class="form-ref">${o.form}</span>`:''}</div><div class="ob-row-meta">${shift?`<span class="ob-row-pq" style="background:var(--as);color:var(--amber)">${shift}</span>`:''}${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.5rem;padding-top:.4rem;border-top:1px solid rgba(65,105,225,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.78rem;color:var(--ch);padding:.15rem 0;display:flex;align-items:center;gap:.35rem"><span aria-hidden="true" style="font-size:.72rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<button type="button" style="margin-top:.5rem;font-size:.75rem;color:var(--royal);font-weight:600;cursor:pointer;background:none;border:none;padding:.3rem .4rem;border-radius:4px;min-height:32px" onclick="event.stopPropagation();document.querySelector('.pnav button:nth-child(2)').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">&#8594; View ${o.form} in Form Reference</button>`:''}</div></div></div>`;}
 function renMon(month,obs){let h='';if(MONTH_NOTES[month])h+=`<div class="cal-note"><span class="cal-note-lbl">Deadline note</span>${MONTH_NOTES[month]}</div>`;const hols=HOLIDAYS[month]||[];if(hols.length){h+=`<div class="cal-holidays"><div class="cal-hol-hdr">Public holidays this month</div>`;hols.forEach(([d,name,type])=>{const dn=getDayName(month,d);h+=`<div class="cal-hol-item"><span class="cal-hol-date">${MN[month].substr(0,3)} ${d}, ${YEAR}</span><span class="cal-hol-name">${dn} &middot; ${name}</span><span class="cal-hol-badge ${type}">${type==='reg'?'Regular holiday':'Special non-working'}</span></div>`;});h+=`</div>`;}if(!obs.length)return h+`<div class="cal-empty">No obligations match your current filters for ${MN[month]}.</div>`;const grps={};[...obs].sort((a,b)=>a.day-b.day).forEach(o=>{const g=getObGrp(o);if(!grps[g])grps[g]=[];grps[g].push(o);});let first=true;GROUP_ORDER.forEach(gk=>{if(!grps[gk])return;h+=`<div class="cal-grp-hdr"${first?' style="margin-top:0"':''}>${GROUP_LABELS[gk]||gk}</div>`;h+=grps[gk].map(rObNew).join('');first=false;});return h;}
 function renPen(ongoingObs){let h=`<p class="cal-pen-intro">Under EOPT (RR 6-2024), penalties for micro and small businesses (gross &lt; &#8369;20M) are substantially reduced. Always verify your BIR classification before computing penalties.</p>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Surcharge on Tax Due</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">10%</div><div class="cal-pen-note">Gross receipts &lt; &#8369;20M &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard — Late Filing/Payment</div><div class="cal-pen-val">25%</div><div class="cal-pen-note">NIRC Sec. 248</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard — Fraud / Willful</div><div class="cal-pen-val">50%</div><div class="cal-pen-note">Fraudulent return or willful neglect</div></div></div>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Interest on Unpaid Tax</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">6% / year</div><div class="cal-pen-note">Double the legal interest rate &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">12% / year</div><div class="cal-pen-note">NIRC Sec. 249 &middot; from due date to payment</div></div></div>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Failure to File (per return)</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">&#8369;500</div><div class="cal-pen-note">Max &#8369;12,500/year &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">&#8369;1,000</div><div class="cal-pen-note">Max &#8369;25,000/year &middot; NIRC Sec. 250</div></div></div>`;if(ongoingObs.length){h+=`<div class="cal-ongoing-hdr">Ongoing &amp; Recurring Obligations</div>`;h+=ongoingObs.map(rObNew).join('');}return h;}
@@ -1692,7 +1695,6 @@ function getLayman(o){
   if(f==='1604-F')return'<b>What:</b> Annual summary of final withholding taxes you remitted on items like dividends, royalties, and certain interest payments.';
   // ── VAT / Business Tax
   if(f==='2550Q')return'<b>What:</b> Quarterly VAT return for VAT-registered taxpayers (gross above ₱3M or voluntarily registered). Reports output VAT (12% on sales) less input VAT (12% on purchases). <b>Plain version:</b> "I sold X with VAT, I bought Y with VAT — here is the difference I owe."';
-  if(f==='2550M')return'<b>What:</b> Monthly VAT declaration for the first 2 months of each quarter. Pre-payment of VAT before the quarterly return reconciles everything.';
   if(f==='2551Q')return'<b>What:</b> Quarterly 3% percentage tax return for non-VAT registered taxpayers under graduated rates. NOT filed if you elect the 8% flat rate. <b>Plain version:</b> "I am not VAT-registered, so I pay 3% of my gross sales as a separate business tax."';
   // ── Income Tax — Individual
   if(f==='1701Q')return'<b>What:</b> Quarterly income tax return for self-employed, professionals, and mixed income earners. Filed 3 times a year (Q1–Q3; annual return covers Q4). Uses cumulative method — each quarter reports year-to-date. <b>Plain version:</b> "Here is my income for the year so far, and the tax I owe based on it (less what I already paid)."';
@@ -1885,8 +1887,25 @@ function getEffectiveExpenses(g){
   const t=pN('eI');return{total:t,allowed:t,gross:t,caps:null};
 }
 
-function generateWarnings(g,expData,best,mode){
+function generateWarnings(g,expData,best,mode,ctx){
+  ctx=ctx||{};
   const W=[];const ratio=g>0?expData.allowed/g:0;
+  // 8% ELECTION MISSED
+  if(ctx.eightWouldWin&&!ctx.elected8){
+    W.push({sev:'high',icon:'🔒',title:'8% election not made — cheapest option locked out',msg:`The 8% flat rate would have produced the lowest total tax, but you indicated you did not signify the election on your Q1 1701Q. Per <b>RR 8-2018 §3(C)</b>, the election is <b>irrevocable</b> for the full taxable year and must be made on the first quarterly return (or at BIR registration). You are on graduated rates for <b>${YEAR}</b>; the 8% row is shown for reference only. You can elect 8% on your Q1 ${YEAR+1} 1701Q (due <b>May 15, ${YEAR+1}</b>). <span class="ref">RR 8-2018 §3(B)–(C); NIRC §24(A)(2)(b)</span>`});
+  }
+  // OTHER PERCENTAGE TAX BLOCKS 8%
+  if(ctx.hasOtherPT){
+    W.push({sev:'med',icon:'⚠',title:'8% unavailable — other percentage tax',msg:`Per <b>RR 8-2018 §3(B)(3)</b>, you cannot use the 8% flat rate if you are subject to any percentage tax other than NIRC §116 (e.g., amusement, common carrier, banking, overseas dispatch). <span class="ref">RR 8-2018 §3(B)(3)</span>`});
+  }
+  // NON-OPERATING INCOME PUSHES OVER ₱3M
+  if(ctx.nop&&g<=3e6&&(g+ctx.nop)>3e6){
+    W.push({sev:'high',icon:'⚠',title:'Non-operating income pushes you above ₱3M',msg:`Gross sales alone are <b>${fmt(g)}</b>, but adding non-operating income of <b>${fmt(ctx.nop)}</b> brings total taxable gross to <b>${fmt(g+ctx.nop)}</b>, which exceeds the ₱3M threshold. Per <b>RR 8-2018 §3(B)(2)</b>, both amounts count when testing eligibility, so the 8% option is unavailable and VAT registration is mandatory. <span class="ref">RR 8-2018 §3(B)(2); NIRC §109(CC)</span>`});
+  }
+  // MIXED INCOME — COMPENSATION STACKING NOTE
+  if(ctx.comp&&ctx.comp>0){
+    W.push({sev:'info',icon:'ℹ',title:'Mixed income — compensation stacks onto business income',msg:`Compensation income of <b>${fmt(ctx.comp)}</b> is added to your business net taxable income before applying graduated brackets (NIRC §24(A)(2)). The 8% option, if eligible, applies only to business gross sales (+ non-op) and does not include compensation — compensation remains at graduated rates regardless. <span class="ref">NIRC §24(A)(2); RR 8-2018 §3(B)(1)</span>`});
+  }
   // VAT THRESHOLD
   if(g>3000000)W.push({sev:'high',icon:'⚠',title:'Above VAT Threshold',msg:`Gross sales of <b>${fmt(g)}</b> exceed the ₱3M VAT threshold. The 8% flat rate is unavailable, and you must register for VAT (12%) instead of percentage tax. <span class="ref">NIRC Sec. 109(BB); RR 13-2018</span>`});
   else if(g>2700000)W.push({sev:'med',icon:'⚠',title:'Approaching VAT Threshold',msg:`You are within <b>${fmt(3000000-g)}</b> of the ₱3M VAT registration threshold. Crossing it triggers mandatory VAT registration and disqualifies you from the 8% flat rate. Plan growth carefully. <span class="ref">NIRC Sec. 109(BB)</span>`});
@@ -2250,8 +2269,18 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo){
   document.getElementById('formPrevBox').innerHTML=h;
 }
 
+function onTaxpayerTypeChange(){
+  const tS=document.getElementById('tS');
+  const fldComp=document.getElementById('fldComp');
+  if(fldComp)fldComp.style.display=tS&&tS.value==='mixed'?'flex':'none';
+}
+
 function calc(){
   const g=getSales(),cwt=pN('cI'),isPure=document.getElementById('tS').value==='pure';
+  const comp=isPure?0:pN('compI');
+  const nop=pN('nopI');
+  const elected8=document.getElementById('eightElect')?.value!=='no';
+  const hasOtherPT=document.getElementById('otherPt')?.value==='yes';
   const calcErr=document.getElementById('calcErr');
   if(calcErr){calcErr.style.display='none';calcErr.textContent='';}
   if(g<=0){
@@ -2261,17 +2290,37 @@ function calc(){
   }
   const expData=getEffectiveExpenses(g);
   const ex=expData.allowed;
+  // ₱3M threshold tests gross sales + non-operating income (RR 8-2018 §3(B)(2)).
+  const thresholdBase=g+nop;
   // VAT-registered selection: 'auto' → threshold-based; 'yes' / 'no' → explicit override.
   const vatSel=document.getElementById('vatR')?.value||'auto';
-  const over=vatSel==='yes'?true:vatSel==='no'?false:g>3e6;
+  const over=vatSel==='yes'?true:vatSel==='no'?false:thresholdBase>3e6;
   const d250=isPure?250000:0;
-  // 8% — available only when non-VAT AND gross ≤ ₱3M.
-  const eightAvailable=!over&&g<=3e6;
-  const aAv=eightAvailable,aIG=aAv?Math.max(0,(g-d250)*.08):0,aIN=aAv?Math.max(0,aIG-cwt):0,aT=aAv?aIN:Infinity;
-  // OSD
-  const bN=g-g*.4,bIG=gradTax(bN),bIN=Math.max(0,bIG-cwt),bP=over?0:g*.03,bT=bIN+bP;
+  // 8% eligibility under RR 8-2018 §3(B):
+  //  (1) not VAT-registered
+  //  (2) gross sales + non-operating income ≤ ₱3M
+  //  (3) not subject to percentage tax other than §116
+  //  (4) timely election signified on Q1 1701Q or at registration
+  const eightAvailable=!over&&thresholdBase<=3e6&&!hasOtherPT&&elected8;
+  const eightIneligReasons=[];
+  if(over)eightIneligReasons.push('VAT-registered');
+  if(thresholdBase>3e6)eightIneligReasons.push(`Gross + non-op ${fmt(thresholdBase)} exceeds ₱3M`);
+  if(hasOtherPT)eightIneligReasons.push('subject to another percentage tax');
+  if(!elected8)eightIneligReasons.push('election not signified on Q1 1701Q');
+  // 8% base = gross sales + non-operating income, minus the ₱250K allowance for purely SE.
+  // Mixed earners cannot deduct ₱250K from the business side because it is consumed by
+  // compensation at graduated rates (RR 8-2018 §3(B)(1)).
+  const aBase=Math.max(0,g+nop-d250);
+  const aAv=eightAvailable,aIG=aAv?aBase*.08:0,aIN=aAv?Math.max(0,aIG-cwt):0,aT=aAv?aIN:Infinity;
+  // OSD — graduated rates applied to (business taxable income + compensation). Mixed income
+  // earners add compensation on top before brackets per NIRC §24(A)(2).
+  const bBizTI=Math.max(0,g-g*.4+nop);
+  const bN=bBizTI+comp;
+  const bIG=gradTax(bN),bIN=Math.max(0,bIG-cwt),bP=over?0:g*.03,bT=bIN+bP;
   // Itemized
-  const cN=Math.max(0,g-ex),cIG=gradTax(cN),cIN=Math.max(0,cIG-cwt),cP=over?0:g*.03,cT=cIN+cP;
+  const cBizTI=Math.max(0,g-ex+nop);
+  const cN=cBizTI+comp;
+  const cIG=gradTax(cN),cIN=Math.max(0,cIG-cwt),cP=over?0:g*.03,cT=cIN+cP;
   const R=[
     {k:'a',n:'8% Flat Rate',iG:aIG,iN:aIN,p:0,t:aT,av:aAv},
     {k:'b',n:'Graduated + OSD',iG:bIG,iN:bIN,p:bP,t:bT,av:true},
@@ -2282,7 +2331,8 @@ function calc(){
   // CARDS
   document.getElementById('cCards').innerHTML=R.map(r=>{
     const ib=r===best&&r.av,sv=r.av?r.t-best.t:0;
-    return`<div class="ccard ${ib?'best':''}">${ib?'<div class="bdg">Lowest</div>':''}<div class="rn">${r.n}</div>${r.av?`<div class="tlbl">Total Annual Tax</div><div class="tamt">${fmt(r.t)}</div><div class="er">Effective: <strong>${pct(r.t,g)}</strong></div><div class="bkd"><div class="bkr"><span>Income Tax</span><span class="bkv">${fmt(r.iG)}</span></div><div class="bkr"><span>Less CWT</span><span class="bkv">(${fmt(cwt)})</span></div><div class="bkr"><span>Net IT</span><span class="bkv">${fmt(r.iN)}</span></div><div class="bkr"><span>${over?'Pct Tax (N/A)':'3% Pct Tax'}</span><span class="bkv">${fmt(r.p)}</span></div></div>${!ib?`<div class="sv">${fmt(sv)} more</div>`:`<div class="sv">Save ${fmt(worst.t-best.t)}</div>`}`:`<div class="tlbl" style="color:var(--red)">Not Available</div><div style="font-family:var(--se);font-size:.72rem;color:var(--mu);margin-top:.3rem">Exceeds ₱3M</div>`}</div>`;
+    const unavailReason=r.k==='a'&&!r.av?eightIneligReasons.join(', '):'Exceeds ₱3M';
+    return`<div class="ccard ${ib?'best':''}">${ib?'<div class="bdg">Lowest</div>':''}<div class="rn">${r.n}</div>${r.av?`<div class="tlbl">Total Annual Tax</div><div class="tamt">${fmt(r.t)}</div><div class="er">Effective: <strong>${pct(r.t,g)}</strong></div><div class="bkd"><div class="bkr"><span>Income Tax</span><span class="bkv">${fmt(r.iG)}</span></div><div class="bkr"><span>Less CWT</span><span class="bkv">(${fmt(cwt)})</span></div><div class="bkr"><span>Net IT</span><span class="bkv">${fmt(r.iN)}</span></div><div class="bkr"><span>${over?'Pct Tax (N/A)':'3% Pct Tax'}</span><span class="bkv">${fmt(r.p)}</span></div></div>${!ib?`<div class="sv">${fmt(sv)} more</div>`:`<div class="sv">Save ${fmt(worst.t-best.t)}</div>`}`:`<div class="tlbl" style="color:var(--red)">Not Available</div><div style="font-family:var(--se);font-size:.78rem;color:var(--mu);margin-top:.3rem;line-height:1.4">${esc(unavailReason)}</div>`}</div>`;
   }).join('');
 
   // RECOMMENDATION
@@ -2301,7 +2351,12 @@ function calc(){
   document.getElementById('rcBox').innerHTML=`<div class="reco"><h3>Recommendation</h3><p>${rt}</p><div class="scall">${best.n}: ${fmt(best.t)} (${pct(best.t,g)} effective rate)</div></div>`;
 
   // WARNINGS & CAPS
-  const W=generateWarnings(g,expData,best,EXP_MODE);
+  // Did the user miss the 8% election even though 8% would be cheapest?
+  const wouldBeAv=!over&&thresholdBase<=3e6&&!hasOtherPT;
+  const hypotheticalEight=wouldBeAv?Math.max(0,aBase*.08-cwt):Infinity;
+  const minGrad=Math.min(bT,cT);
+  const eightWouldWin=wouldBeAv&&!elected8&&hypotheticalEight<minGrad;
+  const W=generateWarnings(g,expData,best,EXP_MODE,{elected8,hasOtherPT,nop,comp,eightWouldWin});
   renderWarnings(W);
   renderCapAnalysis(expData);
   // Quarterly CWT sourced from the 2307 log when available; linear ¼ split otherwise.
@@ -2365,7 +2420,11 @@ function initNumberFormatters(){
   });
 }
 
-initMonthGrid();initCatGrid();initNumberFormatters();
+initMonthGrid();initCatGrid();initNumberFormatters();onTaxpayerTypeChange();refreshCorpGuard();
+// Ensure the new calc inputs (compI, nopI) run through the same comma formatter.
+document.querySelectorAll('#compI,#nopI').forEach(el=>{
+  el.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});
+});
 
 // ══════════ SIMPLE / PRO MODE TOGGLE ══════════
 function updSmBar(){const el=document.getElementById('smTpLabel');if(el)el.textContent=TYPES[cT].name;}
@@ -2414,14 +2473,26 @@ const WZ_STEPS=[
    show:a=>['se','mi'].includes(a.type),
    opts:[
     {label:"Let the app pick — I'll compare later",sub:"We'll show deadlines for both options. You can decide before filing your first return.",val:'grad'},
-    {label:'8% flat rate on gross',sub:"Simple: 8% of what you earn above ₱250K, no expenses to track. Only if your sales stay under ₱3M.",val:'8pct'},
+    {label:'8% flat rate on gross',sub:"Simple: 8% of what you earn above ₱250K, no expenses to track. Only if your sales stay under ₱3M AND you signified the election on your Q1 filing.",val:'8pct'},
     {label:'Graduated rates (the usual way)',sub:'Standard 0%–35% tax table. Lets you deduct expenses. Required if your sales exceed ₱3M.',val:'grad'}
   ]},
-  {q:'Do your yearly sales go above ₱3 million?',hint:"If you're not sure, pick 'No' — that fits most small operators.",key:'vat',
+  {q:'Did you signify the 8% election on your Q1 filing?',hint:"The 8% option is locked in on your first quarterly 1701Q (or at BIR registration). The choice is irrevocable for the whole year and the deadline is May 15 for Q1. If you missed it, you're on graduated rates until next year.",key:'eight_elect',
+   show:a=>['se','mi'].includes(a.type)&&a.rate==='8pct',
+   opts:[
+    {label:'Yes — I marked 8% on my Q1 1701Q (or at BIR registration)',sub:"You're locked into 8% for the entire taxable year.",val:'yes'},
+    {label:"No — or I'm not sure",sub:"Without a timely election, you default to graduated rates + 3% percentage tax for the year. The calculator will show 8% as reference only.",val:'no'}
+  ]},
+  {q:'Are you subject to any percentage tax other than the 3% under NIRC §116?',hint:"Most small businesses are not. You'd know if you run an amusement place, common carrier, international carrier, overseas dispatch, a bank/financial intermediary, or a life-insurance company.",key:'other_pt',
+   show:a=>['se','mi'].includes(a.type)&&a.rate==='8pct',
+   opts:[
+    {label:'No — only regular 3%',sub:"You qualify on this prong of the 8% test.",val:'no'},
+    {label:'Yes — amusement, carrier, banking, etc.',sub:"Per RR 8-2018 §3(B)(3), any other percentage tax disqualifies you from the 8% option.",val:'yes'}
+  ]},
+  {q:'Do your yearly sales go above ₱3 million?',hint:"If you're not sure, pick 'No' — that fits most small operators. Count gross sales plus non-operating income — RR 8-2018 tests both.",key:'vat',
    show:a=>['se','mi','corp'].includes(a.type)&&a.rate!=='8pct',
    opts:[
     {label:'No — under ₱3M',sub:"You're non-VAT. You'll file Percentage Tax (2551Q) instead of VAT returns.",val:'no'},
-    {label:'Yes — I cross ₱3M',sub:"You're VAT-registered. You charge 12% VAT and file 2550M / 2550Q.",val:'yes'}
+    {label:'Yes — I cross ₱3M',sub:"You're VAT-registered. You charge 12% VAT and file 2550Q quarterly (monthly 2550M was abolished by EOPT).",val:'yes'}
   ]},
   {q:'How do you want to handle business expenses?',hint:"Most small businesses pick Standard 40% — less paperwork.",key:'deduction',
    show:a=>['se','mi'].includes(a.type)&&a.rate!=='8pct',
@@ -2538,8 +2609,10 @@ function wzPick(key,val){
 function applySetup(a){
   const t=a.type||'se';
   setType(t);
-  const is8=(a.rate==='8pct');
+  const is8=(a.rate==='8pct'&&a.eight_elect==='yes'&&a.other_pt!=='yes');
   const isVat=(a.vat==='yes');
+  // Expose for Calculator gating
+  window._tpvSetup=Object.assign({},a,{effective_rate:is8?'8pct':'grad'});
   let reg;
   if(t==='emp'){reg='emp_s';}
   else if(is8){reg=(t==='se'?'se_8':t==='mi'?'mi_8':null);}
@@ -2690,7 +2763,8 @@ function calcPenalty(){
   if(isNaN(dueD)||isNaN(payD)){showErr('Please enter valid dates.');return;}
   if(payD<=dueD){showErr('Payment date must be after the due date.');return;}
   const days=Math.floor((payD-dueD)/86400000);
-  const isEopt=document.getElementById('penSize').value==='eopt';
+  const sizeSel=document.getElementById('penSize').value;
+  const isEopt=(sizeSel==='micro'||sizeSel==='small');
   const isWillful=document.getElementById('penType').value==='willful';
   const surRate=isWillful?0.50:(isEopt?0.10:0.25);
   const intRate=isEopt?0.06:0.12;
@@ -2699,7 +2773,7 @@ function calcPenalty(){
   const comp=compromisePenalty(tax);
   const total=tax+surcharge+interest+comp;
   document.getElementById('pr-base').textContent=fmt(tax);
-  document.getElementById('pr-stype').textContent=isWillful?'50% willful':(isEopt?'10% EOPT':'25% late');
+  document.getElementById('pr-stype').textContent=isWillful?'50% willful':(isEopt?`10% EOPT (${sizeSel==='micro'?'Micro':'Small'})`:'25% late');
   document.getElementById('pr-sur').textContent=fmt(surcharge);
   document.getElementById('pr-irate').textContent=(intRate*100)+'%';
   document.getElementById('pr-days').textContent=days;
@@ -2708,22 +2782,28 @@ function calcPenalty(){
   document.getElementById('pr-total').textContent=fmt(total);
   document.getElementById('penResult').classList.add('vis');
 }
-// Compromise penalty schedule from RMO 7-2015 (BIR table of compromise penalties,
-// item on failure to file and pay the tax due). Amounts are indicative only — the
-// assessing officer may adjust per case; always verify against the operative RMO.
+// Compromise penalty schedule from RMO 7-2015 Annex A — failure to file / pay
+// tax due under NIRC §255. Amounts are indicative; the assessing officer may
+// adjust per case. Always verify against the operative RMO at filing time.
 function compromisePenalty(tax){
-  if(tax<=1000)return 200;if(tax<=5000)return 500;if(tax<=10000)return 1000;
-  if(tax<=20000)return 2000;if(tax<=50000)return 5000;if(tax<=100000)return 10000;
-  if(tax<=500000)return 25000;if(tax<=1000000)return 50000;return 75000;
+  if(tax<5000)return 1000;
+  if(tax<=10000)return 3000;
+  if(tax<=20000)return 5000;
+  if(tax<=50000)return 10000;
+  if(tax<=100000)return 15000;
+  if(tax<=500000)return 20000;
+  if(tax<=1000000)return 30000;
+  if(tax<=5000000)return 40000;
+  return 50000;
 }
 
 // ══════════ COMPENSATION WITHHOLDING ══════════
 // TRAIN Law graduated withholding tables — revised brackets effective Jan 1, 2023
-// (NIRC Sec. 79; RA 10963 TRAIN Law Annex “D” / RR 8-2018 Annex “E”, post-2023 values).
+// (NIRC §79; RR 11-2018 Annex E — values published by BIR as the post-2023 table).
 const WH_BRACKETS={
   monthly:[[0,20833,0,0],[20833,33333,0,20833],[33333,66667,1875,33333],[66667,166667,8541.80,66667],[166667,666667,33541.80,166667],[666667,Infinity,183541.80,666667]],
-  semimonthly:[[0,10417,0,0],[10417,16667,0,10417],[16667,33333,937.50,16667],[33333,83333,4270.83,33333],[83333,333333,16770.83,83333],[333333,Infinity,91770.83,333333]],
-  weekly:[[0,4808,0,0],[4808,7692,0,4808],[7692,15385,432.69,7692],[15385,38462,1971.15,15385],[38462,153846,7740.38,38462],[153846,Infinity,42325.00,153846]]
+  semimonthly:[[0,10417,0,0],[10417,16667,0,10417],[16667,33333,937.50,16667],[33333,83333,4270.70,33333],[83333,333333,16770.70,83333],[333333,Infinity,91770.70,333333]],
+  weekly:[[0,4808,0,0],[4808,7692,0,4808],[7692,15385,432.60,7692],[15385,38462,1971.20,15385],[38462,153846,7740.45,38462],[153846,Infinity,42355.65,153846]]
 };
 const WH_RATE=[0.15,0.20,0.25,0.30,0.35];
 function calcWithholding(){
