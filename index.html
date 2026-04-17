@@ -704,7 +704,7 @@ body:not(.pro-mode) .mc{display:none}
 <main class="mn">
 <div class="vc"><div class="vl">
 <div class="vt"><button class="act" onclick="setV('fd',this)">Feed</button><button onclick="setV('tl',this)">Timeline</button><button onclick="setV('tb',this)">Table</button><button onclick="setV('wf',this)">By Workflow</button><button onclick="setV('qck',this)">Q-Checklist</button></div>
-<input type="text" class="sb" placeholder="Search…" oninput="SQ=this.value.toLowerCase();ren()">
+<input type="text" class="sb" placeholder="Search…" oninput="applySearchDebounced(this.value)">
 </div><div class="ft" id="cF"></div></div>
 <div class="stb" id="st"></div>
 <div class="fv vis" id="fv"></div>
@@ -1001,6 +1001,18 @@ body:not(.pro-mode) .mc{display:none}
 <footer class="ftr">This suite is for general reference only — not formal tax advice. Verify against the BIR Interactive Tax Calendar at www.bir.gov.ph. Deadlines on weekends/holidays move to the next business day. Rates current as of March 2026.</footer>
 
 <script>
+// ══════════ SHARED UTILITIES ══════════
+// Escape untrusted strings before interpolating into HTML template literals.
+const _ESC_MAP={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>_ESC_MAP[c]);}
+// Safe localStorage writes — swallow quota / private-mode errors, surface a console warning.
+function safeSet(k,v){try{localStorage.setItem(k,v);return true;}catch(e){console.warn('localStorage.setItem failed:',k,e);return false;}}
+function safeRemove(k){try{localStorage.removeItem(k);}catch(e){/* ignore */}}
+// Simple leading-edge-skip debounce for input handlers.
+function debounce(fn,ms){let t;return function(){clearTimeout(t);const a=arguments,c=this;t=setTimeout(()=>fn.apply(c,a),ms);};}
+// Search input is debounced so typing doesn't re-render the whole feed per keystroke.
+const applySearchDebounced=debounce(function(v){SQ=(v||'').toLowerCase();ren();},140);
+
 // ══════════ PAGE NAV ══════════
 function showPg(p,btn){document.querySelectorAll('.page').forEach(e=>e.classList.remove('vis'));document.getElementById({cal:'pgCal',ref:'pgRef',calc:'pgCalc',tools:'pgTools'}[p]).classList.add('vis');document.querySelectorAll('.pnav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 
@@ -1383,7 +1395,7 @@ function renderWF(f){
   let h='';
   WF_ORDER.forEach(wf=>{
     const obs=grps[wf];if(!obs||!obs.length)return;
-    const sorted=[...obs].sort((a,b)=>(a.month===0?13:a.month)*100+a.day-(((b.month===0?13:b.month)*100)+b.day));
+    const sorted=[...obs].sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));
     const sid='wfs_'+wf;
     h+=`<div class="wf-sec" id="${sid}">`;
     h+=`<div class="wf-sec-hdr" onclick="document.getElementById('${sid}').classList.toggle('collapsed')">`;
@@ -1396,9 +1408,45 @@ function renderWF(f){
 
 // ══ FEED VIEW ══
 function obsId(o){return(o.month+'_'+o.day+'_'+(o.form||'').replace(/[^a-zA-Z0-9]/g,'')+'_'+o.title.replace(/[^a-zA-Z0-9]/g,'').toLowerCase().substring(0,16));}
-function daysUntil(o){const today=new Date();today.setHours(0,0,0,0);return Math.floor((new Date(YEAR,o.month-1,o.day)-today)/86400000);}
+// ── Holiday / weekend deadline roll-forward ─────────────────────────────
+// Per BIR practice, a deadline falling on a Saturday, Sunday, or public
+// holiday (regular or special non-working) shifts to the next business day.
+function isHoliday(m,d){const list=HOLIDAYS[m]||[];for(let i=0;i<list.length;i++){if(list[i][0]===d)return true;}return false;}
+function effectiveDeadline(o){
+  if(!o||o.month===0||o.day===0)return null;
+  const d=new Date(YEAR,o.month-1,o.day);
+  let guard=0;
+  while(guard++<14&&(d.getDay()===0||d.getDay()===6||isHoliday(d.getMonth()+1,d.getDate())))d.setDate(d.getDate()+1);
+  return d;
+}
+function nominalDeadline(o){if(!o||o.month===0||o.day===0)return null;return new Date(YEAR,o.month-1,o.day);}
+function deadlineSortKey(o){const d=effectiveDeadline(o);return d?(d.getMonth()+1)*100+d.getDate():9999;}
+function daysUntil(o){
+  const d=effectiveDeadline(o);
+  if(!d)return Infinity;
+  const today=new Date();today.setHours(0,0,0,0);
+  return Math.floor((d-today)/86400000);
+}
+function shiftedDeadlineNote(o){
+  const nom=nominalDeadline(o),eff=effectiveDeadline(o);
+  if(!nom||!eff)return '';
+  if(nom.getTime()===eff.getTime())return '';
+  const dayName=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][nom.getDay()];
+  return `Shifted from ${MN[nom.getMonth()+1].substring(0,3)} ${nom.getDate()} (${dayName})`;
+}
 function isFiled(o){return localStorage.getItem('tpv_filed_'+obsId(o)+'_'+YEAR)==='1';}
-function tgFiled(id,cardId){const key='tpv_filed_'+id+'_'+YEAR;if(localStorage.getItem(key)==='1')localStorage.removeItem(key);else localStorage.setItem(key,'1');if(vM==='qck')renderQChecklist(gF());else renderFeed();}
+function tgFiled(id,cardId){const key='tpv_filed_'+id+'_'+YEAR;if(localStorage.getItem(key)==='1')safeRemove(key);else safeSet(key,'1');if(vM==='qck')renderQChecklist(gF());else renderFeed();}
+// ── CWT per quarter sourced from 2307 log (falls back to linear split) ─
+// Returns {q:[Q1,Q2,Q3,Q4], source:'log'|'linear', total:annual} where each
+// entry is the total CWT received in that quarter for the requested year.
+function getQuarterlyCWT(year,annualFallback){
+  let log=[];try{log=JSON.parse(localStorage.getItem('tpv_2307log')||'[]');}catch(e){log=[];}
+  const byQ={Q1:0,Q2:0,Q3:0,Q4:0};let total=0;
+  log.filter(e=>e.yr===year).forEach(e=>{if(byQ[e.q]!=null){byQ[e.q]+=Number(e.amt)||0;total+=Number(e.amt)||0;}});
+  if(total>0)return{q:[byQ.Q1,byQ.Q2,byQ.Q3,byQ.Q4],source:'log',total};
+  const a=Number(annualFallback)||0;
+  return{q:[a*.25,a*.25,a*.25,a*.25],source:'linear',total:a};
+}
 function urgLevel(d,o){
   if(d<0)return{c:'var(--red)',t:'Overdue'};
   if(d===0)return{c:'var(--red)',t:'Due today'};
@@ -1406,10 +1454,10 @@ function urgLevel(d,o){
   if(d<=7)return{c:'var(--red)',t:'Due in '+d+' days'};
   if(o){
     const cm=new Date().getMonth()+1;
-    if(o.month===cm)return{c:'var(--amber)',t:'Due this month'};
-    const abbr=MN[cm].substring(0,3);
-    if(o.month===(cm%12)+1&&(o.title.includes(abbr)||o.title.includes(MN[cm])))
-      return{c:'var(--amber)',t:'Due next month'};
+    const eff=effectiveDeadline(o);
+    const em=eff?(eff.getMonth()+1):o.month;
+    if(em===cm)return{c:'var(--amber)',t:'Due this month'};
+    if(em===(cm%12)+1)return{c:'var(--amber)',t:'Due next month'};
   }
   return{c:'var(--royal)',t:'Upcoming'};
 }
@@ -1417,7 +1465,9 @@ function renderFeed(){
   const today=new Date();today.setHours(0,0,0,0);
   const cm=today.getMonth()+1;
   const all=gF();
-  const mobs=all.filter(o=>o.month===cm&&o.day!==0);
+  const dated=all.filter(o=>o.month>0&&o.day>0);
+  const ongoing=all.filter(o=>o.month===0||o.day===0);
+  const mobs=dated.filter(o=>{const e=effectiveDeadline(o);return e&&(e.getMonth()+1)===cm;});
   const Y=mobs.length;
   let h='';
   if(Y){
@@ -1429,18 +1479,27 @@ function renderFeed(){
   }
   const _sdStr=localStorage.getItem('tpv_setup_date');
   const _sd=_sdStr?new Date(_sdStr):null;if(_sd)_sd.setHours(0,0,0,0);
-  const items=all.filter(o=>{
-    if(o.month===0||o.day===0)return false;
-    const d=daysUntil(o);
+  const items=dated.filter(o=>{
+    const eff=effectiveDeadline(o);if(!eff)return false;
+    const d=Math.floor((eff-today)/86400000);
     if(d>90)return false;
-    if(_sd&&new Date(YEAR,o.month-1,o.day)<_sd)return false;
+    if(_sd&&eff<_sd)return false;
     return true;
   });
-  if(!items.length){document.getElementById('fv').innerHTML=h+'<div class="fv-empty">You\'re all clear for the next 90 days.<div class="fv-empty-sub">If this looks wrong, check your taxpayer type and checklist filters above.</div></div>';return;}
+  if(!items.length&&!ongoing.length){
+    const totalCats=Object.keys(CATS).length;
+    const activeFilters=(cQ.size>0?1:0)+(aC.size<totalCats?1:0)+(SQ?1:0);
+    const hint=activeFilters>0
+      ? `<div class="fv-empty-sub">${activeFilters} filter${activeFilters>1?'s':''} active — try clearing the search box, category filters, or conditional checks above.</div>`
+      : `<div class="fv-empty-sub">If this looks wrong, check your taxpayer type and checklist filters above.</div>`;
+    document.getElementById('fv').innerHTML=h+`<div class="fv-empty">No obligations match your current filters.${hint}</div>`;
+    return;
+  }
   items.sort((a,b)=>{
     const fa=isFiled(a)?1:0,fb=isFiled(b)?1:0;
     if(fa!==fb)return fa-fb;
-    return(a.month*100+a.day)-(b.month*100+b.day);
+    const ea=effectiveDeadline(a),eb=effectiveDeadline(b);
+    return(ea?ea.getTime():0)-(eb?eb.getTime():0);
   });
   const tname=TYPES[cT].name;
   const grps={tw:[],nw:[],tm:[],ip:[],lt:[],done:[]};
@@ -1450,25 +1509,41 @@ function renderFeed(){
     if(d<=7)grps.tw.push(o);
     else if(d<=14)grps.nw.push(o);
     else{
-      const dm=new Date(YEAR,o.month-1,o.day).getMonth();
+      const eff=effectiveDeadline(o);
+      const dm=eff?eff.getMonth():0;
       const cur=today.getMonth();
       const nxt=(cur+1)%12;
-      const abbr=MN[cur+1].substring(0,3);
       if(dm===cur)grps.tm.push(o);
-      else if(dm===nxt&&(o.title.includes(abbr)||o.title.includes(MN[cur+1])))grps.ip.push(o);
+      else if(dm===nxt)grps.ip.push(o);
       else grps.lt.push(o);
     }
   });
   function renderCard(o){
     const id=obsId(o);const filed=isFiled(o);const d=daysUntil(o);const u=urgLevel(d,o);
-    const dl=ms(o.month)+' '+o.day+', '+YEAR;
+    const eff=effectiveDeadline(o);
+    const dl=eff?`${ms(eff.getMonth()+1)} ${eff.getDate()}, ${eff.getFullYear()}`:(ms(o.month)+' '+o.day+', '+YEAR);
+    const shiftNote=shiftedDeadlineNote(o);
     const noteKey='tpv_note_'+id;const note=localStorage.getItem(noteKey)||'';
     let c=`<div class="fc${filed?' filed':''}" id="fc_${id}" style="border-left-color:${u.c}">`;
-    c+=`<div class="fc-top"><span class="fc-urg" style="color:${u.c}">${u.t}</span><span class="fc-dl">${dl}</span></div>`;
+    c+=`<div class="fc-top"><span class="fc-urg" style="color:${u.c}">${u.t}</span><span class="fc-dl">${dl}${shiftNote?` · <em style="color:var(--amber);font-style:normal">${shiftNote}</em>`:''}</span></div>`;
     c+=`<div class="fc-title">${o.title}<button class="fc-note-btn${note?' has-note':''}" onclick="event.stopPropagation();tgNote('${id}')" title="Add note">${note?'📝':'+ note'}</button></div>`;
     if(o.ctx)c+=`<div class="fc-ctx">${o.ctx}</div>`;
     if(o.form&&o.form!=='—')c+=`<div class="fc-form">${o.form}</div>`;
-    c+=`<div class="fc-note-area${note?' vis':''}" id="fn_${id}"><textarea class="fc-note-input" id="fni_${id}" placeholder="Notes for this obligation…" oninput="saveNote('${id}')" onblur="saveNote('${id}')">${note}</textarea></div>`;
+    c+=`<div class="fc-note-area${note?' vis':''}" id="fn_${id}"><textarea class="fc-note-input" id="fni_${id}" placeholder="Notes for this obligation…" oninput="saveNote('${id}')" onblur="saveNote('${id}')">${esc(note)}</textarea></div>`;
+    c+=`<div class="fc-btm"><button class="fc-mark" onclick="tgFiled('${id}','fc_${id}')">${filed?'✓ Filed':'Mark as Filed →'}</button><span class="fc-type">${tname}</span></div>`;
+    c+=`</div>`;
+    return c;
+  }
+  function renderOngoingCard(o){
+    const id=obsId(o);const filed=isFiled(o);
+    const noteKey='tpv_note_'+id;const note=localStorage.getItem(noteKey)||'';
+    let c=`<div class="fc${filed?' filed':''}" id="fc_${id}" style="border-left-color:var(--slate)">`;
+    c+=`<div class="fc-top"><span class="fc-urg" style="color:var(--slate)">Ongoing / Recurring</span><span class="fc-dl">—</span></div>`;
+    c+=`<div class="fc-title">${o.title}<button class="fc-note-btn${note?' has-note':''}" onclick="event.stopPropagation();tgNote('${id}')" title="Add note">${note?'📝':'+ note'}</button></div>`;
+    if(o.ctx)c+=`<div class="fc-ctx">${o.ctx}</div>`;
+    else if(o.desc)c+=`<div class="fc-ctx">${o.desc}</div>`;
+    if(o.form&&o.form!=='—')c+=`<div class="fc-form">${o.form}</div>`;
+    c+=`<div class="fc-note-area${note?' vis':''}" id="fn_${id}"><textarea class="fc-note-input" id="fni_${id}" placeholder="Notes for this obligation…" oninput="saveNote('${id}')" onblur="saveNote('${id}')">${esc(note)}</textarea></div>`;
     c+=`<div class="fc-btm"><button class="fc-mark" onclick="tgFiled('${id}','fc_${id}')">${filed?'✓ Filed':'Mark as Filed →'}</button><span class="fc-type">${tname}</span></div>`;
     c+=`</div>`;
     return c;
@@ -1480,6 +1555,11 @@ function renderFeed(){
     first=false;
     arr.forEach(o=>{h+=renderCard(o);});
   });
+  if(ongoing.length){
+    h+=`<div class="fgh" style="margin-top:${first?'0':'1.4rem'}">Ongoing &amp; Recurring <span style="font-family:var(--sa);font-size:.6rem;font-weight:500;color:var(--mu);text-transform:none;letter-spacing:normal">${ongoing.length}</span></div>`;
+    first=false;
+    ongoing.forEach(o=>{h+=renderOngoingCard(o);});
+  }
   if(grps.done.length){
     const n=grps.done.length;
     h+=`<div class="fgh" style="margin-top:${first?'0':'1.4rem'}">Completed <button class="fgh-tog" onclick="var s=document.getElementById('fv-done');var shown=s.style.display!=='none';s.style.display=shown?'none':'block';this.textContent=(shown?'Show ':'Hide ')+${n}+' completed'">Hide ${n} completed</button></div>`;
@@ -1504,7 +1584,7 @@ function getDayName(m,d){return['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new D
 function setCalM(m){cMonth=m;if(m>0)cQuarter=Math.ceil(m/3);ren();}
 function setCalQ(q){cQuarter=q;cMonth=(q-1)*3+1;ren();}
 function getObGrp(o){const f=o.form||'';if(['1601-C','0619-E','0619-F','1600'].includes(f))return'wh-m';if(f==='2550M')return'vat-m';if(['1701A','1701','1700'].includes(f)||(f==='2316'&&o.cat==='inc'))return'itr-a';if(f==='1702-RT')return'itr-ac';if(['1604-C','1604-F','1604-E'].includes(f))return'wh-a';if(f==='1701Q')return'itr-q';if(f==='1702Q')return'itr-qc';if(['2550Q','2551Q','SLSP'].includes(f))return'biz-q';if(['1601-EQ','1601-FQ','2307','2306'].includes(f))return'wh-q';if(f==='Agency'||o.cat==='emp')return'contrib';if(f==='SEC'||o.cat==='sec')return'sec';return'adm';}
-function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='ob_'+Math.random().toString(36).substr(2,7);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div><span class="ob-row-title">${o.title}${obTip(o.title)}</span>${o.form&&o.form!=='—'?`<span class="form-ref">${o.form}</span>`:''}</div><div class="ob-row-meta">${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.45rem;padding-top:.35rem;border-top:1px solid rgba(65,105,225,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.66rem;color:var(--ch);padding:.1rem 0;display:flex;align-items:center;gap:.3rem"><span style="font-size:.6rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<div style="margin-top:.4rem;font-size:.6rem;color:var(--royal);font-weight:600;cursor:pointer" onclick="event.stopPropagation();document.querySelector('.pnav button:nth-child(2)').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">&#8594; View ${o.form} in Form Reference</div>`:''}</div></div></div>`;}
+function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='obn_'+obsId(o);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);const shift=shiftedDeadlineNote(o);return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div><span class="ob-row-title">${o.title}${obTip(o.title)}</span>${o.form&&o.form!=='—'?`<span class="form-ref">${o.form}</span>`:''}</div><div class="ob-row-meta">${shift?`<span class="ob-row-pq" style="background:var(--as);color:var(--amber)">${shift}</span>`:''}${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.45rem;padding-top:.35rem;border-top:1px solid rgba(65,105,225,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.66rem;color:var(--ch);padding:.1rem 0;display:flex;align-items:center;gap:.3rem"><span style="font-size:.6rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<div style="margin-top:.4rem;font-size:.6rem;color:var(--royal);font-weight:600;cursor:pointer" onclick="event.stopPropagation();document.querySelector('.pnav button:nth-child(2)').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">&#8594; View ${o.form} in Form Reference</div>`:''}</div></div></div>`;}
 function renMon(month,obs){let h='';if(MONTH_NOTES[month])h+=`<div class="cal-note"><span class="cal-note-lbl">Deadline note</span>${MONTH_NOTES[month]}</div>`;const hols=HOLIDAYS[month]||[];if(hols.length){h+=`<div class="cal-holidays"><div class="cal-hol-hdr">Public holidays this month</div>`;hols.forEach(([d,name,type])=>{const dn=getDayName(month,d);h+=`<div class="cal-hol-item"><span class="cal-hol-date">${MN[month].substr(0,3)} ${d}, ${YEAR}</span><span class="cal-hol-name">${dn} &middot; ${name}</span><span class="cal-hol-badge ${type}">${type==='reg'?'Regular holiday':'Special non-working'}</span></div>`;});h+=`</div>`;}if(!obs.length)return h+`<div class="cal-empty">No obligations match your current filters for ${MN[month]}.</div>`;const grps={};[...obs].sort((a,b)=>a.day-b.day).forEach(o=>{const g=getObGrp(o);if(!grps[g])grps[g]=[];grps[g].push(o);});let first=true;GROUP_ORDER.forEach(gk=>{if(!grps[gk])return;h+=`<div class="cal-grp-hdr"${first?' style="margin-top:0"':''}>${GROUP_LABELS[gk]||gk}</div>`;h+=grps[gk].map(rObNew).join('');first=false;});return h;}
 function renPen(ongoingObs){let h=`<p class="cal-pen-intro">Under EOPT (RR 6-2024), penalties for micro and small businesses (gross &lt; &#8369;20M) are substantially reduced. Always verify your BIR classification before computing penalties.</p>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Surcharge on Tax Due</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">10%</div><div class="cal-pen-note">Gross receipts &lt; &#8369;20M &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard — Late Filing/Payment</div><div class="cal-pen-val">25%</div><div class="cal-pen-note">NIRC Sec. 248</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard — Fraud / Willful</div><div class="cal-pen-val">50%</div><div class="cal-pen-note">Fraudulent return or willful neglect</div></div></div>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Interest on Unpaid Tax</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">6% / year</div><div class="cal-pen-note">Double the legal interest rate &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">12% / year</div><div class="cal-pen-note">NIRC Sec. 249 &middot; from due date to payment</div></div></div>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Failure to File (per return)</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">&#8369;500</div><div class="cal-pen-note">Max &#8369;12,500/year &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">&#8369;1,000</div><div class="cal-pen-note">Max &#8369;25,000/year &middot; NIRC Sec. 250</div></div></div>`;if(ongoingObs.length){h+=`<div class="cal-ongoing-hdr">Ongoing &amp; Recurring Obligations</div>`;h+=ongoingObs.map(rObNew).join('');}return h;}
 function renderTL(f){const el=document.getElementById('tl');const bm={};f.forEach(o=>{if(!bm[o.month])bm[o.month]=[];bm[o.month].push(o);});const qm=[[1,2,3],[4,5,6],[7,8,9],[10,11,12]];const qlbl=['Q1 \u2014 January to March','Q2 \u2014 April to June','Q3 \u2014 July to September','Q4 \u2014 October to December'];const months=qm[cQuarter-1];let h=`<div class="cal-qhdr"><span class="cal-qtitle">${YEAR} ${qlbl[cQuarter-1]}</span><div class="cal-qnav">`;['Q1','Q2','Q3','Q4'].forEach((qn,qi)=>{h+=`<button class="cal-qbtn${qi+1===cQuarter?' act':''}" onclick="setCalQ(${qi+1})">${qn}</button>`;});h+=`</div></div>`;h+=`<div class="cal-legend">`;[{l:'Income Tax',c:'var(--royal)'},{l:'Business Tax',c:'var(--green)'},{l:'Withholding',c:'var(--purple)'},{l:'Employer / Contributions',c:'var(--teal)'},{l:'DST',c:'var(--rose)'},{l:'Admin',c:'var(--amber)'},{l:'SEC',c:'var(--slate)'}].forEach(li=>{h+=`<span class="cal-leg-item"><span class="cal-leg-dot" style="background:${li.c}"></span>${li.l}</span>`;});h+=`</div>`;h+=`<div class="cal-tabs">`;months.forEach(m=>{h+=`<button class="cal-tab${m===cMonth?' act':''}" onclick="setCalM(${m})">${MN[m]}</button>`;});h+=`<button class="cal-tab${cMonth===0?' act':''}" onclick="setCalM(0)">Penalties</button></div>`;if(cMonth===0){h+=renPen(bm[0]||[]);}else{h+=renMon(cMonth,bm[cMonth]||[]);}el.innerHTML=h;}
@@ -1534,9 +1614,11 @@ function buildHolidays(yr){
   // National Heroes Day — last Monday of August
   const nhd=new Date(yr,7,31);while(nhd.getDay()!==1)nhd.setDate(nhd.getDate()-1);add(8,nhd.getDate(),"National Heroes Day",'reg');
   // Islamic holidays — approximate dates (moon-sighting may shift ±1 day)
-  // Shifts ~11 days earlier each year; table covers 2025–2032
+  // Shifts ~11 days earlier each year; table covers 2025–2032. Refresh each year
+  // using the official Presidential proclamation once published.
   const eid={2025:[3,30,6,7],2026:[3,19,5,27],2027:[3,9,5,16],2028:[2,26,5,5],2029:[2,14,4,24],2030:[2,3,4,13],2031:[1,23,4,2],2032:[1,13,3,22]};
   if(eid[yr]){const[efm,efd,eam,ead]=eid[yr];add(efm,efd,"Eid al-Fitr",'reg');add(eam,ead,"Eid al-Adha",'reg');}
+  else if(yr>2032||yr<2025){console.warn(`Eid holidays are not in the lookup table for ${yr}. Deadline roll-forward will still honour Saturdays, Sundays, and all other holidays, but Eid dates for this year must be added manually to buildHolidays().`);}
   Object.keys(h).forEach(m=>{h[m].sort((a,b)=>a[0]-b[0]);});
   return h;
 }
@@ -1550,7 +1632,6 @@ function buildMonthNotes(yr){
   [[5,'Q1'],[8,'Q2'],[11,'Q3']].forEach(([m,q])=>{const r=chk(m,15);if(r.s)notes[m]=`${MNX[m]} 15 falls on a ${r.lbl} — Income Tax ${q} (1701Q) shifts to <strong>Monday, ${MNX[m]} ${r.nd}</strong>.`;});
   return notes;
 }
-function rOb(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='ob_'+Math.random().toString(36).substr(2,7);let h=`<div class="ob ${cc} ${dm?'dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="obt"><div class="obn">${o.title}${obTip(o.title)}</div><div class="obd">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</div></div><div class="obm">${o.form&&o.form!=='—'?`<span class="obf">${o.form}</span>`:''}${o.pq?`<span class="obpq" style="margin-top:0;display:inline-block;padding:.06rem .3rem;background:var(--ts);color:var(--teal);font-size:.55rem;font-weight:700;border-radius:4px"><b>If:</b> ${pqL(o.pq)}</span>`:''}<span class="ob-chev">▾</span></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this is</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.45rem;padding-top:.35rem;border-top:1px solid rgba(65,105,225,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.66rem;color:var(--ch);padding:.12rem 0;display:flex;align-items:center;gap:.3rem"><span style="font-size:.6rem">📎</span> ${a}</div>`).join('')}</div>`:''}${o.form&&o.form!=='—'&&o.form!=='Agency'&&o.form!=='LGU'&&o.form!=='SEC'&&o.form!=='IPA'&&o.form!=='ORUS'?`<div style="margin-top:.4rem;font-size:.6rem;color:var(--royal);font-weight:600;cursor:pointer" onclick="event.stopPropagation();document.querySelector('.pnav button:nth-child(2)').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">→ View ${o.form} in Form Reference</div>`:''}</div></div></div>`;return h;}
 function getLayman(o){
   if(o.desc)return o.desc;
   const f=o.form,t=o.title.toLowerCase();
@@ -1620,7 +1701,7 @@ function getLayman(o){
   if(t.includes('year-end')||t.includes('bookkeeping'))return'<b>What:</b> Reminder to close out the books, reconcile all accounts, prepare for the January-April compliance season, and verify all withholding taxes match payroll records.';
   return'<b>What:</b> '+(o.title)+'. See Form Reference for the full briefer.';
 }
-function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>(a.month*100+a.day)-(b.month*100+b.day));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>`<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${o.month>0?ms(o.month)+' '+o.day:'Ongoing'}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');const fe=document.getElementById('fv');fe.classList.toggle('vis',vM==='fd');const qe=document.getElementById('qck');qe.classList.toggle('vis',vM==='qck');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);else if(vM==='fd')renderFeed();else if(vM==='qck')renderQChecklist(f);}
+function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>{const eff=effectiveDeadline(o);const shift=shiftedDeadlineNote(o);const dateCell=eff?`${ms(eff.getMonth()+1)} ${eff.getDate()}${shift?` <span style="color:var(--amber);font-size:.54rem">· ${shift}</span>`:''}`:'Ongoing';return `<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${dateCell}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`;}).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');const fe=document.getElementById('fv');fe.classList.toggle('vis',vM==='fd');const qe=document.getElementById('qck');qe.classList.toggle('vis',vM==='qck');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);else if(vM==='fd')renderFeed();else if(vM==='qck')renderQChecklist(f);}
 
 // ══════════ CALCULATOR ══════════
 function gradTax(ti){ti=Math.max(0,ti);if(ti<=250000)return 0;if(ti<=400000)return(ti-250000)*.15;if(ti<=800000)return 22500+(ti-400000)*.20;if(ti<=2000000)return 102500+(ti-800000)*.25;if(ti<=8000000)return 402500+(ti-2000000)*.30;return 2202500+(ti-8000000)*.35;}
@@ -1755,6 +1836,9 @@ function getEffectiveExpenses(g){
   if(EXP_MODE==='q'){const t=pN('eQ1')+pN('eQ2')+pN('eQ3')+pN('eQ4');return{total:t,allowed:t,gross:t,caps:null};}
   if(EXP_MODE==='m'){let t=0;for(let i=1;i<=12;i++)t+=pN('eM'+i);return{total:t,allowed:t,gross:t,caps:null};}
   if(EXP_MODE==='cat')return computeCategoryDeductions(g);
+  // Unknown mode — fall back to lump so callers never see undefined.
+  EXP_MODE='lump';
+  const t=pN('eI');return{total:t,allowed:t,gross:t,caps:null};
 }
 
 function generateWarnings(g,expData,best,mode){
@@ -1833,10 +1917,11 @@ function renderCapAnalysis(expData){
 
 // ══════════ COMPUTATION BREAKDOWN ══════════
 function bracketBreakdown(ti){
-  // Returns array of {range, rate, amt, tax} for the TRAIN brackets applied
-  const B=[[0,250000,0],[250000,400000,.15],[400000,800000,.20],[800000,2000000,.25],[2000000,8000000,.30],[8000000,Infinity,.35]];
+  // Returns array of {range, rate, amt, tax} for the TRAIN brackets applied.
+  // Local name avoids shadowing the module-level `B` (regime-list alias).
+  const BRACKETS=[[0,250000,0],[250000,400000,.15],[400000,800000,.20],[800000,2000000,.25],[2000000,8000000,.30],[8000000,Infinity,.35]];
   const out=[];
-  for(const[lo,hi,r]of B){
+  for(const[lo,hi,r]of BRACKETS){
     if(ti<=lo)break;
     const amt=Math.min(ti,hi)-lo;
     const tax=amt*r;
@@ -1940,7 +2025,20 @@ function renderComputation(g,expData,R,best,isPure,cwt,over){
 //   1701A (Jan 2018) — Parts IV.A, IV.B, IV.C
 //   1701  (Jan 2018 ENCS) — Schedule 3.A, Part VI, Part VII, Part II
 //   2551Q (Jan 2018 ENCS) — Schedule 1, Part II
-function renderBIRForm(g,expData,R,best,isPure,cwt,over){
+function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo){
+  // Distribute CWT across Q1-Q3 vs Q4 using the 2307 log when available.
+  // Fallback: linear 75/25 split, labelled as an estimate.
+  let cwtQ13=cwt*0.75,cwtQ4=cwt*0.25,cwtSrcNote='';
+  if(cwtInfo&&cwtInfo.source==='log'&&cwtInfo.total>0){
+    const logQ13=cwtInfo.q[0]+cwtInfo.q[1]+cwtInfo.q[2];
+    const logTot=cwtInfo.total;
+    // Preserve the user-entered annual total; distribute proportionally using the log.
+    if(cwt>0){cwtQ13=cwt*(logQ13/logTot);cwtQ4=cwt-cwtQ13;}
+    else{cwtQ13=logQ13;cwtQ4=cwtInfo.q[3];}
+    cwtSrcNote=' <span style="font-size:.56rem;color:var(--green);font-weight:600">(from 2307 log)</span>';
+  }else if(cwt>0){
+    cwtSrcNote=' <span style="font-size:.56rem;color:var(--mu)">(estimate — log 2307s for exact split)</span>';
+  }
   const ex=expData.allowed;
   const d250=isPure?250000:0;
   // Form selection logic:
@@ -2005,8 +2103,8 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over){
     h+=`<div class="form-section"><div class="form-section-t">Part IV.C — Tax Credits/Payments</div>`;
     h+=`<div class="form-line"><span class="form-line-num">57</span><span class="form-line-lbl">Prior Year's Excess Credits</span><span class="form-line-val">${fmt(0)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">58</span><span class="form-line-lbl">Tax Payments for the First Three (3) Quarters</span><span class="form-line-val">${fmt(0)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">59</span><span class="form-line-lbl">Creditable Tax Withheld for the First Three (3) Quarters</span><span class="form-line-val">${fmt(cwt*0.75)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">60</span><span class="form-line-lbl">Creditable Tax Withheld per BIR Form 2307 for the 4th Quarter</span><span class="form-line-val">${fmt(cwt*0.25)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">59</span><span class="form-line-lbl">Creditable Tax Withheld for the First Three (3) Quarters${cwtSrcNote}</span><span class="form-line-val">${fmt(cwtQ13)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">60</span><span class="form-line-lbl">Creditable Tax Withheld per BIR Form 2307 for the 4th Quarter</span><span class="form-line-val">${fmt(cwtQ4)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">64</span><span class="form-line-lbl">Total Tax Credits/Payments (Sum of Items 57 to 63) → Item 21</span><span class="form-line-val">${fmt(cwt)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">65</span><span class="form-line-lbl">Net Tax Payable/(Overpayment) (Item ${best.k==='a'?'56':'46'} less Item 64)</span><span class="form-line-val">${fmt(best.iN)}</span></div>`;
     h+=`</div>`;
@@ -2045,8 +2143,8 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over){
     h+=`<div class="form-section"><div class="form-section-t">Part VII — Tax Credits/Payments</div>`;
     h+=`<div class="form-line"><span class="form-line-num">1</span><span class="form-line-lbl">Prior Year's Excess Credits</span><span class="form-line-val">${fmt(0)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">2</span><span class="form-line-lbl">Tax Payments for the First Three (3) Quarters</span><span class="form-line-val">${fmt(0)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">3</span><span class="form-line-lbl">Creditable Tax Withheld for the First Three (3) Quarters</span><span class="form-line-val">${fmt(cwt*0.75)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">4</span><span class="form-line-lbl">Creditable Tax Withheld per BIR Form 2307 for the 4th Quarter</span><span class="form-line-val">${fmt(cwt*0.25)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">3</span><span class="form-line-lbl">Creditable Tax Withheld for the First Three (3) Quarters${cwtSrcNote}</span><span class="form-line-val">${fmt(cwtQ13)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">4</span><span class="form-line-lbl">Creditable Tax Withheld per BIR Form 2307 for the 4th Quarter</span><span class="form-line-val">${fmt(cwtQ4)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">10</span><span class="form-line-lbl">Total Tax Credits/Payments (Sum of Items 1 to 9) → Part II Item 23</span><span class="form-line-val">${fmt(cwt)}</span></div>`;
     h+=`</div>`;
     // 1701 Part II — Total Tax Payable
@@ -2113,9 +2211,13 @@ function calc(){
   if(g<=0){alert('Enter gross sales / receipts.');return;}
   const expData=getEffectiveExpenses(g);
   const ex=expData.allowed;
-  const over=g>3e6,d250=isPure?250000:0;
-  // 8%
-  const aAv=!over,aIG=aAv?Math.max(0,(g-d250)*.08):0,aIN=aAv?Math.max(0,aIG-cwt):0,aT=aAv?aIN:Infinity;
+  // VAT-registered selection: 'auto' → threshold-based; 'yes' / 'no' → explicit override.
+  const vatSel=document.getElementById('vatR')?.value||'auto';
+  const over=vatSel==='yes'?true:vatSel==='no'?false:g>3e6;
+  const d250=isPure?250000:0;
+  // 8% — available only when non-VAT AND gross ≤ ₱3M.
+  const eightAvailable=!over&&g<=3e6;
+  const aAv=eightAvailable,aIG=aAv?Math.max(0,(g-d250)*.08):0,aIN=aAv?Math.max(0,aIG-cwt):0,aT=aAv?aIN:Infinity;
   // OSD
   const bN=g-g*.4,bIG=gradTax(bN),bIN=Math.max(0,bIG-cwt),bP=over?0:g*.03,bT=bIN+bP;
   // Itemized
@@ -2152,9 +2254,19 @@ function calc(){
   const W=generateWarnings(g,expData,best,EXP_MODE);
   renderWarnings(W);
   renderCapAnalysis(expData);
+  // Quarterly CWT sourced from the 2307 log when available; linear ¼ split otherwise.
+  const cwtInfo=getQuarterlyCWT(YEAR,cwt);
+  // Normalise against user-entered annual CWT: if both values are positive and disagree,
+  // scale the log distribution to match the user's annual figure so regime totals reconcile.
+  let cwtCum=[cwtInfo.q[0],cwtInfo.q[0]+cwtInfo.q[1],cwtInfo.q[0]+cwtInfo.q[1]+cwtInfo.q[2],cwtInfo.total];
+  if(cwtInfo.source==='log'&&cwt>0&&Math.abs(cwtInfo.total-cwt)>1){
+    const s=cwt/cwtInfo.total;cwtCum=cwtCum.map(v=>v*s);
+  }else if(cwtInfo.source==='log'&&cwt===0){
+    // User left cI blank; use log total as annual CWT across the rest of this calc.
+  }
   // COMPUTATION BREAKDOWN + RATIONALE + BIR FORM PREVIEW
   renderComputation(g,expData,R,best,isPure,cwt,over);
-  renderBIRForm(g,expData,R,best,isPure,cwt,over);
+  renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo);
 
   // QUARTERLY BREAKDOWN
   const cumExp=getCumulativeExpenses(ex);
@@ -2162,26 +2274,38 @@ function calc(){
   const qL=['Q1','Q2','Q3','Annual'],qF=[.25,.5,.75,1];
   for(let q=0;q<4;q++){
     const f=qF[q],pg=g*f;
-    const qA=aAv?Math.max(0,(pg-d250)*.08-cwt*f):0;
-    const pA=q>0?(aAv?Math.max(0,(g*qF[q-1]-d250)*.08-cwt*qF[q-1]):0):0;
-    const qB=Math.max(0,gradTax(pg-pg*.4)-cwt*f);
-    const pB=q>0?Math.max(0,gradTax(g*qF[q-1]-g*qF[q-1]*.4)-cwt*qF[q-1]):0;
+    const cwtCurF=cwtCum[q],cwtPrevF=q>0?cwtCum[q-1]:0;
+    const qA=aAv?Math.max(0,(pg-d250)*.08-cwtCurF):0;
+    const pA=q>0?(aAv?Math.max(0,(g*qF[q-1]-d250)*.08-cwtPrevF):0):0;
+    const qB=Math.max(0,gradTax(pg-pg*.4)-cwtCurF);
+    const pB=q>0?Math.max(0,gradTax(g*qF[q-1]-g*qF[q-1]*.4)-cwtPrevF):0;
     const cumE=cumExp[q],prevCumE=q>0?cumExp[q-1]:0;
-    const qC=Math.max(0,gradTax(Math.max(0,pg-cumE))-cwt*f);
-    const pC=q>0?Math.max(0,gradTax(Math.max(0,g*qF[q-1]-prevCumE))-cwt*qF[q-1]):0;
+    const qC=Math.max(0,gradTax(Math.max(0,pg-cumE))-cwtCurF);
+    const pC=q>0?Math.max(0,gradTax(Math.max(0,g*qF[q-1]-prevCumE))-cwtPrevF):0;
     const dA=Math.max(0,qA-pA),dB=Math.max(0,qB-pB),dC=Math.max(0,qC-pC);
     const vs=[aAv?dA:null,dB,dC],mn=Math.min(...vs.filter(v=>v!==null));
     qh+=`<tr><td style="font-weight:600">${qL[q]}</td><td class="${vs[0]===mn&&aAv?'bc':''}">${aAv?fmt(dA):'N/A'}</td><td class="${vs[1]===mn?'bc':''}">${fmt(dB)}</td><td class="${vs[2]===mn?'bc':''}">${fmt(dC)}</td></tr>`;
   }
   if(!over)qh+=`<tr style="border-top:2px solid var(--bd)"><td style="font-weight:600">+3% Pct Tax</td><td>${aAv?'Exempt':'N/A'}</td><td>${fmt(g*.03)}</td><td>${fmt(g*.03)}</td></tr>`;
   qh+=`<tr style="background:var(--s2);font-weight:700"><td>TOTAL</td><td class="${best.k==='a'?'bc':''}">${aAv?fmt(R[0].t):'N/A'}</td><td class="${best.k==='b'?'bc':''}">${fmt(R[1].t)}</td><td class="${best.k==='c'?'bc':''}">${fmt(R[2].t)}</td></tr></tbody></table>`;
-  document.getElementById('qB').innerHTML=qh;document.getElementById('qB').classList.add('vis');
-  // YoY comparison
+  // Source of CWT distribution — explicit so the user knows whether numbers reflect real 2307s.
+  const cwtSrcLabel=cwtInfo.source==='log'
+    ? `<div style="font-size:.58rem;color:var(--dim);margin-top:.3rem">CWT distributed using your 2307 log (${fmt(cwtInfo.total)} across ${cwtInfo.q.filter(v=>v>0).length} quarter${cwtInfo.q.filter(v=>v>0).length===1?'':'s'}).</div>`
+    : `<div style="font-size:.58rem;color:var(--dim);margin-top:.3rem">CWT split assumes even ¼ per quarter — log 2307 certificates in Tools &amp; Guides for a precise distribution.</div>`;
+  document.getElementById('qB').innerHTML=qh+cwtSrcLabel;document.getElementById('qB').classList.add('vis');
+  // Cache the current computation in memory for an explicit "Save as YoY snapshot" action.
+  _pendingYoYSnapshot={g,cwt,ex,best:{k:best.k,t:best.t,iG:best.iG,iN:best.iN},R:[{t:R[0].t,av:R[0].av},{t:R[1].t},{t:R[2].t}]};
   renderYoY(g,R,best,cwt,ex);
-  // Save current computation for next year's YoY
-  localStorage.setItem('tpv_calc_'+YEAR,JSON.stringify({g,cwt,ex,best:{k:best.k,t:best.t,iG:best.iG,iN:best.iN},R:[{t:R[0].t,av:R[0].av},{t:R[1].t},{t:R[2].t}]}));
   document.getElementById('cRes').classList.add('vis');
   document.getElementById('cRes').scrollIntoView({behavior:'smooth',block:'start'});
+}
+// Explicit save — no more autosave on every calc click.
+let _pendingYoYSnapshot=null;
+function saveYoYSnapshot(){
+  if(!_pendingYoYSnapshot){alert('Run the calculator first.');return;}
+  if(!safeSet('tpv_calc_'+YEAR,JSON.stringify(_pendingYoYSnapshot))){alert('Could not save snapshot — storage quota reached.');return;}
+  const btn=document.getElementById('yoySaveBtn');
+  if(btn){btn.textContent='✓ Snapshot saved';btn.disabled=true;btn.style.opacity='.6';btn.style.cursor='default';}
 }
 
 // Init number formatters on all numeric inputs
@@ -2199,7 +2323,7 @@ function tgMode(){
   const isPro=!document.body.classList.contains('pro-mode');
   document.body.classList.toggle('pro-mode',isPro);
   document.querySelector('.mode-toggle .mt-label').textContent=isPro?'Pro':'Simple';
-  localStorage.setItem('tpv_mode',isPro?'pro':'simple');
+  safeSet('tpv_mode',isPro?'pro':'simple');
   if(!isPro){
     // Switched to Simple — redirect away from tabs hidden in Simple mode (Form Reference and Tools & Guides)
     if(document.getElementById('pgRef')?.classList.contains('vis')||document.getElementById('pgTools')?.classList.contains('vis')){
@@ -2261,13 +2385,20 @@ function renderWzStep(){
   const pct=Math.round(((visIdx+1)/vis.length)*100);
   document.getElementById('wzBar').style.width=pct+'%';
   const cur=WZ.answers[s.key];
-  let h=`<p class="wz-q">${s.q}</p><div class="wz-opts">`;
-  s.opts.forEach(o=>{
-    h+=`<button class="wz-opt${cur===o.val?' sel':''}" onclick="wzPick('${s.key}','${o.val}')"><strong>${o.label}</strong>${o.sub?`<br><span style="font-weight:400;font-size:.78rem;color:var(--mu)">${o.sub}</span>`:''}`;
+  let h=`<p class="wz-q">${esc(s.q)}</p><div class="wz-opts">`;
+  s.opts.forEach((o,i)=>{
+    h+=`<button class="wz-opt${cur===o.val?' sel':''}" data-wz-idx="${i}"><strong>${esc(o.label)}</strong>${o.sub?`<br><span style="font-weight:400;font-size:.78rem;color:var(--mu)">${esc(o.sub)}</span>`:''}`;
     h+=`</button>`;
   });
   h+=`</div>`;
-  document.getElementById('wzBody').innerHTML=h;
+  const body=document.getElementById('wzBody');
+  body.innerHTML=h;
+  // Attach handlers via addEventListener so option values never flow through an onclick attribute.
+  body.querySelectorAll('.wz-opt').forEach(btn=>{
+    const idx=parseInt(btn.getAttribute('data-wz-idx'),10);
+    const opt=s.opts[idx];
+    if(opt)btn.addEventListener('click',()=>wzPick(s.key,opt.val));
+  });
 }
 
 function showWizard(){
@@ -2306,16 +2437,18 @@ function applySetup(a){
 
 function wzFinish(){
   applySetup(WZ.answers);
-  localStorage.setItem('tpv_setup',JSON.stringify(WZ.answers));
-  if(!localStorage.getItem('tpv_setup_date'))localStorage.setItem('tpv_setup_date',new Date().toISOString().split('T')[0]);
+  safeSet('tpv_setup',JSON.stringify(WZ.answers));
+  // Refresh setup_date on every completion — if the user is re-running the wizard, their
+  // situation has meaningfully changed and the feed should reflect the new start point.
+  safeSet('tpv_setup_date',new Date().toISOString().split('T')[0]);
   updSmBar();
   if(!document.body.classList.contains('pro-mode')){const fdBtn=document.querySelector('.vt button:first-child');if(fdBtn)setV('fd',fdBtn);}
   dismissWizard();
 }
 
 function wzSkip(){
-  localStorage.setItem('tpv_setup','skipped');
-  if(!localStorage.getItem('tpv_setup_date'))localStorage.setItem('tpv_setup_date',new Date().toISOString().split('T')[0]);
+  safeSet('tpv_setup','skipped');
+  if(!localStorage.getItem('tpv_setup_date'))safeSet('tpv_setup_date',new Date().toISOString().split('T')[0]);
   dismissWizard();
 }
 
@@ -2344,22 +2477,38 @@ const _setup=localStorage.getItem('tpv_setup');
 if(!_setup){showWizard();}
 else if(_setup!=='skipped'){try{applySetup(JSON.parse(_setup));}catch(e){}}
 
+// Reload when the system clock crosses into a new year or a new day after
+// the tab has been backgrounded. YEAR and date-derived state are computed
+// once at load — without this, a tab left open across midnight shows stale data.
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState!=='visible')return;
+  const now=new Date();
+  if(now.getFullYear()!==YEAR){location.reload();return;}
+  // Same year but possibly a new day — refresh visible views so "days until" recomputes.
+  const today=now.toISOString().split('T')[0];
+  if(window._tpvLastSeenDate&&window._tpvLastSeenDate!==today){ren();}
+  window._tpvLastSeenDate=today;
+});
+window._tpvLastSeenDate=new Date().toISOString().split('T')[0];
+
 // ══════════ PUSH NOTIFICATIONS ══════════
+// Best-effort only: notifications fire when the page is opened on a new day.
+// There is no Service Worker here, so a closed browser won't surface reminders.
 function toggleNotifications(){
   const btn=document.getElementById('notifBtn');
   if(!('Notification' in window)){alert('Your browser does not support push notifications.');return;}
   if(Notification.permission==='denied'){alert('Notifications are blocked. Please enable them in your browser settings.');return;}
   if(localStorage.getItem('tpv_notif')==='on'){
-    localStorage.removeItem('tpv_notif');
+    safeRemove('tpv_notif');
     btn.classList.remove('on');btn.textContent='🔔 Reminders';
     return;
   }
   Notification.requestPermission().then(perm=>{
     if(perm==='granted'){
-      localStorage.setItem('tpv_notif','on');
+      safeSet('tpv_notif','on');
       btn.classList.add('on');btn.textContent='🔔 Reminders On';
       scheduleNotifications();
-      new Notification('The Present Value',{body:'BIR deadline reminders are now on. You\'ll be notified when obligations are due within 7 days.',icon:''});
+      new Notification('The Present Value',{body:'Reminders on. Each time you open this page, upcoming deadlines within 7 days will show a notification (once per day).',icon:''});
     }
   });
 }
@@ -2368,15 +2517,15 @@ function scheduleNotifications(){
   const lastCheck=localStorage.getItem('tpv_notif_last');
   const today=new Date().toISOString().split('T')[0];
   if(lastCheck===today)return;
-  localStorage.setItem('tpv_notif_last',today);
+  safeSet('tpv_notif_last',today);
   const f=gF();
   const upcoming=f.filter(o=>{
     if(o.month===0||o.day===0)return false;
     const d=daysUntil(o);
     return d>=0&&d<=7&&!isFiled(o);
-  });
+  }).sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));
   if(!upcoming.length)return;
-  const titles=upcoming.slice(0,3).map(o=>`${ms(o.month)} ${o.day}: ${o.title}`).join('\n');
+  const titles=upcoming.slice(0,3).map(o=>{const eff=effectiveDeadline(o);return `${eff?ms(eff.getMonth()+1)+' '+eff.getDate():ms(o.month)+' '+o.day}: ${o.title}`;}).join('\n');
   const extra=upcoming.length>3?`\n+ ${upcoming.length-3} more`:'';
   setTimeout(()=>{
     new Notification(`${upcoming.length} BIR deadline${upcoming.length>1?'s':''} due within 7 days`,{body:titles+extra,icon:''});
@@ -2417,6 +2566,9 @@ function calcPenalty(){
   document.getElementById('pr-total').textContent=fmt(total);
   document.getElementById('penResult').classList.add('vis');
 }
+// Compromise penalty schedule from RMO 7-2015 (BIR table of compromise penalties,
+// item on failure to file and pay the tax due). Amounts are indicative only — the
+// assessing officer may adjust per case; always verify against the operative RMO.
 function compromisePenalty(tax){
   if(tax<=1000)return 200;if(tax<=5000)return 500;if(tax<=10000)return 1000;
   if(tax<=20000)return 2000;if(tax<=50000)return 5000;if(tax<=100000)return 10000;
@@ -2424,7 +2576,8 @@ function compromisePenalty(tax){
 }
 
 // ══════════ COMPENSATION WITHHOLDING ══════════
-// TRAIN Law monthly withholding brackets (NIRC Sec. 79, RR 29-2025)
+// TRAIN Law graduated withholding tables — revised brackets effective Jan 1, 2023
+// (NIRC Sec. 79; RA 10963 TRAIN Law Annex “D” / RR 8-2018 Annex “E”, post-2023 values).
 const WH_BRACKETS={
   monthly:[[0,20833,0,0],[20833,33333,0,20833],[33333,66667,1875,33333],[66667,166667,8541.80,66667],[166667,666667,33541.80,166667],[666667,Infinity,183541.80,666667]],
   semimonthly:[[0,10417,0,0],[10417,16667,0,10417],[16667,33333,937.50,16667],[33333,83333,4270.83,33333],[83333,333333,16770.83,83333],[333333,Infinity,91770.83,333333]],
@@ -2467,7 +2620,7 @@ function calcWithholding(){
 
 // ══════════ 2307 CREDIT LOG ══════════
 function get2307Log(){try{return JSON.parse(localStorage.getItem('tpv_2307log')||'[]');}catch{return[];}}
-function save2307Log(l){localStorage.setItem('tpv_2307log',JSON.stringify(l));}
+function save2307Log(l){if(!safeSet('tpv_2307log',JSON.stringify(l))){alert('Could not save 2307 log — storage is full. Try deleting old entries.');}}
 function add2307Entry(){
   const payor=document.getElementById('logPayor').value.trim();
   const atc=document.getElementById('logAtc').value.trim();
@@ -2502,7 +2655,7 @@ function render2307Log(){
     const qtotal=entries.reduce((s,e)=>s+e.amt,0);grand+=qtotal;
     h+=`<div class="log-q-section"><div class="log-q-hdr"><span>${q} (${q==='Q1'?'Jan–Mar':q==='Q2'?'Apr–Jun':q==='Q3'?'Jul–Sep':'Oct–Dec'})</span><span class="lqt">${fmt(qtotal)}</span></div>`;
     entries.forEach(e=>{
-      h+=`<div class="log-entry"><span class="log-entry-payor">${e.payor}${e.atc?` <span style="font-size:.58rem;color:var(--mu)">${e.atc}</span>`:''}</span><span class="log-entry-q">${e.q}</span><span class="log-entry-amt">${fmt(e.amt)}</span><button class="log-entry-del" onclick="del2307Entry(${e.id})" title="Delete">✕</button></div>`;
+      h+=`<div class="log-entry"><span class="log-entry-payor">${esc(e.payor)}${e.atc?` <span style="font-size:.58rem;color:var(--mu)">${esc(e.atc)}</span>`:''}</span><span class="log-entry-q">${esc(e.q)}</span><span class="log-entry-amt">${fmt(e.amt)}</span><button class="log-entry-del" onclick="del2307Entry(${Number(e.id)||0})" title="Delete">✕</button></div>`;
     });
     h+=`</div>`;
   });
@@ -2522,7 +2675,7 @@ function renderQChecklist(f){
   let h='';
   qs.forEach((q,qi)=>{
     const obs=f.filter(o=>o.month>0&&o.day>0&&q.months.includes(o.month))
-      .sort((a,b)=>(a.month*100+a.day)-(b.month*100+b.day));
+      .sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));
     if(!obs.length)return;
     const total=obs.length,filed=obs.filter(o=>isFiled(o)).length;
     const pct=total?Math.round(filed/total*100):0;
@@ -2533,12 +2686,12 @@ function renderQChecklist(f){
     h+=`<div class="qck-prog"><div class="qck-pbar"><div class="qck-pfill" style="width:${pct}%;background:${fc}"></div></div><span class="qck-stat">${filed}/${total} filed</span></div>`;
     h+=`</div><div class="qck-body">`;
     obs.forEach(o=>{
-      const id=obsId(o);const fd=isFiled(o);
+      const id=obsId(o);const fd=isFiled(o);const eff=effectiveDeadline(o);const shift=shiftedDeadlineNote(o);
       h+=`<div class="qck-item${fd?' filed':''}" onclick="tgFiled('${id}','')">`;
       h+=`<div class="qck-chk"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5"/></svg></div>`;
       if(o.form&&o.form!=='—')h+=`<span class="qck-form">${o.form}</span>`;
-      h+=`<span class="qck-title">${o.title}</span>`;
-      h+=`<span class="qck-date">${ms(o.month)} ${o.day}</span>`;
+      h+=`<span class="qck-title">${o.title}${shift?` <span style="color:var(--amber);font-size:.55rem;font-weight:600">· ${shift}</span>`:''}</span>`;
+      h+=`<span class="qck-date">${eff?ms(eff.getMonth()+1)+' '+eff.getDate():ms(o.month)+' '+o.day}</span>`;
       h+=`</div>`;
     });
     h+=`</div></div>`;
@@ -2559,17 +2712,19 @@ function saveNote(id){
   if(!el)return;
   const val=el.value.trim();
   const key='tpv_note_'+id;
-  if(val)localStorage.setItem(key,val);else localStorage.removeItem(key);
+  if(val)safeSet(key,val);else safeRemove(key);
   const btn=document.querySelector(`#fc_${id} .fc-note-btn`);
   if(btn){btn.classList.toggle('has-note',!!val);btn.textContent=val?'📝':'+ note';}
 }
 
 // ══════════ YoY COMPARISON ══════════
 function renderYoY(g,R,best,cwt,ex){
-  const prev=localStorage.getItem('tpv_calc_'+(YEAR-1));
   const el=document.getElementById('yoyBox');
   if(!el)return;
-  if(!prev){el.innerHTML='';return;}
+  const prev=localStorage.getItem('tpv_calc_'+(YEAR-1));
+  const curSaved=localStorage.getItem('tpv_calc_'+YEAR);
+  const saveBtn=`<button id="yoySaveBtn" onclick="saveYoYSnapshot()" style="font-family:var(--sa);font-size:.62rem;font-weight:700;padding:.25rem .7rem;border-radius:100px;border:1.5px solid var(--royal);background:${curSaved?'var(--rs)':'transparent'};color:var(--royal);cursor:${curSaved?'default':'pointer'};opacity:${curSaved?'.7':'1'}" ${curSaved?'disabled':''}>${curSaved?'✓ Saved for YoY':'💾 Save snapshot for YoY'}</button>`;
+  if(!prev){el.innerHTML=`<div class="yoy-panel"><h3>Year-over-Year Comparison</h3><p style="font-size:.7rem;color:var(--dim);margin:.4rem 0 .6rem">No snapshot from ${YEAR-1} found. Save this year's snapshot so you can compare next year.</p>${saveBtn}</div>`;return;}
   let p;try{p=JSON.parse(prev);}catch{el.innerHTML='';return;}
   function delta(cur,prv){
     if(!prv)return'<span class="yoy-flat">—</span>';
@@ -2591,6 +2746,7 @@ function renderYoY(g,R,best,cwt,ex){
     const pv=r.prv!=null?fmt(r.prv):'—';
     h+=`<div class="yoy-row"><span class="yoy-lbl">${r.lbl}</span><span class="yoy-val">${pv}</span><span class="yoy-val">${fmt(r.cur)}</span><span class="yoy-delta">${delta(r.cur,r.prv)}</span></div>`;
   });
+  h+=`<div style="margin-top:.6rem;display:flex;justify-content:flex-end">${saveBtn}</div>`;
   h+=`</div>`;
   el.innerHTML=h;
 }
