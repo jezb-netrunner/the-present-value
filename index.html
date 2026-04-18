@@ -490,13 +490,16 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 /* ══ REGIME CALCULATOR — TWO-PANE LIVE SIMULATOR ══ */
 .calc-shell{display:block}
 .cProfile{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--shs);margin-bottom:.75rem}
-.cp-hdr{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.55rem .85rem;cursor:pointer;user-select:none}
-.cp-hdr:hover{background:var(--s2)}
+.cp-hdr{display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;user-select:none}
 .cp-title{font-family:var(--se);font-size:.82rem;font-weight:600;color:var(--ink);flex-shrink:0}
-.cp-sum{display:flex;flex-wrap:wrap;gap:.3rem;font-size:.72rem;flex:1;min-width:0}
-.cp-sum .chip{background:var(--rs);color:var(--royal);padding:.12rem .55rem;border-radius:100px;font-weight:600;white-space:nowrap;font-size:.68rem}
-.cp-chev{color:var(--mu);transition:transform .3s;font-size:.65rem;flex-shrink:0}
-.cProfile.open .cp-chev{transform:rotate(180deg)}
+.cp-sum{display:flex;flex-wrap:nowrap;gap:.3rem;font-size:.72rem;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.cp-sum::-webkit-scrollbar{display:none}
+.cp-sum .chip{background:var(--rs);color:var(--royal);padding:.14rem .55rem;border-radius:100px;font-weight:600;white-space:nowrap;font-size:.68rem;flex-shrink:0}
+.cp-sum .chip.muted{background:var(--s2);color:var(--mu)}
+.cp-edit{font-family:var(--sa);font-size:.74rem;font-weight:700;color:var(--royal);background:var(--rs);border:1px solid transparent;border-radius:100px;padding:.32rem .75rem;cursor:pointer;flex-shrink:0;min-height:30px;transition:background .15s}
+.cp-edit:hover{background:var(--rm)}
+.cp-edit:focus-visible{outline:2px solid var(--royal);outline-offset:2px}
+.cProfile.open .cp-edit{background:var(--ink);color:#fff}
 .cp-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
 .cProfile.open .cp-body{max-height:700px;overflow:visible}
 .cp-body-inner{padding:.55rem .85rem .85rem;border-top:1px solid var(--s2)}
@@ -744,6 +747,26 @@ body:not(.pro-mode) .mc{display:none}
 .upd-setup:hover{color:var(--royal);background:var(--rs)}
 .upd-setup:focus-visible{outline:2px solid var(--royal);outline-offset:2px}
 
+/* ══ TWO-STEP DEDUCTION METHOD PICKER (OSD vs Itemized) ══ */
+.ded-method-row{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.7rem}
+.ded-method-card{display:flex;flex-direction:column;align-items:flex-start;gap:.18rem;text-align:left;padding:.7rem .85rem;background:var(--bg);border:1.5px solid var(--bd);border-radius:var(--rr);cursor:pointer;transition:all .15s;font-family:var(--sa);min-height:64px}
+.ded-method-card:hover{border-color:var(--bl);background:var(--s2)}
+.ded-method-card.act{border-color:var(--royal);background:var(--rs);box-shadow:0 0 0 2px var(--rs)}
+.ded-method-card:focus-visible{outline:2px solid var(--royal);outline-offset:2px}
+.ded-method-name{font-family:var(--se);font-size:.95rem;font-weight:700;color:var(--ink)}
+.ded-method-card.act .ded-method-name{color:var(--royal)}
+.ded-method-desc{font-size:.74rem;font-weight:500;color:var(--dim);line-height:1.3}
+.ded-osd-info{padding:.6rem .8rem;background:var(--gs);border-left:3px solid var(--green);border-radius:var(--rr);font-family:var(--se);font-size:.82rem;color:var(--ch);line-height:1.5;margin-bottom:.3rem}
+.ded-osd-info b{color:var(--green);font-weight:700}
+.ded-itemized-wrap[hidden]{display:none}
+
+/* The primary input card no longer has a heading; first section sits flush. */
+.inp.inp-flat>.exp-section.first-section{margin-top:0;padding-top:0;border-top:none}
+.ctx-fg:empty,.ctx-fg.is-hidden{display:none}
+.inp.inp-flat>.ctx-fg{margin-bottom:1rem}
+/* Advanced details styled in line with the existing .cd-sec sections. */
+.adv-credits{margin-top:.85rem}
+
 /* ══ MOBILE STICKY CALCULATOR DRAWER (≤480px) ══ */
 .cr-mob-bar{display:none}
 @media(max-width:480px){
@@ -878,10 +901,10 @@ body:not(.pro-mode) .mc{display:none}
 <div class="calc-shell">
 
 <section class="cProfile" id="cProfile">
-<header class="cp-hdr" onclick="toggleProfile()" role="button" aria-expanded="false" aria-controls="cp-body" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleProfile();}">
+<header class="cp-hdr">
 <span class="cp-title">Profile</span>
 <span class="cp-sum" id="cp-sum" aria-live="polite"></span>
-<span class="cp-chev" aria-hidden="true">▾</span>
+<button type="button" class="cp-edit" id="cpEditBtn" onclick="toggleProfile()" aria-expanded="false" aria-controls="cp-body"><span id="cpEditLbl">Edit profile</span></button>
 </header>
 <div class="cp-body" id="cp-body">
 <div class="cp-body-inner">
@@ -900,21 +923,18 @@ body:not(.pro-mode) .mc{display:none}
 
 <div class="calc-grid">
 <div class="calc-left" id="calcLeft">
-<div class="inp"><h3>Your Numbers</h3>
-<div class="fg">
-<div class="fld"><label for="cI">CWT / 2307 Credits</label><input type="text" id="cI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld" id="fldComp" style="display:none"><label for="compI">Annual Compensation Income (₱)</label><input type="text" id="compI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="nopI">Non-Operating Income (₱)</label><input type="text" id="nopI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="inp inp-flat">
+
+<!-- Conditional context inputs (compensation + VAT). Each .fld is hidden by
+     applyProfileVisibility() until the relevant profile state turns it on. -->
+<div class="fg ctx-fg" id="ctxFields">
+<div class="fld hidden" id="fldComp"><label for="compI">Annual Compensation Income (₱)</label><input type="text" id="compI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 <div class="fld" id="fldZeroRated"><label for="zeroRatedSales">Zero-rated Sales (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Zero-rated VAT sales" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Sales subject to 0% VAT under NIRC §106(A)(2)(a) / §108(B) — typically direct exports, services to non-residents paid in acceptable foreign currency, and sales to SEZs. Included in your gross sales figure above. The 2550Q preview will split output VAT between 12% and 0% portions.</span></span></label><input type="text" id="zeroRatedSales" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 <div class="fld" id="fldInputVAT"><label for="inputVAT">Input VAT on Purchases (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Input VAT on purchases" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">The 12% VAT you paid on business purchases (from VAT-registered suppliers, per official VAT invoices/receipts). Creditable against output VAT on 2550Q per NIRC §110. Only applicable if you are VAT-registered.</span></span></label><input type="text" id="inputVAT" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="priorExcess">Prior-Year Excess Credit (₱)</label><input type="text" id="priorExcess" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="q1Paid">Q1 1701Q Payment Already Made (₱)</label><input type="text" id="q1Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="q2Paid">Q2 1701Q Payment Already Made (₱)</label><input type="text" id="q2Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="q3Paid">Q3 1701Q Payment Already Made (₱)</label><input type="text" id="q3Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 </div>
 
 <!-- SALES INPUT -->
-<div class="exp-section">
+<div class="exp-section first-section">
 <div class="exp-title" style="display:flex;align-items:center;justify-content:space-between">
   <span>Gross Sales / Receipts</span>
   <span id="salesTotalBadge" style="font-family:var(--sa);font-size:.72rem;font-weight:700;color:var(--royal)">₱0</span>
@@ -940,17 +960,31 @@ body:not(.pro-mode) .mc{display:none}
 </div>
 </div>
 
-<!-- EXPENSES INPUT -->
+<!-- DEDUCTIONS — Step 1: OSD vs Itemized method picker.
+     Step 2: granularity (Annual/Quarterly/Monthly/Categorized) appears only
+     when Itemized is selected. -->
 <div class="exp-section">
 <div class="exp-title" style="display:flex;align-items:center;justify-content:space-between">
-  <span>Expenses / Deductions</span>
+  <span>Deductions</span>
   <span id="expTotalBadge" style="font-family:var(--sa);font-size:.72rem;font-weight:700;color:var(--royal)">₱0</span>
 </div>
-<div class="exp-modes" role="tablist" aria-label="Expense input mode" style="margin-bottom:.55rem">
+<div class="ded-method-row" role="radiogroup" aria-label="Deduction method">
+<button type="button" class="ded-method-card" id="dedCardOsd" data-m="osd" onclick="setDedMethod('osd',this)" role="radio" aria-checked="false">
+  <span class="ded-method-name">OSD</span>
+  <span class="ded-method-desc">Auto 40% of gross — no receipts.</span>
+</button>
+<button type="button" class="ded-method-card act" id="dedCardItem" data-m="itemized" onclick="setDedMethod('itemized',this)" role="radio" aria-checked="true">
+  <span class="ded-method-name">Itemized</span>
+  <span class="ded-method-desc">Deduct your actual business expenses.</span>
+</button>
+</div>
+<div class="ded-osd-info" id="dedOsdInfo" hidden>OSD applies a flat 40% deduction to your gross sales/receipts — nothing to enter. Switch to <b>Itemized</b> if your real expenses run above 40% of gross.</div>
+<div class="ded-itemized-wrap" id="dedItemizedWrap">
+<div class="exp-modes" role="tablist" aria-label="Expense input granularity" style="margin-bottom:.55rem">
 <button type="button" class="em-btn act" onclick="setExpMode('lump',this)" role="tab" aria-selected="true">Annual Total</button>
 <button type="button" class="em-btn" onclick="setExpMode('q',this)" role="tab" aria-selected="false">Quarterly</button>
 <button type="button" class="em-btn" onclick="setExpMode('m',this)" role="tab" aria-selected="false">Monthly</button>
-<button type="button" class="em-btn" onclick="setExpMode('cat',this)" role="tab" aria-selected="false">Itemized</button>
+<button type="button" class="em-btn" onclick="setExpMode('cat',this)" role="tab" aria-selected="false">Categorized</button>
 </div>
 <div class="exp-panel vis" id="ep-lump">
 <div class="fld"><label for="eI" class="sr-only">Annual total expenses</label><input type="text" id="eI" placeholder="e.g. 480,000" inputmode="numeric" style="font-size:1rem" autocomplete="off"></div>
@@ -971,9 +1005,25 @@ body:not(.pro-mode) .mc{display:none}
 <div id="catGrid"></div>
 </div>
 </div>
+</div>
 
 <div class="crow" style="margin-top:.5rem"><span style="font-size:.72rem;color:var(--mu);font-style:italic">VAT threshold: ₱3M · 8% option: ≤₱3M · Results update live as you type</span></div>
 </div>
+
+<!-- Advanced inputs that don't change for most users — collapsed by default. -->
+<details class="cd-sec adv-credits" id="cdAdvCredits">
+<summary>Advanced — creditable taxes and prior payments</summary>
+<div class="cd-sec-body">
+<div class="fg">
+<div class="fld"><label for="cI">CWT / 2307 Credits</label><input type="text" id="cI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="nopI">Non-Operating Income (₱)</label><input type="text" id="nopI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="priorExcess">Prior-Year Excess Credit (₱)</label><input type="text" id="priorExcess" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="q1Paid">Q1 1701Q Payment Already Made (₱)</label><input type="text" id="q1Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="q2Paid">Q2 1701Q Payment Already Made (₱)</label><input type="text" id="q2Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="q3Paid">Q3 1701Q Payment Already Made (₱)</label><input type="text" id="q3Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+</div>
+</div>
+</details>
 </div>
 
 <aside class="calc-right" id="calcRight" aria-label="Live regime comparison">
@@ -1273,6 +1323,13 @@ function applyProfileVisibility(){
   _calcToggleField('fldInputVAT',vatOn);
   _calcToggleField('fldOtherPt',!vatOn);
   _calcToggleField('fldEightElect',!vatOn&&thresholdOk);
+  // Collapse the conditional context wrapper when nothing inside is visible
+  // — keeps the primary input card flush against the Sales section.
+  const ctx=document.getElementById('ctxFields');
+  if(ctx){
+    const hasVisible=Array.from(ctx.querySelectorAll('.fld')).some(f=>!f.classList.contains('hidden'));
+    ctx.classList.toggle('is-hidden',!hasVisible);
+  }
 }
 function updateProfileSummary(){
   const sum=document.getElementById('cp-sum');if(!sum)return;
@@ -1281,32 +1338,40 @@ function updateProfileSummary(){
   const vatSel=document.getElementById('vatR')?.value;
   const g=typeof getSales==='function'?getSales():0,nop=pN('nopI');
   const vatOn=vatSel==='yes'||(vatSel==='auto'&&(g+nop)>3e6);
+  // Always emit one chip per profile dimension so the row is stable. Negative
+  // states are muted ("Non-GPP", "Non-BMBE") so users see status at a glance
+  // without the row growing/shrinking on every selection.
   const chips=[];
-  if(tS==='pure')chips.push('Self-Employed');else if(tS==='mixed')chips.push('Mixed Income');
-  if(bizT==='services')chips.push('Services');else if(bizT==='goods')chips.push('Goods');
-  chips.push(vatOn?'VAT':'Non-VAT');
-  if(document.getElementById('eightElect')?.value==='yes'&&!vatOn&&(g+nop)<=3e6)chips.push('8% elected');
-  if(document.getElementById('otherPt')?.value==='yes')chips.push('Other % Tax');
-  if(document.getElementById('gppPartner')?.value==='yes')chips.push('GPP');
-  if(document.getElementById('bmbe')?.value==='yes')chips.push('BMBE');
-  sum.innerHTML=chips.map(c=>`<span class="chip">${esc(c)}</span>`).join('');
+  if(tS==='pure')chips.push({l:'Self-Employed'});else if(tS==='mixed')chips.push({l:'Mixed Income'});
+  if(bizT==='services')chips.push({l:'Services'});else if(bizT==='goods')chips.push({l:'Goods'});
+  chips.push({l:vatOn?'VAT':'Non-VAT'});
+  if(!vatOn&&(g+nop)<=3e6)chips.push({l:document.getElementById('eightElect')?.value==='yes'?'8% elected':'Graduated',muted:document.getElementById('eightElect')?.value!=='yes'});
+  chips.push(document.getElementById('otherPt')?.value==='yes'?{l:'Other % Tax'}:{l:'§116 only',muted:true});
+  chips.push(document.getElementById('gppPartner')?.value==='yes'?{l:'GPP'}:{l:'Non-GPP',muted:true});
+  chips.push(document.getElementById('bmbe')?.value==='yes'?{l:'BMBE'}:{l:'Non-BMBE',muted:true});
+  sum.innerHTML=chips.map(c=>`<span class="chip${c.muted?' muted':''}">${esc(c.l)}</span>`).join('');
 }
 function toggleProfile(){
   const el=document.getElementById('cProfile');if(!el)return;
   const open=!el.classList.contains('open');
   el.classList.toggle('open',open);
-  const hdr=el.querySelector('.cp-hdr');
-  if(hdr)hdr.setAttribute('aria-expanded',open?'true':'false');
+  const btn=document.getElementById('cpEditBtn');
+  if(btn)btn.setAttribute('aria-expanded',open?'true':'false');
+  const lbl=document.getElementById('cpEditLbl');
+  if(lbl)lbl.textContent=open?'Done':'Edit profile';
   safeSet('tpv_calc_profile_open',open?'1':'0');
 }
 function initProfileStrip(){
   const el=document.getElementById('cProfile');if(!el)return;
   let stored=null;try{stored=localStorage.getItem('tpv_calc_profile_open');}catch(e){/* ignore */}
-  // Open on first visit (no saved preference) so users see the profile; honor saved choice thereafter.
-  const open=stored===null?true:stored==='1';
+  // Default closed — chip row alone communicates the profile; selects only
+  // appear when the user clicks Edit profile. Honor saved preference if set.
+  const open=stored==='1';
   el.classList.toggle('open',open);
-  const hdr=el.querySelector('.cp-hdr');
-  if(hdr)hdr.setAttribute('aria-expanded',open?'true':'false');
+  const btn=document.getElementById('cpEditBtn');
+  if(btn)btn.setAttribute('aria-expanded',open?'true':'false');
+  const lbl=document.getElementById('cpEditLbl');
+  if(lbl)lbl.textContent=open?'Done':'Edit profile';
 }
 function renderCalcEmptyState(){
   const cCards=document.getElementById('cCards');
@@ -2148,6 +2213,11 @@ function pN(id){const el=document.getElementById(id);if(!el)return 0;return pars
 
 // EXPENSE MODE STATE
 let EXP_MODE='lump';
+// Deduction method (OSD vs Itemized). With OSD picked, the granularity tabs
+// + input panels are hidden — OSD is auto-computed at 40% of gross. The
+// Itemized regime card still renders but reflects whatever expenses were
+// previously entered (zero by default) so users see the contrast.
+let DED_METHOD='itemized';
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 const CAT_GROUPS=[
@@ -2180,6 +2250,28 @@ let SALES_MODE='lump';
 function setSalesMode(m,btn){SALES_MODE=m;const grp=btn.parentElement;grp.querySelectorAll('.em-btn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');['lump','q','m'].forEach(x=>document.getElementById('sp-'+x).classList.remove('vis'));document.getElementById('sp-'+m).classList.add('vis');updateTotals();if(typeof _calcRecompute==='function')_calcRecompute();}
 
 function setExpMode(m,btn){EXP_MODE=m;const grp=btn.parentElement;grp.querySelectorAll('.em-btn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');['lump','q','m','cat'].forEach(x=>document.getElementById('ep-'+x).classList.remove('vis'));document.getElementById('ep-'+m).classList.add('vis');updateTotals();if(typeof _calcRecompute==='function')_calcRecompute();}
+
+// Step 1 of the deduction picker. OSD hides the granularity tabs entirely
+// (40% is auto-computed); Itemized reveals them with whatever granularity was
+// last selected.
+function setDedMethod(m,btn){
+  DED_METHOD=m;
+  const cards=document.querySelectorAll('.ded-method-card');
+  cards.forEach(c=>{const on=c.dataset.m===m;c.classList.toggle('act',on);c.setAttribute('aria-checked',on?'true':'false');});
+  const itemWrap=document.getElementById('dedItemizedWrap');
+  const osdInfo=document.getElementById('dedOsdInfo');
+  if(itemWrap)itemWrap.hidden=(m!=='itemized');
+  if(osdInfo)osdInfo.hidden=(m!=='osd');
+  safeSet('tpv_calc_ded_method',m);
+  updateTotals();
+  if(typeof _calcRecompute==='function')_calcRecompute();
+}
+function initDedMethod(){
+  let stored=null;try{stored=localStorage.getItem('tpv_calc_ded_method');}catch(e){/* ignore */}
+  const m=(stored==='osd'||stored==='itemized')?stored:'itemized';
+  const btn=document.querySelector('.ded-method-card[data-m="'+m+'"]');
+  if(btn)setDedMethod(m,btn);
+}
 
 function initMonthGrid(){
   let h1='';for(let i=1;i<=12;i++)h1+=`<div class="fld"><label>${MONTHS[i-1]}</label><input type="text" class="qsI" id="sM${i}" placeholder="0" inputmode="numeric"></div>`;
@@ -2224,6 +2316,13 @@ function getSales(){
 
 function updateTotals(){
   document.getElementById('salesTotalBadge').textContent=fmt(getSales());
+  // OSD has no entered expenses — surface the auto-computed 40% in the badge
+  // so the user sees what the deduction will be without leaving the card.
+  if(DED_METHOD==='osd'){
+    const auto=getSales()*0.40;
+    document.getElementById('expTotalBadge').textContent=fmt(auto)+' (40% OSD)';
+    return;
+  }
   let ex=0;
   if(EXP_MODE==='lump')ex=pN('eI');
   else if(EXP_MODE==='q')ex=pN('eQ1')+pN('eQ2')+pN('eQ3')+pN('eQ4');
@@ -2926,7 +3025,7 @@ function initNumberFormatters(){
   });
 }
 
-initMonthGrid();initCatGrid();initNumberFormatters();onTaxpayerTypeChange();refreshCorpGuard();
+initMonthGrid();initCatGrid();initNumberFormatters();onTaxpayerTypeChange();refreshCorpGuard();initDedMethod();
 // Ensure all extended calc inputs run through the same comma formatter.
 document.querySelectorAll('#compI,#nopI,#zeroRatedSales,#inputVAT,#priorExcess,#q1Paid,#q2Paid,#q3Paid').forEach(el=>{
   el.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});
