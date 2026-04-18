@@ -176,7 +176,7 @@ table.ct tr:last-child td{border-bottom:none}table.ct tr:hover td{background:var
 .inp h3{font-family:var(--se);font-size:.95rem;font-weight:600;color:var(--ink);margin-bottom:.85rem}
 .fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.85rem}
 .fld{display:flex;flex-direction:column;gap:.2rem;min-width:0}
-.fld label{font-size:.75rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.fld label{font-size:.82rem;font-weight:600;color:var(--ch);letter-spacing:0}
 .fld .hn{font-size:.72rem;color:var(--mu);font-weight:400;text-transform:none;letter-spacing:0}
 .fld input,.fld select{font-family:var(--sa);font-size:.9rem;font-weight:600;padding:.45rem .65rem;border:1.5px solid var(--bd);border-radius:var(--rr);background:var(--bg);color:var(--ink);outline:none;transition:border-color .2s;min-width:0;width:100%;max-width:100%}
 .fld input:focus,.fld select:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}
@@ -219,7 +219,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .exp-panel{display:none}.exp-panel.vis{display:block;animation:fi .2s ease both}
 .qg{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.55rem}
 .mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(85px,1fr));gap:.5rem}
-.qg .fld label,.mg .fld label{font-size:.58rem}
+.qg .fld label,.mg .fld label{font-size:.78rem;font-weight:600}
 .qg .fld input,.mg .fld input{font-size:.78rem;padding:.38rem .55rem}
 .exp-total{margin-top:.6rem;padding:.4rem .65rem;background:var(--rs);border-radius:var(--rr);font-size:.72rem;font-weight:600;color:var(--royal);display:flex;justify-content:space-between;align-items:center}
 .exp-total .ttv{font-family:var(--sa);font-size:.85rem;font-weight:700}
@@ -652,7 +652,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 /* Tooltip bubble is position:fixed so it escapes any overflow:hidden ancestor
    (cards, accordions, form previews, etc.). Placement is set by JS in
    positionTip() relative to the trigger button. */
-.tip-b{display:none;position:fixed;top:0;left:0;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);padding:.55rem .72rem;min-width:180px;max-width:260px;font-family:var(--se);font-size:.8rem;font-weight:400;font-style:normal;color:var(--ch);line-height:1.5;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:normal;text-align:left;text-transform:none;letter-spacing:0;pointer-events:auto}
+.tip-b{display:none;position:fixed;top:0;left:0;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);padding:.55rem .72rem;min-width:180px;max-width:min(280px,calc(100vw - 16px));font-family:var(--se);font-size:.8rem;font-weight:400;font-style:normal;color:var(--ch);line-height:1.5;z-index:100000;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:normal;text-align:left;text-transform:none;letter-spacing:0;pointer-events:auto;box-sizing:border-box}
 .tip:hover .tip-b,.tip.on .tip-b,.tip:focus-within .tip-b{display:block}
 .form-ref{font-family:var(--sa);font-size:.72rem;font-weight:600;color:var(--mu);margin-left:.3rem;vertical-align:middle;white-space:nowrap}
 #plainSummary:not(:empty){background:#fff;border-left:4px solid var(--green);border-radius:var(--rr);padding:.9rem 1.1rem;margin-bottom:.75rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
@@ -743,6 +743,42 @@ body:not(.pro-mode) .mc{display:none}
 .upd-setup{font-family:var(--sa);font-size:.78rem;color:var(--dim);background:none;border:none;cursor:pointer;margin-left:auto;padding:.3rem .45rem;white-space:nowrap;border-radius:4px;min-height:32px}
 .upd-setup:hover{color:var(--royal);background:var(--rs)}
 .upd-setup:focus-visible{outline:2px solid var(--royal);outline-offset:2px}
+
+/* ══ MOBILE STICKY CALCULATOR DRAWER (≤480px) ══ */
+.cr-mob-bar{display:none}
+@media(max-width:480px){
+  #pgCalc.vis main.mn{padding-bottom:84px}
+  .calc-grid{grid-template-columns:1fr}
+  .calc-right{
+    position:fixed !important;left:0;right:0;bottom:0;top:auto;
+    z-index:300;border:none;border-top:1px solid var(--bd);
+    border-radius:14px 14px 0 0;background:var(--sf);
+    box-shadow:0 -4px 18px rgba(0,0,0,.14);
+    max-height:64px;overflow:hidden;
+    padding:0;transition:max-height .3s cubic-bezier(.4,0,.2,1);
+  }
+  .calc-right.expanded{max-height:78vh;overflow:auto;padding-bottom:.85rem}
+  .calc-right .cr-mob-bar{
+    display:flex;width:100%;align-items:center;justify-content:space-between;
+    padding:.7rem .9rem;background:var(--sf);border:none;
+    font-family:var(--sa);cursor:pointer;text-align:left;gap:.6rem;min-height:64px;
+    position:sticky;top:0;z-index:1;
+  }
+  .cr-mob-info{display:flex;flex-direction:column;gap:.08rem;min-width:0;flex:1}
+  .cr-mob-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mu)}
+  .cr-mob-name{font-family:var(--se);font-size:.92rem;font-weight:600;color:var(--green);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cr-mob-amt{font-family:var(--sa);font-size:.78rem;font-weight:700;color:var(--ink);white-space:nowrap}
+  .cr-mob-toggle{font-family:var(--sa);font-size:.78rem;font-weight:700;color:var(--royal);padding:.42rem .85rem;background:var(--rs);border-radius:100px;flex-shrink:0;border:1px solid transparent;min-height:36px;display:inline-flex;align-items:center}
+  .calc-right .ccards,
+  .calc-right #rcBox,
+  .calc-right #plainSummary,
+  .calc-right #warnBox{padding-left:.85rem;padding-right:.85rem}
+  .calc-right.expanded .ccards{margin-top:.5rem}
+  .calc-right:not(.expanded) .ccards,
+  .calc-right:not(.expanded) #rcBox,
+  .calc-right:not(.expanded) #plainSummary,
+  .calc-right:not(.expanded) #warnBox{display:none}
+}
 </style>
 </head>
 <body>
@@ -852,8 +888,8 @@ body:not(.pro-mode) .mc{display:none}
 <div class="fg">
 <div class="fld"><label for="tS">Taxpayer Type</label><select id="tS"><option value="pure">Purely Self-Employed</option><option value="mixed">Mixed Income Earner</option></select></div>
 <div class="fld"><label for="bizT">Business Type</label><select id="bizT"><option value="services">Services / Professional</option><option value="goods">Sale of Goods</option></select></div>
-<div class="fld"><label for="vatR">VAT-Registered?<span class="tip"><button type="button" class="tip-i" aria-label="Help: VAT registration threshold" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Required if annual gross sales + non-operating income exceed ₱3 million. You can also voluntarily register.</span></span></label><select id="vatR"><option value="auto">Auto (based on gross + non-op)</option><option value="no">No</option><option value="yes">Yes</option></select></div>
-<div class="fld" id="fldEightElect"><label for="eightElect">8% Election on Q1 1701Q?<span class="tip"><button type="button" class="tip-i" aria-label="Help: 8% election status" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">The 8% option must be signified on Q1 1701Q (due May 15) or at BIR registration. Irrevocable for the entire taxable year. Missing the election defaults you to graduated rates.</span></span></label><select id="eightElect"><option value="yes">Yes — I elected 8% on Q1</option><option value="no">No / I'm not sure</option></select></div>
+<div class="fld"><label for="vatR">VAT-Registered?</label><select id="vatR"><option value="auto">Auto (based on gross + non-op)</option><option value="no">No</option><option value="yes">Yes</option></select></div>
+<div class="fld" id="fldEightElect"><label for="eightElect">8% Election on Q1 1701Q?</label><select id="eightElect"><option value="yes">Yes — I elected 8% on Q1</option><option value="no">No / I'm not sure</option></select></div>
 <div class="fld" id="fldOtherPt"><label for="otherPt">Other Percentage Tax?<span class="tip"><button type="button" class="tip-i" aria-label="Help: Other percentage tax" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Amusement, common carrier, banking, overseas dispatch, life insurance and similar payors subject to Title V, Chapter III (§117–§127) of the NIRC. Any such tax disqualifies you from 8%.</span></span></label><select id="otherPt"><option value="no">No — only §116 (3%)</option><option value="yes">Yes — amusement / carrier / banking / etc.</option></select></div>
 <div class="fld"><label for="gppPartner">GPP Partner?<span class="tip"><button type="button" class="tip-i" aria-label="Help: GPP partner exclusion" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">A General Professional Partnership (law firm, CPA firm, etc.) distributes net income to partners. Per RR 8-2018 §3(B)(4), GPP partners are expressly barred from the 8% option — their distributive share is reported at graduated rates only.</span></span></label><select id="gppPartner"><option value="no">No — sole prop / solo professional</option><option value="yes">Yes — GPP partner (8% unavailable)</option></select></div>
 <div class="fld"><label for="bmbe">BMBE Registration?<span class="tip"><button type="button" class="tip-i" aria-label="Help: Barangay Micro Business Enterprise" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">A Barangay Micro Business Enterprise (RA 9178) with total assets ≤ ₱3M and a BMBE Certificate of Authority from the LGU is exempt from income tax. Percentage tax, VAT, and local business taxes still apply.</span></span></label><select id="bmbe"><option value="no">No</option><option value="yes">Yes — BMBE income-tax-exempt (RA 9178)</option></select></div>
@@ -866,13 +902,13 @@ body:not(.pro-mode) .mc{display:none}
 <div class="calc-left" id="calcLeft">
 <div class="inp"><h3>Your Numbers</h3>
 <div class="fg">
-<div class="fld"><label for="cI">CWT / 2307 Credits<span class="tip"><button type="button" class="tip-i" aria-label="Help: CWT / 2307 Credits" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Tax your clients deducted before paying you. Check BIR Form 2307 for the amount.</span></span></label><input type="text" id="cI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld" id="fldComp" style="display:none"><label for="compI">Annual Compensation Income (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Compensation income for mixed earners" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">For mixed income earners: your full-year taxable compensation from employment (after 90K 13th-month exclusion). Needed because graduated rates stack business income on top of compensation.</span></span></label><input type="text" id="compI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="nopI">Non-Operating Income (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Non-operating income" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Rental, interest, miscellaneous income not part of your main business. Per RR 8-2018, this is added to gross sales when testing the ₱3M VAT / 8% threshold.</span></span></label><input type="text" id="nopI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="cI">CWT / 2307 Credits</label><input type="text" id="cI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld" id="fldComp" style="display:none"><label for="compI">Annual Compensation Income (₱)</label><input type="text" id="compI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="nopI">Non-Operating Income (₱)</label><input type="text" id="nopI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 <div class="fld" id="fldZeroRated"><label for="zeroRatedSales">Zero-rated Sales (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Zero-rated VAT sales" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Sales subject to 0% VAT under NIRC §106(A)(2)(a) / §108(B) — typically direct exports, services to non-residents paid in acceptable foreign currency, and sales to SEZs. Included in your gross sales figure above. The 2550Q preview will split output VAT between 12% and 0% portions.</span></span></label><input type="text" id="zeroRatedSales" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 <div class="fld" id="fldInputVAT"><label for="inputVAT">Input VAT on Purchases (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Input VAT on purchases" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">The 12% VAT you paid on business purchases (from VAT-registered suppliers, per official VAT invoices/receipts). Creditable against output VAT on 2550Q per NIRC §110. Only applicable if you are VAT-registered.</span></span></label><input type="text" id="inputVAT" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="priorExcess">Prior-Year Excess Credit (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Prior-year excess tax credit" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Overpayment from last year's 1701 / 1701A that you elected to CARRY OVER (NIRC §76). Once elected, the carry-over is irrevocable for that prior taxable period. Reduces this year's tax due on the annual return.</span></span></label><input type="text" id="priorExcess" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="q1Paid">Q1 1701Q Payment Already Made (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Q1 1701Q payment" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">If you already filed your Q1 1701Q (May 15) and paid tax, enter the amount here so the annual return reconciles correctly. Leave as 0 if filing fresh.</span></span></label><input type="text" id="q1Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="priorExcess">Prior-Year Excess Credit (₱)</label><input type="text" id="priorExcess" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="q1Paid">Q1 1701Q Payment Already Made (₱)</label><input type="text" id="q1Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 <div class="fld"><label for="q2Paid">Q2 1701Q Payment Already Made (₱)</label><input type="text" id="q2Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 <div class="fld"><label for="q3Paid">Q3 1701Q Payment Already Made (₱)</label><input type="text" id="q3Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 </div>
@@ -914,7 +950,7 @@ body:not(.pro-mode) .mc{display:none}
 <button type="button" class="em-btn act" onclick="setExpMode('lump',this)" role="tab" aria-selected="true">Annual Total</button>
 <button type="button" class="em-btn" onclick="setExpMode('q',this)" role="tab" aria-selected="false">Quarterly</button>
 <button type="button" class="em-btn" onclick="setExpMode('m',this)" role="tab" aria-selected="false">Monthly</button>
-<button type="button" class="em-btn" onclick="setExpMode('cat',this)" role="tab" aria-selected="false">Itemized<span class="tip"><button type="button" class="tip-i" aria-label="Help: Itemized deductions" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Deduct actual business expenses. Requires complete receipts and records kept all year.</span></span></button>
+<button type="button" class="em-btn" onclick="setExpMode('cat',this)" role="tab" aria-selected="false">Itemized</button>
 </div>
 <div class="exp-panel vis" id="ep-lump">
 <div class="fld"><label for="eI" class="sr-only">Annual total expenses</label><input type="text" id="eI" placeholder="e.g. 480,000" inputmode="numeric" style="font-size:1rem" autocomplete="off"></div>
@@ -941,6 +977,14 @@ body:not(.pro-mode) .mc{display:none}
 </div>
 
 <aside class="calc-right" id="calcRight" aria-label="Live regime comparison">
+<button type="button" class="cr-mob-bar" id="crMobBar" onclick="toggleMobileCalcDrawer()" aria-expanded="false" aria-controls="calcRight">
+  <div class="cr-mob-info">
+    <span class="cr-mob-lbl" id="crMobLbl">Lowest</span>
+    <span class="cr-mob-name" id="crMobName">Enter sales</span>
+    <span class="cr-mob-amt" id="crMobAmt"></span>
+  </div>
+  <span class="cr-mob-toggle" id="crMobToggle" aria-hidden="true">Expand</span>
+</button>
 <div class="ccards" id="cCards"></div>
 <div id="rcBox"></div>
 <div id="plainSummary"></div>
@@ -972,7 +1016,7 @@ body:not(.pro-mode) .mc{display:none}
 <div class="fld"><label for="penDue">Due Date</label><input type="date" id="penDue"></div>
 <div class="fld"><label for="penPay">Payment Date</label><input type="date" id="penPay"></div>
 <div class="fld"><label for="penTax">Tax Due (₱)</label><input type="text" id="penTax" placeholder="e.g. 25,000" inputmode="numeric" autocomplete="off"></div>
-<div class="fld"><label for="penSize">Taxpayer Classification<span class="tip"><button type="button" class="tip-i" aria-label="Help: EOPT taxpayer classifications" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">EOPT Act (RA 11976) §47 and RR 6-2024 classify taxpayers by annual gross sales. Micro: &lt;₱3M. Small: ₱3M–&lt;₱20M. Medium: ₱20M–&lt;₱1B. Large: ≥₱1B. Micro/Small get reduced penalties (10% surcharge, 6%/yr interest) and a uniform reduced failure-to-file penalty of ₱500/return with a ₱12,500/yr cap per RR 6-2024.</span></span></label>
+<div class="fld"><label for="penSize">Taxpayer Classification</label>
 <select id="penSize"><option value="micro">Micro — gross &lt; ₱3M (EOPT)</option><option value="small">Small — gross ₱3M – &lt;₱20M (EOPT)</option><option value="std">Medium / Large / Willful (Standard)</option></select></div>
 <div class="fld"><label for="penType">Surcharge Type</label>
 <select id="penType"><option value="late">Late Filing / Payment (25% or 10%)</option><option value="willful">Fraud / Willful Neglect (50%)</option></select></div>
@@ -1002,8 +1046,8 @@ body:not(.pro-mode) .mc{display:none}
 <option value="semimonthly">Semi-Monthly</option>
 <option value="weekly">Weekly</option>
 </select></div>
-<div class="fld"><label for="whContrib">Mandatory Contributions (SSS + PhilHealth + Pag-IBIG, employee share)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Mandatory employee-share contributions" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Employee share of SSS, PhilHealth, and Pag-IBIG (HDMF) contributions for this pay period. Excluded from taxable compensation per NIRC §32(B)(7)(f).</span></span></label><input type="text" id="whContrib" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="whBenefits">De-Minimis + 13th Month Portion (within ceilings)<span class="tip"><button type="button" class="tip-i" aria-label="Help: De-minimis and 13th-month non-taxable portion" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">De-minimis benefits within the RR 29-2025 ceilings effective 6 Jan 2026 (rice ₱2,500/mo or one 50-kg sack, uniform ₱8,000/yr, laundry ₱400/mo, medical cash to dependents ₱2,000/sem, actual medical assistance ₱12,000/yr, monetized VL up to 12 days) PLUS the portion of 13th-month pay + other benefits that falls within the combined ₱90,000 ceiling (NIRC §32(B)(7)(e)). Excess over ₱90K is taxable — the calculator flags it.</span></span></label><input type="text" id="whBenefits" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="whContrib">Mandatory Contributions (SSS + PhilHealth + Pag-IBIG, employee share)</label><input type="text" id="whContrib" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="whBenefits">De-Minimis + 13th Month Portion (within ceilings)</label><input type="text" id="whBenefits" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 </div>
 <label style="display:inline-flex;align-items:center;gap:.5rem;margin-top:.6rem;font-family:var(--se);font-size:.82rem;color:var(--ch);cursor:pointer"><input type="checkbox" id="whMWE" onchange="calcWithholding()"> <span>Minimum-wage earner (RA 9504 §24(A)(2)(a) — exempt on basic pay, holiday, OT, night-shift, hazard pay)</span></label>
 <div class="crow" style="margin-top:.75rem"><button type="button" class="cbtn" onclick="calcWithholding()">Compute Withholding</button></div>
@@ -1026,7 +1070,7 @@ body:not(.pro-mode) .mc{display:none}
 <p class="tool-intro">Track BIR Form 2307 certificates received from clients and employers. Running totals are available for use in your quarterly and annual income tax returns.</p>
 <div class="fg" style="max-width:700px;margin-bottom:.75rem">
 <div class="fld"><label for="logPayor">Payor / Client Name</label><input type="text" id="logPayor" placeholder="e.g. ABC Corporation" autocomplete="organization"></div>
-<div class="fld"><label for="logAtc">ATC Code<span class="tip"><button type="button" class="tip-i" aria-label="Help: Alphanumeric Tax Code" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Alphanumeric Tax Code printed on the 2307 by your payor. The printed ATC is authoritative — copy it exactly. Examples seen on individual professional-fee 2307s include the WI010/WI011 series (5% with sworn declaration / 10% otherwise) and WI160 for rentals (5%). For Top Withholding Agent goods/services purchases the rates are 1%/2% and use a different ATC. Codes are revised in successive RRs; trust the slip.</span></span></label><input type="text" id="logAtc" placeholder="from the 2307" autocomplete="off"></div>
+<div class="fld"><label for="logAtc">ATC Code</label><input type="text" id="logAtc" placeholder="from the 2307" autocomplete="off"></div>
 <div class="fld"><label for="logAmt">Amount Withheld (₱)</label><input type="text" id="logAmt" placeholder="0" inputmode="numeric" autocomplete="off"></div>
 <div class="fld"><label for="logQ">Quarter</label>
 <select id="logQ"><option value="Q1">Q1 (Jan–Mar)</option><option value="Q2">Q2 (Apr–Jun)</option><option value="Q3">Q3 (Jul–Sep)</option><option value="Q4">Q4 (Oct–Dec)</option></select></div>
@@ -1293,25 +1337,74 @@ const TIPS={
 function mkTip(text){const safe=esc(text);return`<span class="tip"><button type="button" class="tip-i" aria-label="Help" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">${safe}</span></span>`;}
 // Place the fixed-position bubble relative to its trigger button. Prefers
 // above; falls back below when the top would overflow the viewport. Clamps
-// horizontally to keep the bubble on-screen.
+// width and horizontal position so long-text bubbles (e.g. §117–§127) can't
+// overflow the viewport on narrow screens or near grid edges.
 function positionTip(tip){
   const btn=tip.querySelector('.tip-i');const bubble=tip.querySelector('.tip-b');
   if(!btn||!bubble)return;
+  const vw=window.innerWidth,vh=window.innerHeight,pad=8,gap=8;
+  // Cap the bubble to the viewport width before measuring so very long tooltips
+  // wrap rather than blow past the right edge.
+  const maxBw=Math.max(160,vw-pad*2);
+  bubble.style.maxWidth=maxBw+'px';
   // Temporarily force visibility so offsetWidth / offsetHeight are measurable
   // even when the bubble is about to appear for the first time.
   const prevDisp=bubble.style.display;bubble.style.visibility='hidden';bubble.style.display='block';
-  const bw=bubble.offsetWidth||220,bh=bubble.offsetHeight||80;
+  const bw=Math.min(bubble.offsetWidth||220,maxBw),bh=bubble.offsetHeight||80;
   bubble.style.display=prevDisp;bubble.style.visibility='';
   const r=btn.getBoundingClientRect();
-  const vw=window.innerWidth,vh=window.innerHeight,pad=8,gap=8;
+  // Vertical: prefer above, fall back below, then clamp into viewport.
   let top=r.top-bh-gap;
-  if(top<pad)top=Math.min(r.bottom+gap,vh-bh-pad);
+  if(top<pad)top=r.bottom+gap;
+  if(top+bh>vh-pad)top=Math.max(pad,vh-bh-pad);
+  // Horizontal: centre on trigger, then clamp inside viewport.
   let left=r.left+r.width/2-bw/2;
   if(left<pad)left=pad;
-  if(left+bw>vw-pad)left=vw-bw-pad;
+  if(left+bw>vw-pad)left=Math.max(pad,vw-bw-pad);
   bubble.style.top=top+'px';bubble.style.left=left+'px';
 }
 function tipTgl(el,e){e.stopPropagation();const wasOn=el.classList.contains('on');document.querySelectorAll('.tip.on').forEach(t=>{t.classList.remove('on');const b=t.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','false');});if(!wasOn){el.classList.add('on');const b=el.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','true');positionTip(el);}}
+
+// ══════════ MOBILE STICKY CALC DRAWER ══════════
+// On phones (≤480px) the right pane is converted to a sticky bottom bar
+// showing only the winning regime. Tap "Expand" to slide the full pane up.
+function toggleMobileCalcDrawer(){
+  const cr=document.getElementById('calcRight');if(!cr)return;
+  const open=!cr.classList.contains('expanded');
+  cr.classList.toggle('expanded',open);
+  const bar=document.getElementById('crMobBar');
+  if(bar)bar.setAttribute('aria-expanded',open?'true':'false');
+  const tog=document.getElementById('crMobToggle');
+  if(tog)tog.textContent=open?'Collapse':'Expand';
+}
+function updateMobileCalcBar(){
+  const name=document.getElementById('crMobName');
+  const amt=document.getElementById('crMobAmt');
+  const lbl=document.getElementById('crMobLbl');
+  if(!name||!amt||!lbl)return;
+  const best=document.querySelector('#cCards .ccard.best');
+  if(best){
+    name.textContent=(best.querySelector('.rn')?.textContent||'').trim();
+    amt.textContent=(best.querySelector('.tamt')?.textContent||'').trim();
+    lbl.textContent='Lowest';
+  }else{
+    name.textContent='Enter sales to compare';
+    amt.textContent='';
+    lbl.textContent='Live comparison';
+  }
+  document.body.classList.add('has-mobile-cr');
+}
+// Keep the mobile bar in sync as cCards re-renders (calc() updates on every keystroke).
+(function initMobileCalcObserver(){
+  if(typeof MutationObserver==='undefined')return;
+  const start=()=>{
+    const target=document.getElementById('cCards');if(!target)return;
+    new MutationObserver(updateMobileCalcBar).observe(target,{childList:true,subtree:true});
+    updateMobileCalcBar();
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);
+  else start();
+})();
 // Hover and keyboard-focus reveal: CSS still handles visibility, but we need
 // to compute position on each show since the trigger may have scrolled.
 document.addEventListener('mouseover',e=>{const t=e.target.closest('.tip');if(t)positionTip(t);});
