@@ -586,9 +586,10 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .tip-i{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--s3);color:var(--dim);font-family:var(--sa);font-size:.72rem;font-weight:700;font-style:normal;text-transform:none;letter-spacing:0;margin-left:.3rem;border:1px solid var(--bl);cursor:pointer;transition:all .15s;flex-shrink:0;user-select:none;vertical-align:middle}
 .tip.on .tip-i,.tip:hover .tip-i,.tip:focus-within .tip-i{background:var(--royal);color:#fff;border-color:var(--royal)}
 .tip .tip-i:focus-visible{outline:2px solid var(--royal);outline-offset:2px}
-.tip-b{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);padding:.55rem .72rem;min-width:180px;max-width:260px;font-family:var(--se);font-size:.8rem;font-weight:400;font-style:normal;color:var(--ch);line-height:1.5;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.14);white-space:normal;text-align:left;text-transform:none;letter-spacing:0;pointer-events:auto}
-.tip-b::before{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--bd)}
-.tip-b::after{content:'';position:absolute;top:calc(100% - 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--sf)}
+/* Tooltip bubble is position:fixed so it escapes any overflow:hidden ancestor
+   (cards, accordions, form previews, etc.). Placement is set by JS in
+   positionTip() relative to the trigger button. */
+.tip-b{display:none;position:fixed;top:0;left:0;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);padding:.55rem .72rem;min-width:180px;max-width:260px;font-family:var(--se);font-size:.8rem;font-weight:400;font-style:normal;color:var(--ch);line-height:1.5;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:normal;text-align:left;text-transform:none;letter-spacing:0;pointer-events:auto}
 .tip:hover .tip-b,.tip.on .tip-b,.tip:focus-within .tip-b{display:block}
 .form-ref{font-family:var(--sa);font-size:.72rem;font-weight:600;color:var(--mu);margin-left:.3rem;vertical-align:middle;white-space:nowrap}
 #plainSummary:not(:empty){background:#fff;border-left:4px solid var(--green);border-radius:var(--rr);padding:.9rem 1.1rem;margin-bottom:.75rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
@@ -785,6 +786,14 @@ body:not(.pro-mode) .mc{display:none}
 <div class="fld"><label for="nopI">Non-Operating Income (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Non-operating income" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Rental, interest, miscellaneous income not part of your main business. Per RR 8-2018, this is added to gross sales when testing the ₱3M VAT / 8% threshold.</span></span></label><input type="text" id="nopI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 <div class="fld"><label for="eightElect">8% Election on Q1 1701Q?<span class="tip"><button type="button" class="tip-i" aria-label="Help: 8% election status" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">The 8% option must be signified on Q1 1701Q (due May 15) or at BIR registration. Irrevocable for the entire taxable year. Missing the election defaults you to graduated rates.</span></span></label><select id="eightElect"><option value="yes">Yes — I elected 8% on Q1</option><option value="no">No / I'm not sure</option></select></div>
 <div class="fld"><label for="otherPt">Other Percentage Tax?<span class="tip"><button type="button" class="tip-i" aria-label="Help: Other percentage tax" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Amusement, common carrier, banking, overseas dispatch, life insurance and similar payors subject to Title V, Chapter III (§117–§127) of the NIRC. Any such tax disqualifies you from 8%.</span></span></label><select id="otherPt"><option value="no">No — only §116 (3%)</option><option value="yes">Yes — amusement / carrier / banking / etc.</option></select></div>
+<div class="fld"><label for="gppPartner">GPP Partner?<span class="tip"><button type="button" class="tip-i" aria-label="Help: GPP partner exclusion" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">A General Professional Partnership (law firm, CPA firm, etc.) distributes net income to partners. Per RR 8-2018 §3(B)(4), GPP partners are expressly barred from the 8% option — their distributive share is reported at graduated rates only.</span></span></label><select id="gppPartner"><option value="no">No — sole prop / solo professional</option><option value="yes">Yes — GPP partner (8% unavailable)</option></select></div>
+<div class="fld"><label for="bmbe">BMBE Registration?<span class="tip"><button type="button" class="tip-i" aria-label="Help: Barangay Micro Business Enterprise" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">A Barangay Micro Business Enterprise (RA 9178) with total assets ≤ ₱3M and a BMBE Certificate of Authority from the LGU is exempt from income tax. Percentage tax, VAT, and local business taxes still apply.</span></span></label><select id="bmbe"><option value="no">No</option><option value="yes">Yes — BMBE income-tax-exempt (RA 9178)</option></select></div>
+<div class="fld"><label for="zeroRatedSales">Zero-rated Sales (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Zero-rated VAT sales" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Sales subject to 0% VAT under NIRC §106(A)(2)(a) / §108(B) — typically direct exports, services to non-residents paid in acceptable foreign currency, and sales to SEZs. Included in your gross sales figure above. The 2550Q preview will split output VAT between 12% and 0% portions.</span></span></label><input type="text" id="zeroRatedSales" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="inputVAT">Input VAT on Purchases (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Input VAT on purchases" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">The 12% VAT you paid on business purchases (from VAT-registered suppliers, per official VAT invoices/receipts). Creditable against output VAT on 2550Q per NIRC §110. Only applicable if you are VAT-registered.</span></span></label><input type="text" id="inputVAT" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="priorExcess">Prior-Year Excess Credit (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Prior-year excess tax credit" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Overpayment from last year's 1701 / 1701A that you elected to CARRY OVER (NIRC §76). Once elected, the carry-over is irrevocable for that prior taxable period. Reduces this year's tax due on the annual return.</span></span></label><input type="text" id="priorExcess" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="q1Paid">Q1 1701Q Payment Already Made (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Q1 1701Q payment" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">If you already filed your Q1 1701Q (May 15) and paid tax, enter the amount here so the annual return reconciles correctly. Leave as 0 if filing fresh.</span></span></label><input type="text" id="q1Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="q2Paid">Q2 1701Q Payment Already Made (₱)</label><input type="text" id="q2Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="q3Paid">Q3 1701Q Payment Already Made (₱)</label><input type="text" id="q3Paid" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 </div>
 
 <!-- SALES INPUT -->
@@ -895,17 +904,19 @@ body:not(.pro-mode) .mc{display:none}
 <!-- COMPENSATION WITHHOLDING CALCULATOR -->
 <div class="tool-section">
 <h3>👤 Compensation Withholding Calculator</h3>
-<p class="tool-intro">Compute how much income tax to withhold from an employee's pay based on TRAIN Law rates (RA 10963). Does not include SSS, PhilHealth, or Pag-IBIG contributions.</p>
-<div class="fg" style="max-width:600px">
-<div class="fld"><label for="whComp">Gross Compensation</label><input type="text" id="whComp" placeholder="e.g. 50,000" inputmode="numeric" autocomplete="off"></div>
+<p class="tool-intro">Compute how much income tax to withhold from an employee's pay based on TRAIN Law rates (RA 10963). Minimum-wage earners are exempt (RA 9504); mandatory SSS/PhilHealth/Pag-IBIG employee-share contributions are excluded from taxable pay per NIRC §32(B)(7)(f).</p>
+<div class="fg" style="max-width:700px">
+<div class="fld"><label for="whComp">Gross Compensation (this period)</label><input type="text" id="whComp" placeholder="e.g. 50,000" inputmode="numeric" autocomplete="off"></div>
 <div class="fld"><label for="whFreq">Pay Frequency</label>
 <select id="whFreq" onchange="calcWithholding()">
 <option value="monthly">Monthly</option>
 <option value="semimonthly">Semi-Monthly</option>
 <option value="weekly">Weekly</option>
 </select></div>
-<div class="fld"><label for="whBenefits">Non-Taxable Benefits<span class="tip"><button type="button" class="tip-i" aria-label="Help: Non-taxable de minimis benefits" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">De minimis benefits exempt from income tax (13th month + other benefits up to ₱90K, rice subsidy up to ₱2,500/mo or one 50-kg sack per RR 29-2025 eff. 6 Jan 2026, uniform allowance up to ₱8,000/yr, laundry up to ₱400/mo, medical cash to dependents up to ₱2,000/semester). Enter total non-taxable amount.</span></span></label><input type="text" id="whBenefits" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="whContrib">Mandatory Contributions (SSS + PhilHealth + Pag-IBIG, employee share)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Mandatory employee-share contributions" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Employee share of SSS, PhilHealth, and Pag-IBIG (HDMF) contributions for this pay period. Excluded from taxable compensation per NIRC §32(B)(7)(f).</span></span></label><input type="text" id="whContrib" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="whBenefits">De-Minimis + 13th Month Portion (within ceilings)<span class="tip"><button type="button" class="tip-i" aria-label="Help: De-minimis and 13th-month non-taxable portion" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">De-minimis benefits within RR 29-2025 ceilings (rice ₱2,500/mo, uniform ₱8K/yr, laundry ₱400/mo, medical cash ₱2K/sem, etc.) PLUS the portion of 13th-month pay + other benefits that falls within the combined ₱90,000 ceiling (NIRC §32(B)(7)(e)). Excess over ₱90K is taxable — the calculator flags it.</span></span></label><input type="text" id="whBenefits" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 </div>
+<label style="display:inline-flex;align-items:center;gap:.5rem;margin-top:.6rem;font-family:var(--se);font-size:.82rem;color:var(--ch);cursor:pointer"><input type="checkbox" id="whMWE" onchange="calcWithholding()"> <span>Minimum-wage earner (RA 9504 §24(A)(2)(a) — exempt on basic pay, holiday, OT, night-shift, hazard pay)</span></label>
 <div class="crow" style="margin-top:.75rem"><button type="button" class="cbtn" onclick="calcWithholding()">Compute Withholding</button></div>
 <div class="wh-result" id="whResult">
 <div style="font-size:.62rem;color:var(--mu);margin-bottom:.25rem" id="wh-freq-label"></div>
@@ -1122,7 +1133,36 @@ const TIPS={
   gis:'General Information Sheet — annual corporate disclosure to SEC of officers and shareholders.',
 };
 function mkTip(text){const safe=esc(text);return`<span class="tip"><button type="button" class="tip-i" aria-label="Help" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">${safe}</span></span>`;}
-function tipTgl(el,e){e.stopPropagation();const wasOn=el.classList.contains('on');document.querySelectorAll('.tip.on').forEach(t=>{t.classList.remove('on');const b=t.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','false');});if(!wasOn){el.classList.add('on');const b=el.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','true');}}
+// Place the fixed-position bubble relative to its trigger button. Prefers
+// above; falls back below when the top would overflow the viewport. Clamps
+// horizontally to keep the bubble on-screen.
+function positionTip(tip){
+  const btn=tip.querySelector('.tip-i');const bubble=tip.querySelector('.tip-b');
+  if(!btn||!bubble)return;
+  // Temporarily force visibility so offsetWidth / offsetHeight are measurable
+  // even when the bubble is about to appear for the first time.
+  const prevDisp=bubble.style.display;bubble.style.visibility='hidden';bubble.style.display='block';
+  const bw=bubble.offsetWidth||220,bh=bubble.offsetHeight||80;
+  bubble.style.display=prevDisp;bubble.style.visibility='';
+  const r=btn.getBoundingClientRect();
+  const vw=window.innerWidth,vh=window.innerHeight,pad=8,gap=8;
+  let top=r.top-bh-gap;
+  if(top<pad)top=Math.min(r.bottom+gap,vh-bh-pad);
+  let left=r.left+r.width/2-bw/2;
+  if(left<pad)left=pad;
+  if(left+bw>vw-pad)left=vw-bw-pad;
+  bubble.style.top=top+'px';bubble.style.left=left+'px';
+}
+function tipTgl(el,e){e.stopPropagation();const wasOn=el.classList.contains('on');document.querySelectorAll('.tip.on').forEach(t=>{t.classList.remove('on');const b=t.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','false');});if(!wasOn){el.classList.add('on');const b=el.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','true');positionTip(el);}}
+// Hover and keyboard-focus reveal: CSS still handles visibility, but we need
+// to compute position on each show since the trigger may have scrolled.
+document.addEventListener('mouseover',e=>{const t=e.target.closest('.tip');if(t)positionTip(t);});
+document.addEventListener('focusin',e=>{const t=e.target.closest('.tip');if(t)positionTip(t);});
+// Reposition any open/hovered tooltip on scroll/resize; if it can't fit,
+// hiding is preferable to floating-wrong-place.
+let _tipRAF=0;function _retipAll(){cancelAnimationFrame(_tipRAF);_tipRAF=requestAnimationFrame(()=>{document.querySelectorAll('.tip.on,.tip:hover,.tip:focus-within').forEach(positionTip);});}
+window.addEventListener('scroll',_retipAll,{passive:true,capture:true});
+window.addEventListener('resize',_retipAll);
 document.addEventListener('click',e=>{if(e.target.closest('.tip'))return;document.querySelectorAll('.tip.on').forEach(t=>{t.classList.remove('on');const b=t.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','false');});});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.tip.on').forEach(t=>{t.classList.remove('on');const b=t.querySelector('.tip-i');if(b){b.setAttribute('aria-expanded','false');b.focus();}});}});
 function cqTip(key){const t={ewt:TIPS.ewt,fwt:TIPS.fwt,dst:TIPS.dst,cas:TIPS.cas,crm:TIPS.crm,mcit:TIPS.mcit,rbe:TIPS.rbe,einv:TIPS.einv,lowerewt:TIPS.lowerewt,govpay:TIPS.govpay}[key];return t?mkTip(t):'';}
@@ -1373,6 +1413,46 @@ const MONTH_NOTES=buildMonthNotes(YEAR);
 const GROUP_LABELS={'itr-a':'Annual Income Tax Returns','itr-ac':'Annual Corporate Income Tax','itr-q':'Quarterly Income Tax (Individuals)','itr-qc':'Quarterly Corporate Income Tax','wh-m':'BIR Monthly Returns','wh-a':'Annual Information Returns','wh-q':'Quarterly Withholding Returns','biz-q':'Quarterly Business Tax','contrib':'Mandatory Contributions','sec':'SEC Filings','adm':'Administrative Requirements'};
 const GROUP_ORDER=['itr-a','itr-ac','itr-q','itr-qc','wh-m','wh-a','wh-q','biz-q','contrib','sec','adm'];
 
+// eFPS staggered filing day for 1601-C / 0619-E / 0619-F per RR 26-2002:
+// Group A 15th, B 14th, C 13th, D 12th, E 11th. Default (eBIRForms) 10th.
+function getMonthlyRemitDay(){
+  const ch=(typeof window!=='undefined'&&window._tpvChannel)||'ebir';
+  return({eA:15,eB:14,eC:13,eD:12,eE:11}[ch])||10;
+}
+// Recompute the corporate 1702Q (60 days after each fiscal quarter-end,
+// NIRC §75) and 1702-RT (15th day of the 4th month after fiscal year-end,
+// NIRC §77(B)) based on the selected fiscal year-end month (1–12).
+// For calendar-year FYE (=12) this matches the hardcoded calendar; for
+// other FYEs we rewrite the month/day on every 1702Q / 1702-RT obligation.
+function shiftCorporateDeadlines(fye){
+  const fye0=((parseInt(fye,10)||12)-1+12)%12; // 0-based month of FYE
+  // Fiscal year starts at (FYE+1). Q_n ends n×3 months after FYE (mod 12).
+  // For calendar-year FYE=Dec (fye0=11): Q1 ends Mar (2), Q2 Jun (5), Q3 Sep (8).
+  const qEnds=[1,2,3,4].map(i=>(fye0+3*i)%12);
+  // 60 days after each quarter-end (same-year); approximate using end-of-Q-month + 60.
+  function plus60(mZero){
+    // Start from the LAST day of the quarter-end month in a neutral year.
+    const dt=new Date(2026,mZero+1,0); // day 0 of next month = last day of this month
+    dt.setDate(dt.getDate()+60);
+    return{month:dt.getMonth()+1,day:dt.getDate()};
+  }
+  const qDeadlines=qEnds.map(plus60);
+  const qIdx=['Q1','Q2','Q3','Q4'];
+  let qc=0;
+  OB.forEach(o=>{
+    if(o.form!=='1702Q')return;
+    // Titles encode "— Q1", "— Q2", "— Q3". There is no Q4 1702Q (Q4 is
+    // absorbed into the annual 1702-RT). Keep first three; remove any Q4
+    // stragglers (none in the current dataset).
+    const match=o.title.match(/— (Q[1-3])$/);if(!match)return;
+    const qi=qIdx.indexOf(match[1]);if(qi<0||qi>2)return;
+    o.month=qDeadlines[qi].month;o.day=qDeadlines[qi].day;
+    qc++;
+  });
+  // 1702-RT: 15th day of the 4th month after FYE.
+  const rtMonth=((fye0+4)%12)+1;
+  OB.forEach(o=>{if(o.form==='1702-RT'){o.month=rtMonth;o.day=15;}});
+}
 function mW(m,fn,r){
   // 1601-C (compensation) is monthly for all 12 months.
   // 0619-E / 0619-F are ONLY for months 1 & 2 of each quarter — month 3
@@ -1380,10 +1460,11 @@ function mW(m,fn,r){
   // RR 11-2018 §2.58. Deadline m=1,4,7,10 would cover the prior month 3
   // (Dec/Mar/Jun/Sep) and must NOT create a 0619-E/F obligation.
   const prevMonthWasQEnd=(m===1||m===4||m===7||m===10);
-  const out=[{month:m,day:10,title:`Remit Withholding — Compensation (${fn})`,form:"1601-C",cat:"emp",r,pq:"employees"}];
+  const day=getMonthlyRemitDay();
+  const out=[{month:m,day,title:`Remit Withholding — Compensation (${fn})`,form:"1601-C",cat:"emp",r,pq:"employees"}];
   if(!prevMonthWasQEnd){
-    out.push({month:m,day:10,title:`Remit Expanded Withholding Tax (${fn})`,form:"0619-E",cat:"wh",r,pq:"ewt"});
-    out.push({month:m,day:10,title:`Remit Final Withholding Tax (${fn})`,form:"0619-F",cat:"wh",r,pq:"fwt"});
+    out.push({month:m,day,title:`Remit Expanded Withholding Tax (${fn})`,form:"0619-E",cat:"wh",r,pq:"ewt"});
+    out.push({month:m,day,title:`Remit Final Withholding Tax (${fn})`,form:"0619-F",cat:"wh",r,pq:"fwt"});
   }
   return out;
 }
@@ -1953,6 +2034,14 @@ function generateWarnings(g,expData,best,mode,ctx){
   if(ctx.eightWouldWin&&!ctx.elected8){
     W.push({sev:'high',icon:'🔒',title:'8% election not made — cheapest option locked out',msg:`The 8% flat rate would have produced the lowest total tax, but you indicated you did not signify the election on your Q1 1701Q. Per <b>RR 8-2018 §3(C)</b>, the election is <b>irrevocable</b> for the full taxable year and must be made on the first quarterly return (or at BIR registration). You are on graduated rates for <b>${YEAR}</b>; the 8% row is shown for reference only. You can elect 8% on your Q1 ${YEAR+1} 1701Q (due <b>May 15, ${YEAR+1}</b>). <span class="ref">RR 8-2018 §3(B)–(C); NIRC §24(A)(2)(b)</span>`});
   }
+  // GPP PARTNER — 8% barred by RR 8-2018 §3(B)(4)
+  if(ctx.isGPP){
+    W.push({sev:'high',icon:'🚫',title:'GPP Partner — 8% option unavailable',msg:`Per <b>RR 8-2018 §3(B)(4)</b>, partners receiving a distributive share from a General Professional Partnership cannot elect the 8% flat rate. Your share is reported at graduated rates; the partnership itself files Form 1702Q/1702-EX as a non-taxable entity under NIRC §26. <span class="ref">NIRC §26; RR 8-2018 §3(B)(4)</span>`});
+  }
+  // BMBE — income-tax exempt per RA 9178 §7
+  if(ctx.isBMBE){
+    W.push({sev:'info',icon:'✓',title:'BMBE — Income-tax exempt',msg:`As a registered Barangay Micro Business Enterprise (RA 9178), your <b>income tax is zero</b>. You still pay 3% percentage tax (or 12% VAT if above ₱3M), LGU business permit, and regulatory fees. Keep your BMBE Certificate of Authority current (typically renewed every 2 years). <span class="ref">RA 9178 §7; RMC 5-2018</span>`});
+  }
   // OTHER PERCENTAGE TAX BLOCKS 8%
   if(ctx.hasOtherPT){
     W.push({sev:'med',icon:'⚠',title:'8% unavailable — other percentage tax',msg:`Per <b>RR 8-2018 §3(B)(3)</b>, you cannot use the 8% flat rate if you are subject to any percentage tax other than NIRC §116 (e.g., amusement, common carrier, banking, overseas dispatch). <span class="ref">RR 8-2018 §3(B)(3)</span>`});
@@ -2188,6 +2277,11 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,extras){
   extras=extras||{};
   const nop=extras.nop||0;
   const comp=extras.comp||0;
+  const zeroRated=Math.max(0,Math.min(extras.zeroRated||0,g));
+  const inputVAT=extras.inputVAT||0;
+  const priorExcess=extras.priorExcess||0;
+  const qPaid=extras.qPaid||[0,0,0];
+  const totalQPaid=extras.totalQPaid||0;
   // Distribute CWT across Q1-Q3 vs Q4 using the 2307 log when available.
   // Fallback: linear 75/25 split, labelled as an estimate.
   let cwtQ13=cwt*0.75,cwtQ4=cwt*0.25,cwtSrcNote='';
@@ -2261,20 +2355,26 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,extras){
       h+=`<div class="form-line tot"><span class="form-line-num">56</span><span class="form-line-lbl">TAX DUE (Item 55 × 8%) → Part II Item 20</span><span class="form-line-val">${fmt(R[0].iG)}</span></div>`;
       h+=`</div>`;
     }
-    // 1701A Part IV.C — Tax Credits items 57-65
+    // 1701A Part IV.C — Tax Credits items 57-65. Populate prior-year credits,
+    // Q1-Q3 payments already made, and re-compute the net tax payable after
+    // all credits. This makes the annual 1701A reconcile to the user's actual
+    // filing history rather than assuming first-time-filer zeros.
+    const totalCredits=cwt+priorExcess+totalQPaid;
+    const netPayable=Math.max(0,best.iG-totalCredits);
+    const overpayment=Math.max(0,totalCredits-best.iG);
     h+=`<div class="form-section"><div class="form-section-t">Part IV.C — Tax Credits/Payments</div>`;
-    h+=`<div class="form-line"><span class="form-line-num">57</span><span class="form-line-lbl">Prior Year's Excess Credits</span><span class="form-line-val">${fmt(0)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">58</span><span class="form-line-lbl">Tax Payments for the First Three (3) Quarters</span><span class="form-line-val">${fmt(0)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">57</span><span class="form-line-lbl">Prior Year's Excess Credits (carry-over, NIRC §76)</span><span class="form-line-val">${fmt(priorExcess)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">58</span><span class="form-line-lbl">Tax Payments for the First Three (3) Quarters (1701Q Q1+Q2+Q3)</span><span class="form-line-val">${fmt(totalQPaid)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">59</span><span class="form-line-lbl">Creditable Tax Withheld for the First Three (3) Quarters${cwtSrcNote}</span><span class="form-line-val">${fmt(cwtQ13)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">60</span><span class="form-line-lbl">Creditable Tax Withheld per BIR Form 2307 for the 4th Quarter</span><span class="form-line-val">${fmt(cwtQ4)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">64</span><span class="form-line-lbl">Total Tax Credits/Payments (Sum of Items 57 to 63) → Item 21</span><span class="form-line-val">${fmt(cwt)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">65</span><span class="form-line-lbl">Net Tax Payable/(Overpayment) (Item ${best.k==='a'?'56':'46'} less Item 64)</span><span class="form-line-val">${fmt(best.iN)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">64</span><span class="form-line-lbl">Total Tax Credits/Payments (Sum of Items 57 to 63) → Item 21</span><span class="form-line-val">${fmt(totalCredits)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">65</span><span class="form-line-lbl">Net Tax Payable/(Overpayment) (Item ${best.k==='a'?'56':'46'} less Item 64)</span><span class="form-line-val">${overpayment>0?'('+fmt(overpayment)+')':fmt(netPayable)}</span></div>`;
     h+=`</div>`;
     // 1701A Part II — Total Tax Payable
     h+=`<div class="form-section"><div class="form-section-t">Part II — Total Tax Payable</div>`;
     h+=`<div class="form-line"><span class="form-line-num">20</span><span class="form-line-lbl">Tax Due (from Part IV.A Item 46 OR Part IV.B Item 56)</span><span class="form-line-val">${fmt(best.iG)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">21</span><span class="form-line-lbl">Less: Total Tax Credits/Payments (from Item 64)</span><span class="form-line-val">${fmt(cwt)}</span></div>`;
-    h+=`<div class="form-line tot"><span class="form-line-num">22</span><span class="form-line-lbl">NET TAX PAYABLE / (OVERPAYMENT)</span><span class="form-line-val">${fmt(best.iN)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">21</span><span class="form-line-lbl">Less: Total Tax Credits/Payments (from Item 64)</span><span class="form-line-val">${fmt(totalCredits)}</span></div>`;
+    h+=`<div class="form-line tot"><span class="form-line-num">22</span><span class="form-line-lbl">NET TAX PAYABLE / (OVERPAYMENT)</span><span class="form-line-val">${overpayment>0?'('+fmt(overpayment)+')':fmt(netPayable)}</span></div>`;
     h+=`</div>`;
   }else{
     // ─── 1701: Schedule 3.A (Itemized) — items 8-25 ───
@@ -2303,19 +2403,22 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,extras){
     h+=`<div class="form-line"><span class="form-line-num">1</span><span class="form-line-lbl">Regular Rate — Income Tax Due (from Schedule 3.A Item 25)</span><span class="form-line-val">${fmt(R[2].iG)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">5</span><span class="form-line-lbl">Total Income Tax Due (Sum of Items 1 &amp; 4) → Part II Item 22</span><span class="form-line-val">${fmt(R[2].iG)}</span></div>`;
     h+=`</div>`;
-    // 1701 Part VII — Tax Credits
+    // 1701 Part VII — Tax Credits (same reconciliation logic as 1701A)
+    const totalCredits1701=cwt+priorExcess+totalQPaid;
+    const netPayable1701=Math.max(0,R[2].iG-totalCredits1701);
+    const overpay1701=Math.max(0,totalCredits1701-R[2].iG);
     h+=`<div class="form-section"><div class="form-section-t">Part VII — Tax Credits/Payments</div>`;
-    h+=`<div class="form-line"><span class="form-line-num">1</span><span class="form-line-lbl">Prior Year's Excess Credits</span><span class="form-line-val">${fmt(0)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">2</span><span class="form-line-lbl">Tax Payments for the First Three (3) Quarters</span><span class="form-line-val">${fmt(0)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">1</span><span class="form-line-lbl">Prior Year's Excess Credits (carry-over, NIRC §76)</span><span class="form-line-val">${fmt(priorExcess)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">2</span><span class="form-line-lbl">Tax Payments for the First Three (3) Quarters (1701Q Q1+Q2+Q3)</span><span class="form-line-val">${fmt(totalQPaid)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">3</span><span class="form-line-lbl">Creditable Tax Withheld for the First Three (3) Quarters${cwtSrcNote}</span><span class="form-line-val">${fmt(cwtQ13)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">4</span><span class="form-line-lbl">Creditable Tax Withheld per BIR Form 2307 for the 4th Quarter</span><span class="form-line-val">${fmt(cwtQ4)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">10</span><span class="form-line-lbl">Total Tax Credits/Payments (Sum of Items 1 to 9) → Part II Item 23</span><span class="form-line-val">${fmt(cwt)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">10</span><span class="form-line-lbl">Total Tax Credits/Payments (Sum of Items 1 to 9) → Part II Item 23</span><span class="form-line-val">${fmt(totalCredits1701)}</span></div>`;
     h+=`</div>`;
     // 1701 Part II — Total Tax Payable
     h+=`<div class="form-section"><div class="form-section-t">Part II — Total Tax Payable</div>`;
     h+=`<div class="form-line"><span class="form-line-num">22</span><span class="form-line-lbl">Tax Due (from Part VI Item 5)</span><span class="form-line-val">${fmt(R[2].iG)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">23</span><span class="form-line-lbl">Less: Total Tax Credits/Payments (from Part VII Item 10)</span><span class="form-line-val">${fmt(cwt)}</span></div>`;
-    h+=`<div class="form-line tot"><span class="form-line-num">24</span><span class="form-line-lbl">TAX PAYABLE / (OVERPAYMENT)</span><span class="form-line-val">${fmt(R[2].iN)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">23</span><span class="form-line-lbl">Less: Total Tax Credits/Payments (from Part VII Item 10)</span><span class="form-line-val">${fmt(totalCredits1701)}</span></div>`;
+    h+=`<div class="form-line tot"><span class="form-line-num">24</span><span class="form-line-lbl">TAX PAYABLE / (OVERPAYMENT)</span><span class="form-line-val">${overpay1701>0?'('+fmt(overpay1701)+')':fmt(netPayable1701)}</span></div>`;
     h+=`</div>`;
   }
   h+=`<div class="form-footer">Filed annually on or before April 15 of the year following the taxable year. E-file via eBIRForms or eFPS.</div>`;
@@ -2328,20 +2431,37 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,extras){
     h+=`<div class="form-disclaimer">⚠ VISUAL REFERENCE ONLY. Shows the quarterly return populated with one quarter's share of your annual figures (annual ÷ 4).</div>`;
     h+=`<div class="form-letterhead"><div class="fl-rep">REPUBLIC OF THE PHILIPPINES · DEPARTMENT OF FINANCE · BUREAU OF INTERNAL REVENUE</div><div class="fl-title">BIR Form No. ${bizForm}</div><div class="fl-sub">${bizDesc}</div></div>`;
     if(over){
-      // 2550Q — VAT (line items kept generic; structure verified against form)
-      const qg=g/4,vatBase=qg/1.12,outV=vatBase*.12;
+      // 2550Q — VAT (supports 12% + 0%-rated split and input VAT credit)
+      // Per NIRC §106(A)(2)(a) / §108(B), sales like direct exports and services
+      // to non-residents paid in acceptable foreign currency are 0%-rated. The
+      // gross figure typed above is assumed to be VAT-inclusive on the 12% portion
+      // and face-value on the 0%-rated portion (which has no VAT baked in).
+      const qg=g/4;
+      const qZero=zeroRated/4;
+      const qTaxable=Math.max(0,qg-qZero);
+      const vatBase=qTaxable/1.12;
+      const outV=vatBase*.12;
+      const qInput=inputVAT/4;
+      const netVAT=Math.max(0,outV-qInput);
+      const excessInput=Math.max(0,qInput-outV);
       h+=`<div class="form-section"><div class="form-section-t">Part I — Background &amp; Period</div>`;
       h+=`<div class="form-line"><span class="form-line-num">12</span><span class="form-line-lbl">Are you VAT-registered?</span><span class="form-line-val">YES</span></div>`;
       h+=`</div>`;
       h+=`<div class="form-section"><div class="form-section-t">Part II — Computation of Tax (per quarter)</div>`;
+      if(zeroRated>0){
+        h+=`<div class="form-line"><span class="form-line-num">13A</span><span class="form-line-lbl">Zero-rated Sales (exports / services to non-residents — NIRC §106(A)(2)(a), §108(B))</span><span class="form-line-val">${fmt(qZero)}</span></div>`;
+      }
       h+=`<div class="form-line"><span class="form-line-num">14A</span><span class="form-line-lbl">Vatable Sales/Receipts (VAT-exclusive, per quarter)</span><span class="form-line-val">${fmt(vatBase)}</span></div>`;
       h+=`<div class="form-line"><span class="form-line-num">14B</span><span class="form-line-lbl">Output Tax Due (12% × Item 14A)</span><span class="form-line-val">${fmt(outV)}</span></div>`;
       h+=`<div class="form-line"><span class="form-line-num">20</span><span class="form-line-lbl">Total Output Tax Due</span><span class="form-line-val">${fmt(outV)}</span></div>`;
-      h+=`<div class="form-line"><span class="form-line-num">21</span><span class="form-line-lbl">Less: Allowable Input Tax (from purchases)</span><span class="form-line-val">${fmt(0)}</span></div>`;
-      h+=`<div class="form-line"><span class="form-line-num">22</span><span class="form-line-lbl">Net VAT Payable (Item 20 less Item 21)</span><span class="form-line-val">${fmt(outV)}</span></div>`;
-      h+=`<div class="form-line tot"><span class="form-line-num">26</span><span class="form-line-lbl">VAT PAYABLE — per quarter</span><span class="form-line-val">${fmt(outV)}</span></div>`;
+      h+=`<div class="form-line"><span class="form-line-num">21</span><span class="form-line-lbl">Less: Allowable Input Tax on Purchases (per quarter)</span><span class="form-line-val">${fmt(qInput)}</span></div>`;
+      h+=`<div class="form-line"><span class="form-line-num">22</span><span class="form-line-lbl">Net VAT Payable (Item 20 less Item 21)</span><span class="form-line-val">${fmt(netVAT)}</span></div>`;
+      h+=`<div class="form-line tot"><span class="form-line-num">26</span><span class="form-line-lbl">VAT PAYABLE — per quarter</span><span class="form-line-val">${fmt(netVAT)}</span></div>`;
+      if(excessInput>0){
+        h+=`<div class="form-line"><span class="form-line-num">—</span><span class="form-line-lbl">Excess input VAT (carry-over to next quarter; zero-rated sellers may claim cash refund per §112)</span><span class="form-line-val">${fmt(excessInput)}</span></div>`;
+      }
       h+=`</div>`;
-      h+=`<div class="form-footer">Filed quarterly within 25 days after the close of each taxable quarter. Note: ensure all sales declared on this form are <b>VAT-exclusive</b> — including VAT inflates both output VAT and ITR liability.</div>`;
+      h+=`<div class="form-footer">Filed quarterly within 25 days after the close of each taxable quarter. Gross-sales input is treated as VAT-inclusive for the 12%-rated portion; 0%-rated sales pass through at face value. Excess input VAT (e.g., exporter refunds) is filed under NIRC §112 with supporting documents.</div>`;
     }else{
       // 2551Q — Percentage Tax (verified against Jan 2018 ENCS)
       const qg=g/4;
@@ -2382,6 +2502,8 @@ function calc(){
   const nop=pN('nopI');
   const elected8=document.getElementById('eightElect')?.value!=='no';
   const hasOtherPT=document.getElementById('otherPt')?.value==='yes';
+  const isGPP=document.getElementById('gppPartner')?.value==='yes';
+  const isBMBE=document.getElementById('bmbe')?.value==='yes';
   const calcErr=document.getElementById('calcErr');
   if(calcErr){calcErr.style.display='none';calcErr.textContent='';}
   if(g<=0){
@@ -2402,12 +2524,13 @@ function calc(){
   //  (2) gross sales + non-operating income ≤ ₱3M
   //  (3) not subject to percentage tax other than §116
   //  (4) timely election signified on Q1 1701Q or at registration
-  const eightAvailable=!over&&thresholdBase<=3e6&&!hasOtherPT&&elected8;
+  const eightAvailable=!over&&thresholdBase<=3e6&&!hasOtherPT&&elected8&&!isGPP;
   const eightIneligReasons=[];
   if(over)eightIneligReasons.push('VAT-registered');
   if(thresholdBase>3e6)eightIneligReasons.push(`Gross + non-op ${fmt(thresholdBase)} exceeds ₱3M`);
   if(hasOtherPT)eightIneligReasons.push('subject to another percentage tax');
   if(!elected8)eightIneligReasons.push('election not signified on Q1 1701Q');
+  if(isGPP)eightIneligReasons.push('GPP partners cannot elect 8% (RR 8-2018 §3(B)(4))');
   // 8% base = gross sales + non-operating income, minus the ₱250K allowance for purely SE.
   // Mixed earners cannot deduct ₱250K from the business side because it is consumed by
   // compensation at graduated rates (RR 8-2018 §3(B)(1)). For mixed earners electing 8%,
@@ -2428,10 +2551,14 @@ function calc(){
   const cBizTI=Math.max(0,g-ex+nop);
   const cN=cBizTI+comp;
   const cIG=gradTax(cN),cIN=Math.max(0,cIG-cwt),cP=over?0:g*.03,cT=cIN+cP;
+  // BMBE exemption (RA 9178 §7): income-tax-exempt. Percentage tax / VAT and
+  // local business taxes are unaffected. We zero the income-tax component
+  // across all three regimes while preserving the business-tax add-on.
+  const bmbeOff=isBMBE?1:0;
   const R=[
-    {k:'a',n:'8% Flat Rate',iG:aIG,iN:aIN,p:0,t:aT,av:aAv},
-    {k:'b',n:'Graduated + OSD',iG:bIG,iN:bIN,p:bP,t:bT,av:true},
-    {k:'c',n:'Graduated + Itemized',iG:cIG,iN:cIN,p:cP,t:cT,av:true},
+    {k:'a',n:'8% Flat Rate',iG:bmbeOff?0:aIG,iN:bmbeOff?0:aIN,p:0,t:bmbeOff?0:aT,av:aAv},
+    {k:'b',n:'Graduated + OSD',iG:bmbeOff?0:bIG,iN:bmbeOff?0:bIN,p:bP,t:bP+(bmbeOff?0:bIN),av:true},
+    {k:'c',n:'Graduated + Itemized',iG:bmbeOff?0:cIG,iN:bmbeOff?0:cIN,p:cP,t:cP+(bmbeOff?0:cIN),av:true},
   ];
   const av=R.filter(r=>r.av),best=av.reduce((a,b)=>a.t<b.t?a:b),worst=av.reduce((a,b)=>a.t>b.t?a:b);
 
@@ -2463,7 +2590,7 @@ function calc(){
   const hypotheticalEight=wouldBeAv?Math.max(0,aBase*.08-cwt):Infinity;
   const minGrad=Math.min(bT,cT);
   const eightWouldWin=wouldBeAv&&!elected8&&hypotheticalEight<minGrad;
-  const W=generateWarnings(g,expData,best,EXP_MODE,{elected8,hasOtherPT,nop,comp,eightWouldWin});
+  const W=generateWarnings(g,expData,best,EXP_MODE,{elected8,hasOtherPT,nop,comp,eightWouldWin,isGPP,isBMBE});
   renderWarnings(W);
   renderCapAnalysis(expData);
   // Quarterly CWT sourced from the 2307 log when available; linear ¼ split otherwise.
@@ -2478,7 +2605,12 @@ function calc(){
   }
   // COMPUTATION BREAKDOWN + RATIONALE + BIR FORM PREVIEW
   renderComputation(g,expData,R,best,isPure,cwt,over,{comp,aBizIG,aCompTax,nop});
-  renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,{nop,comp});
+  const zeroRated=pN('zeroRatedSales');
+  const inputVAT=pN('inputVAT');
+  const priorExcess=pN('priorExcess');
+  const qPaid=[pN('q1Paid'),pN('q2Paid'),pN('q3Paid')];
+  const totalQPaid=qPaid[0]+qPaid[1]+qPaid[2];
+  renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,{nop,comp,zeroRated,inputVAT,priorExcess,qPaid,totalQPaid,isBMBE,bmbeOff});
 
   // QUARTERLY BREAKDOWN
   // Uses the cumulative method per NIRC §74(A) / RR 8-2018: each quarterly
@@ -2546,8 +2678,8 @@ function initNumberFormatters(){
 }
 
 initMonthGrid();initCatGrid();initNumberFormatters();onTaxpayerTypeChange();refreshCorpGuard();
-// Ensure the new calc inputs (compI, nopI) run through the same comma formatter.
-document.querySelectorAll('#compI,#nopI').forEach(el=>{
+// Ensure all extended calc inputs run through the same comma formatter.
+document.querySelectorAll('#compI,#nopI,#zeroRatedSales,#inputVAT,#priorExcess,#q1Paid,#q2Paid,#q3Paid').forEach(el=>{
   el.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});
 });
 
@@ -2594,11 +2726,19 @@ const WZ_STEPS=[
     {label:"I'm an employee only — salary from one job",sub:"You're on payroll. Your employer handles most of your taxes.",val:'emp'},
     {label:'My business is incorporated',sub:'A registered corporation, OPC (one-person corp), or partnership with the SEC.',val:'corp'}
   ]},
+  {q:'Is your business income a distributive share from a General Professional Partnership (GPP)?',hint:"A GPP is a partnership of professionals (law firm, CPA firm, architect firm, etc.) registered with the BIR as a GPP. If you're a solo freelancer or sole proprietor, pick 'No'.",key:'gpp',
+   show:a=>['se','mi'].includes(a.type),
+   opts:[
+    {label:'No — I am a sole proprietor / solo professional',sub:"You may elect the 8% flat rate if eligible.",val:'no'},
+    {label:'Yes — I am a partner receiving a share from a registered GPP',sub:"Per RR 8-2018 §3(B)(4), GPP partners are expressly barred from the 8% option; your share is reported at graduated rates. The 8% regime will be locked out.",val:'yes'}
+  ]},
   {q:'How would you like to be taxed on your business income?',hint:'Not sure? "Whatever gives me less tax" is a safe pick — the Regime Calculator will compare.',key:'rate',
    show:a=>['se','mi'].includes(a.type),
    opts:[
     {label:"Let the app pick — I'll compare later",sub:"We'll show deadlines for both options. You can decide before filing your first return.",val:'grad'},
-    {label:'8% flat rate on gross',sub:"Simple: 8% of what you earn above ₱250K, no expenses to track. Only if your sales stay under ₱3M AND you signified the election on your Q1 filing.",val:'8pct'},
+    {label:'8% flat rate on gross',sub:"Simple: 8% of what you earn above ₱250K, no expenses to track. Only if your sales stay under ₱3M AND you signified the election on your Q1 filing.",val:'8pct',
+     disableIf:a=>a.gpp==='yes',
+     disabledSub:"Not available — GPP partners cannot elect 8% (RR 8-2018 §3(B)(4))."},
     {label:'Graduated rates (the usual way)',sub:'Standard 0%–35% tax table. Lets you deduct expenses. Required if your sales exceed ₱3M.',val:'grad'}
   ]},
   {q:'Did you signify the 8% election on your Q1 filing?',hint:"The 8% option is locked in on your first quarterly 1701Q (or at BIR registration). The choice is irrevocable for the whole year and the deadline is May 15 for Q1. If you missed it, you're on graduated rates until next year.",key:'eight_elect',
@@ -2636,6 +2776,25 @@ const WZ_STEPS=[
    opts:[
     {label:'No — just me',sub:"No payroll filings needed. SSS / PhilHealth for yourself is handled separately.",val:'no'},
     {label:'Yes — at least one employee',sub:"You'll have monthly withholding and SSS/PhilHealth/Pag-IBIG deadlines.",val:'yes'}
+  ]},
+  {q:'What is your corporate fiscal year-end?',hint:"Most SMEs use the calendar year (Dec 31). If your Articles of Incorporation set a different fiscal year-end, pick it here so corporate deadlines (1702Q, 1702-RT) shift accordingly.",key:'fye',
+   show:a=>a.type==='corp',
+   opts:[
+    {label:'December 31 — calendar year (most common)',val:12},
+    {label:'March 31',val:3},
+    {label:'June 30',val:6},
+    {label:'September 30',val:9},
+    {label:'Other month — use calendar defaults for now',sub:"We'll keep calendar-year deadlines; check the Form Reference for your actual dates.",val:12}
+  ]},
+  {q:'Which channel do you use to file?',hint:"eFPS (Electronic Filing & Payment System) is required for Large Taxpayers, TWAs, and certain others. eBIRForms works for most small taxpayers. eFPS 1601-C deadlines are staggered by industry group.",key:'channel',
+   show:a=>a.type!=='emp',
+   opts:[
+    {label:'eBIRForms (standard)',sub:"Monthly 1601-C / 0619-E / 0619-F due on the 10th of the following month.",val:'ebir'},
+    {label:'eFPS — Group A',sub:"Monthly returns due on the 15th of the following month (staggered per RR 26-2002).",val:'eA'},
+    {label:'eFPS — Group B',sub:"Due on the 14th.",val:'eB'},
+    {label:'eFPS — Group C',sub:"Due on the 13th.",val:'eC'},
+    {label:'eFPS — Group D',sub:"Due on the 12th.",val:'eD'},
+    {label:'eFPS — Group E',sub:"Due on the 11th.",val:'eE'}
   ]}
 ];
 const WZ={step:0,answers:{},_lastFocus:null};
@@ -2667,7 +2826,9 @@ function renderWzStep(){
   h+=`<div class="wz-opts" role="radiogroup" aria-labelledby="wzTitle">`;
   s.opts.forEach((o,i)=>{
     const selected=cur===o.val;
-    h+=`<button type="button" class="wz-opt${selected?' sel':''}" role="radio" aria-checked="${selected}" data-wz-idx="${i}"><strong>${esc(o.label)}</strong>${o.sub?`<span class="wz-opt-sub">${esc(o.sub)}</span>`:''}</button>`;
+    const disabled=typeof o.disableIf==='function'&&o.disableIf(WZ.answers);
+    const sub=disabled&&o.disabledSub?o.disabledSub:o.sub;
+    h+=`<button type="button" class="wz-opt${selected?' sel':''}" role="radio" aria-checked="${selected}" ${disabled?'disabled aria-disabled="true" style="opacity:.45;cursor:not-allowed"':''} data-wz-idx="${i}"><strong>${esc(o.label)}</strong>${sub?`<span class="wz-opt-sub">${esc(sub)}</span>`:''}</button>`;
   });
   h+=`</div>`;
   const body=document.getElementById('wzBody');
@@ -2676,7 +2837,7 @@ function renderWzStep(){
   optBtns.forEach(btn=>{
     const idx=parseInt(btn.getAttribute('data-wz-idx'),10);
     const opt=s.opts[idx];
-    if(opt)btn.addEventListener('click',()=>wzPick(s.key,opt.val));
+    if(opt&&!btn.disabled)btn.addEventListener('click',()=>wzPick(s.key,opt.val));
   });
   // Focus the first (or selected) option for keyboard users
   const focusTarget=body.querySelector('.wz-opt.sel')||optBtns[0];
@@ -2733,8 +2894,23 @@ function wzPick(key,val){
 function applySetup(a){
   const t=a.type||'se';
   setType(t);
-  const is8=(a.rate==='8pct'&&a.eight_elect==='yes'&&a.other_pt!=='yes');
+  // GPP partners are barred from 8% regardless of stated preference (RR 8-2018 §3(B)(4)).
+  const is8=(a.rate==='8pct'&&a.eight_elect==='yes'&&a.other_pt!=='yes'&&a.gpp!=='yes');
   const isVat=(a.vat==='yes');
+  // Propagate GPP / BMBE into the Calculator inputs so regime math matches the setup.
+  const gppSel=document.getElementById('gppPartner');if(gppSel)gppSel.value=a.gpp==='yes'?'yes':'no';
+  const bmbeSel=document.getElementById('bmbe');if(bmbeSel)bmbeSel.value=a.bmbe==='yes'?'yes':'no';
+  // Corporate fiscal year-end (1–12) and filing channel drive the calendar shifts.
+  window._tpvFYE=t==='corp'?(parseInt(a.fye,10)||12):12;
+  window._tpvChannel=a.channel||'ebir';
+  // Re-apply the eFPS staggered day to every existing monthly remittance
+  // obligation so the calendar matches the current channel.
+  const remitDay=getMonthlyRemitDay();
+  OB.forEach(o=>{if(['1601-C','0619-E','0619-F'].includes(o.form)&&o.day!==remitDay)o.day=remitDay;});
+  // Shift corporate-quarterly (1702Q) and annual (1702-RT) dates relative to
+  // fiscal year-end. For calendar-year (FYE=12) the original hardcoded
+  // calendar already matches; for other FYEs we recompute.
+  shiftCorporateDeadlines(window._tpvFYE);
   // Expose for Calculator gating
   window._tpvSetup=Object.assign({},a,{effective_rate:is8?'8pct':'grad'});
   let reg;
@@ -2947,9 +3123,36 @@ function calcWithholding(){
   const comp=parseFloat(compStr)||0;
   const benStr=document.getElementById('whBenefits').value.replace(/[^0-9.]/g,'');
   const ben=parseFloat(benStr)||0;
+  const contribStr=document.getElementById('whContrib')?.value.replace(/[^0-9.]/g,'')||'0';
+  const contrib=parseFloat(contribStr)||0;
+  const isMWE=!!document.getElementById('whMWE')?.checked;
   const freq=document.getElementById('whFreq').value;
   if(!comp){document.getElementById('whResult').classList.remove('vis');return;}
-  const taxable=Math.max(0,comp-ben);
+  // MWE: RA 9504 exempts statutory minimum-wage earners from income tax on basic
+  // pay, holiday pay, overtime, night-shift differential, and hazard pay.
+  // (De-minimis and the 13th-month + benefits ₱90K ceiling still apply to any
+  // excess; if the employee has taxable supplemental income, they become subject
+  // to regular rates on that portion — not handled here.)
+  if(isMWE){
+    document.getElementById('wh-freq-label').textContent='Minimum-wage earner — exempt under RA 9504';
+    document.getElementById('wh-tax').textContent=fmt(0);
+    document.getElementById('wh-er').textContent='Effective rate: 0.00% (basic + statutory premium pay is exempt; supplemental income outside this scope may be taxable)';
+    document.getElementById('wh-brackets-rows').innerHTML='';
+    document.getElementById('whResult').classList.add('vis');
+    return;
+  }
+  // Annualize the combined 13th-month + benefits ceiling so the calculator
+  // can flag over-the-cap excess regardless of pay frequency. The ₱90K cap
+  // under NIRC §32(B)(7)(e) is a FULL-YEAR ceiling on 13th-month + other
+  // bonuses; de-minimis within its own RR 29-2025 ceilings is separate.
+  // If the user enters a per-period figure exceeding the implied per-period
+  // share (₱90K ÷ 12 for monthly; ÷ 24 semi-monthly; ÷ 52 weekly), we warn
+  // because the excess would be taxable compensation.
+  const periodCap={monthly:90000/12,semimonthly:90000/24,weekly:90000/52}[freq];
+  const benExcess=Math.max(0,ben-periodCap);
+  const allowedBen=Math.min(ben,periodCap);
+  // Taxable compensation = gross − mandatory contributions − allowed non-taxable benefits + any over-cap excess returned to base.
+  const taxable=Math.max(0,comp-contrib-allowedBen);
   const brk=WH_BRACKETS[freq];
   let tax=0,activeBrk=-1;
   for(let i=0;i<brk.length;i++){
@@ -2961,7 +3164,8 @@ function calcWithholding(){
   }
   tax=Math.max(0,tax);
   const freqLabel={monthly:'Monthly withholding tax',semimonthly:'Semi-monthly withholding tax',weekly:'Weekly withholding tax'}[freq];
-  document.getElementById('wh-freq-label').textContent=freqLabel+' on ₱'+taxable.toLocaleString('en-PH')+' taxable compensation';
+  const capNote=benExcess>0?` · ⚠ ${fmt(benExcess)} of declared non-taxable benefits exceeds the ₱90K annual cap (${fmt(periodCap)} per ${freq==='monthly'?'month':freq==='semimonthly'?'half-month':'week'}) — excess added back to taxable`:'';
+  document.getElementById('wh-freq-label').textContent=freqLabel+' on ₱'+taxable.toLocaleString('en-PH')+' taxable compensation'+capNote;
   document.getElementById('wh-tax').textContent=fmt(tax);
   document.getElementById('wh-er').textContent=taxable>0?`Effective rate: ${(tax/taxable*100).toFixed(2)}%`:'';
   const rangeLabels=brk.map(([lo,hi])=>lo===0?`≤ ₱${(hi).toLocaleString('en-PH')}`:(hi===Infinity?`> ₱${lo.toLocaleString('en-PH')}`:`₱${lo.toLocaleString('en-PH')} – ₱${hi.toLocaleString('en-PH')}`));
@@ -3182,7 +3386,7 @@ function toggleGuide(id){document.getElementById(id)?.classList.toggle('open');}
   const penPay=document.getElementById('penPay');
   if(penPay&&!penPay.value)penPay.value=today;
   // Withholding formatter
-  const whInputs=['whComp','whBenefits'];
+  const whInputs=['whComp','whBenefits','whContrib'];
   whInputs.forEach(id=>{
     const el=document.getElementById(id);
     if(el)el.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});
