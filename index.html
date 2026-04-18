@@ -914,7 +914,7 @@ body:not(.pro-mode) .mc{display:none}
 <option value="weekly">Weekly</option>
 </select></div>
 <div class="fld"><label for="whContrib">Mandatory Contributions (SSS + PhilHealth + Pag-IBIG, employee share)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Mandatory employee-share contributions" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Employee share of SSS, PhilHealth, and Pag-IBIG (HDMF) contributions for this pay period. Excluded from taxable compensation per NIRC §32(B)(7)(f).</span></span></label><input type="text" id="whContrib" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
-<div class="fld"><label for="whBenefits">De-Minimis + 13th Month Portion (within ceilings)<span class="tip"><button type="button" class="tip-i" aria-label="Help: De-minimis and 13th-month non-taxable portion" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">De-minimis benefits within RR 29-2025 ceilings (rice ₱2,500/mo, uniform ₱8K/yr, laundry ₱400/mo, medical cash ₱2K/sem, etc.) PLUS the portion of 13th-month pay + other benefits that falls within the combined ₱90,000 ceiling (NIRC §32(B)(7)(e)). Excess over ₱90K is taxable — the calculator flags it.</span></span></label><input type="text" id="whBenefits" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+<div class="fld"><label for="whBenefits">De-Minimis + 13th Month Portion (within ceilings)<span class="tip"><button type="button" class="tip-i" aria-label="Help: De-minimis and 13th-month non-taxable portion" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">De-minimis benefits within the RR 29-2025 ceilings effective 6 Jan 2026 (rice ₱2,500/mo or one 50-kg sack, uniform ₱8,000/yr, laundry ₱400/mo, medical cash to dependents ₱2,000/sem, actual medical assistance ₱12,000/yr, monetized VL up to 12 days) PLUS the portion of 13th-month pay + other benefits that falls within the combined ₱90,000 ceiling (NIRC §32(B)(7)(e)). Excess over ₱90K is taxable — the calculator flags it.</span></span></label><input type="text" id="whBenefits" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 </div>
 <label style="display:inline-flex;align-items:center;gap:.5rem;margin-top:.6rem;font-family:var(--se);font-size:.82rem;color:var(--ch);cursor:pointer"><input type="checkbox" id="whMWE" onchange="calcWithholding()"> <span>Minimum-wage earner (RA 9504 §24(A)(2)(a) — exempt on basic pay, holiday, OT, night-shift, hazard pay)</span></label>
 <div class="crow" style="margin-top:.75rem"><button type="button" class="cbtn" onclick="calcWithholding()">Compute Withholding</button></div>
@@ -2620,6 +2620,8 @@ function calc(){
   // the sum of quarterly installments reconciles to the annual total (B-2).
   const cumExp=getCumulativeExpenses(ex);
   const cumSales=getCumulativeSales(g);
+  // BMBE (RA 9178 §7): income-tax-exempt across all regimes; percentage tax and VAT unaffected.
+  const itMul=isBMBE?0:1;
   let qh=`<table class="qt"><thead><tr><th>Period</th><th>8% Flat</th><th>Grad+OSD</th><th>Grad+Item</th></tr></thead><tbody>`;
   const qL=['Q1','Q2','Q3','Annual'],qF=[.25,.5,.75,1];
   for(let q=0;q<4;q++){
@@ -2633,15 +2635,15 @@ function calc(){
     // mixed earners add graduated tax on cumulative compensation.
     const aBase8=Math.max(0,pg+nopCum-d250);
     const aBase8p=Math.max(0,prevPg+nopPrev-d250);
-    const qA=aAv?Math.max(0,aBase8*.08+gradTax(compCum)-cwtCurF):0;
-    const pA=q>0?(aAv?Math.max(0,aBase8p*.08+gradTax(compPrev)-cwtPrevF):0):0;
+    const qA=aAv?Math.max(0,itMul*(aBase8*.08+gradTax(compCum))-cwtCurF):0;
+    const pA=q>0?(aAv?Math.max(0,itMul*(aBase8p*.08+gradTax(compPrev))-cwtPrevF):0):0;
     // Grad + OSD — 40% OSD on gross only; add nop and compensation on top.
-    const qB=Math.max(0,gradTax(pg-pg*.4+nopCum+compCum)-cwtCurF);
-    const pB=q>0?Math.max(0,gradTax(prevPg-prevPg*.4+nopPrev+compPrev)-cwtPrevF):0;
+    const qB=Math.max(0,itMul*gradTax(pg-pg*.4+nopCum+compCum)-cwtCurF);
+    const pB=q>0?Math.max(0,itMul*gradTax(prevPg-prevPg*.4+nopPrev+compPrev)-cwtPrevF):0;
     // Grad + Itemized — deduct cumulative actual expenses; add nop + comp.
     const cumE=cumExp[q],prevCumE=q>0?cumExp[q-1]:0;
-    const qC=Math.max(0,gradTax(Math.max(0,pg-cumE)+nopCum+compCum)-cwtCurF);
-    const pC=q>0?Math.max(0,gradTax(Math.max(0,prevPg-prevCumE)+nopPrev+compPrev)-cwtPrevF):0;
+    const qC=Math.max(0,itMul*gradTax(Math.max(0,pg-cumE)+nopCum+compCum)-cwtCurF);
+    const pC=q>0?Math.max(0,itMul*gradTax(Math.max(0,prevPg-prevCumE)+nopPrev+compPrev)-cwtPrevF):0;
     const dA=Math.max(0,qA-pA),dB=Math.max(0,qB-pB),dC=Math.max(0,qC-pC);
     const vs=[aAv?dA:null,dB,dC],mn=Math.min(...vs.filter(v=>v!==null));
     qh+=`<tr><td style="font-weight:600">${qL[q]}</td><td class="${vs[0]===mn&&aAv?'bc':''}">${aAv?fmt(dA):'N/A'}</td><td class="${vs[1]===mn?'bc':''}">${fmt(dB)}</td><td class="${vs[2]===mn?'bc':''}">${fmt(dC)}</td></tr>`;
