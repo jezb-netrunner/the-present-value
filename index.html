@@ -607,16 +607,6 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .fc-note-area.vis{display:block}
 .fc-note-input{font-family:var(--se);font-size:.7rem;width:100%;padding:.28rem .45rem;border:1.5px solid var(--bd);border-radius:var(--rr);background:var(--bg);color:var(--ch);resize:vertical;min-height:42px;outline:none;line-height:1.4}
 .fc-note-input:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}
-/* YoY comparison */
-.yoy-panel{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);padding:.85rem 1rem;margin-bottom:1rem;border-left:3px solid var(--slate)}
-.yoy-panel h3{font-family:var(--se);font-size:.85rem;font-weight:600;color:var(--ink);margin-bottom:.45rem}
-.yoy-hdr{display:grid;grid-template-columns:130px 1fr 1fr 58px;gap:.4rem;padding:.3rem .35rem;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu)}
-.yoy-row{display:grid;grid-template-columns:130px 1fr 1fr 58px;gap:.4rem;align-items:center;padding:.3rem .35rem;border-bottom:1px solid var(--s2);font-size:.8rem}
-.yoy-row:last-child{border-bottom:none}
-.yoy-lbl{color:var(--dim);font-family:var(--se)}
-.yoy-val{font-family:var(--sa);font-weight:600;color:var(--ch)}
-.yoy-delta{font-family:var(--sa);font-size:.74rem;font-weight:700;text-align:right}
-.yoy-up{color:var(--red)}.yoy-dn{color:var(--green)}.yoy-flat{color:var(--mu)}
 /* Guide cards */
 .guide-section{margin-bottom:1.5rem}
 .guide-section-hdr{font-family:var(--se);font-size:.92rem;font-weight:600;color:var(--ink);margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:2px solid var(--amber);display:inline-block}
@@ -653,7 +643,6 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 /* Simple mode — hide Tools & Guides tab */
 .pnav button:nth-child(4){display:none}
 .pro-mode .pnav button:nth-child(4){display:block}
-@media(max-width:480px){.yoy-hdr,.yoy-row{grid-template-columns:100px 1fr 1fr 50px;font-size:.62rem}}
 
 /* ══ INLINE TOOLTIPS ══ */
 .tip{position:relative;display:inline-flex;align-items:center;cursor:default;line-height:1}
@@ -964,7 +953,6 @@ body:not(.pro-mode) .mc{display:none}
 <details class="cd-sec" id="cdForm"><summary>BIR form previews</summary><div class="cd-sec-body"><div id="formPrevBox"></div></div></details>
 <details class="cd-sec" id="cdCap"><summary>Cap analysis (itemized deductions)</summary><div class="cd-sec-body"><div id="capBox"></div></div></details>
 <details class="cd-sec" id="cdQ"><summary>Quarterly payment breakdown</summary><div class="cd-sec-body"><div id="qB"></div></div></details>
-<details class="cd-sec" id="cdYoY"><summary>Year-over-year snapshots</summary><div class="cd-sec-body"><div id="yoyBox"></div></div></details>
 </section>
 
 </div>
@@ -1279,7 +1267,7 @@ function initProfileStrip(){
 function renderCalcEmptyState(){
   const cCards=document.getElementById('cCards');
   if(cCards)cCards.innerHTML='<div class="cr-empty">Enter gross sales / receipts to compare the three regimes live.</div>';
-  ['rcBox','plainSummary','warnBox','compSetBox','formPrevBox','capBox','qB','yoyBox'].forEach(id=>{
+  ['rcBox','plainSummary','warnBox','compSetBox','formPrevBox','capBox','qB'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.innerHTML='';
   });
 }
@@ -2836,9 +2824,6 @@ function calc(){
   }else{
     document.getElementById('qB').innerHTML='';
   }
-  safeSet('tpv_calc_'+YEAR,JSON.stringify({g,cwt,ex,best:{k:best.k,t:best.t,iG:best.iG,iN:best.iN},R:[{t:R[0].t,av:R[0].av},{t:R[1].t},{t:R[2].t}]}));
-  if(document.getElementById('cdYoY')?.open)renderYoY(g,R,best,cwt,ex);
-  else document.getElementById('yoyBox').innerHTML='';
 }
 
 // Init number formatters on all numeric inputs
@@ -3478,37 +3463,6 @@ function saveNote(id){
   if(val)safeSet(key,val);else safeRemove(key);
   const btn=document.querySelector(`#fc_${id} .fc-note-btn`);
   if(btn){btn.classList.toggle('has-note',!!val);btn.textContent=val?'📝':'+ note';}
-}
-
-// ══════════ YoY COMPARISON ══════════
-function renderYoY(g,R,best,cwt,ex){
-  const el=document.getElementById('yoyBox');
-  if(!el)return;
-  const prev=localStorage.getItem('tpv_calc_'+(YEAR-1));
-  if(!prev){el.innerHTML=`<div class="yoy-panel"><h3>Year-over-Year Comparison</h3><p style="font-size:.7rem;color:var(--dim);margin:.4rem 0 0">No snapshot from ${YEAR-1} found. This year's computation is saved automatically so you can compare next year.</p></div>`;return;}
-  let p;try{p=JSON.parse(prev);}catch{el.innerHTML='';return;}
-  function delta(cur,prv){
-    if(!prv)return'<span class="yoy-flat">—</span>';
-    const d=cur-prv;
-    if(Math.abs(d)<1)return'<span class="yoy-flat">0</span>';
-    const sign=d>0?'+':'';
-    const cls=d>0?'yoy-up':'yoy-dn';
-    return`<span class="${cls}">${sign}${fmt(d)}</span>`;
-  }
-  const rows=[
-    {lbl:'Gross Sales',cur:g,prv:p.g},
-    {lbl:'Expenses (allowed)',cur:ex,prv:p.ex},
-    {lbl:'CWT Credits',cur:cwt,prv:p.cwt},
-    {lbl:'Best Regime Tax',cur:best.t,prv:p.best?.t},
-  ];
-  let h=`<div class="yoy-panel"><h3>Year-over-Year Comparison (${YEAR-1} vs ${YEAR})</h3>`;
-  h+=`<div class="yoy-hdr"><span>Metric</span><span>${YEAR-1}</span><span>${YEAR}</span><span style="text-align:right">Change</span></div>`;
-  rows.forEach(r=>{
-    const pv=r.prv!=null?fmt(r.prv):'—';
-    h+=`<div class="yoy-row"><span class="yoy-lbl">${r.lbl}</span><span class="yoy-val">${pv}</span><span class="yoy-val">${fmt(r.cur)}</span><span class="yoy-delta">${delta(r.cur,r.prv)}</span></div>`;
-  });
-  h+=`</div>`;
-  el.innerHTML=h;
 }
 
 // ══════════ YTD QUARTERLY PROJECTOR ══════════
