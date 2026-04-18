@@ -740,7 +740,7 @@ body:not(.pro-mode) .mc{display:none}
 <div class="clb"><div class="clg" id="clG"></div></div>
 <div class="csm" id="clS"></div>
 </div></section>
-<main class="mn" id="mainContent" role="main">
+<main class="mn" id="mainContent" role="main" data-skiptarget="1">
 <div class="vc"><div class="vl">
 <div class="vt" role="tablist" aria-label="Calendar view"><button type="button" class="act" onclick="setV('fd',this)" role="tab" aria-selected="true">Feed</button><button type="button" onclick="setV('tl',this)" role="tab" aria-selected="false">Timeline</button><button type="button" onclick="setV('tb',this)" role="tab" aria-selected="false">Table</button><button type="button" onclick="setV('wf',this)" role="tab" aria-selected="false">By Workflow</button><button type="button" onclick="setV('qck',this)" role="tab" aria-selected="false">Q-Checklist</button></div>
 <label for="calSearch" class="sr-only">Search obligations</label>
@@ -924,7 +924,7 @@ body:not(.pro-mode) .mc{display:none}
 <p class="tool-intro">Track BIR Form 2307 certificates received from clients and employers. Running totals are available for use in your quarterly and annual income tax returns.</p>
 <div class="fg" style="max-width:700px;margin-bottom:.75rem">
 <div class="fld"><label for="logPayor">Payor / Client Name</label><input type="text" id="logPayor" placeholder="e.g. ABC Corporation" autocomplete="organization"></div>
-<div class="fld"><label for="logAtc">ATC Code<span class="tip"><button type="button" class="tip-i" aria-label="Help: Alphanumeric Tax Code" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Alphanumeric Tax Code printed on the 2307. Common individual-payee ATCs: WI158 — professional fees (5% ≤₱3M with sworn dec / 10% otherwise); WI160 — rent on real property (5%). For corporate payees of Top Withholding Agents: WC157 — services (2%); WC158 — goods (1%). Verify against your 2307 — the printed ATC is authoritative.</span></span></label><input type="text" id="logAtc" placeholder="e.g. WI158" autocomplete="off"></div>
+<div class="fld"><label for="logAtc">ATC Code<span class="tip"><button type="button" class="tip-i" aria-label="Help: Alphanumeric Tax Code" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Alphanumeric Tax Code printed on the 2307 by your payor. The printed ATC is authoritative — copy it exactly. Examples seen on individual professional-fee 2307s include the WI010/WI011 series (5% with sworn declaration / 10% otherwise) and WI160 for rentals (5%). For Top Withholding Agent goods/services purchases the rates are 1%/2% and use a different ATC. Codes are revised in successive RRs; trust the slip.</span></span></label><input type="text" id="logAtc" placeholder="from the 2307" autocomplete="off"></div>
 <div class="fld"><label for="logAmt">Amount Withheld (₱)</label><input type="text" id="logAmt" placeholder="0" inputmode="numeric" autocomplete="off"></div>
 <div class="fld"><label for="logQ">Quarter</label>
 <select id="logQ"><option value="Q1">Q1 (Jan–Mar)</option><option value="Q2">Q2 (Apr–Jun)</option><option value="Q3">Q3 (Jul–Sep)</option><option value="Q4">Q4 (Oct–Dec)</option></select></div>
@@ -994,7 +994,7 @@ body:not(.pro-mode) .mc{display:none}
 <div class="guide-hdr-l"><span class="guide-title">Freelancer &amp; Professional Tax Flow — Gross Receipts → EWT → Net Tax Due</span><span class="guide-sub">Self-employed professionals · NIRC Sec. 24(A) · BIR Form 1701Q</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
-<div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-body"><div class="guide-step-title">Receive payment — client withholds EWT and issues Form 2307</div><div class="guide-step-desc">When a corporate client or top withholding agent pays you, they <b>deduct EWT before releasing your fee</b>. Rates per RR 11-2018 §2.57.2(A):<br><b>Individual payees:</b> 5% if prior-year gross &lt; ₱3M and you filed a sworn declaration; 10% otherwise. ATC: <b>WI158</b>.<br><b>Corporate payees (professional partnerships, etc.):</b> 10% if current-year gross income ≤ ₱720K; 15% once it exceeds ₱720K. ATC: <b>WC158</b> for goods or analogous code per the payor's classification.<br>They issue BIR Form 2307 within 20 days after quarter-end. <b>Collect every 2307 — each one is a tax credit.</b></div></div></div>
+<div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-body"><div class="guide-step-title">Receive payment — client withholds EWT and issues Form 2307</div><div class="guide-step-desc">When a corporate client or top withholding agent pays you, they <b>deduct EWT before releasing your fee</b>. Professional-fee rates per RR 11-2018 §2.57.2(A):<br><b>Individual payees:</b> 5% if prior-year gross &lt; ₱3M and you filed a sworn declaration; 10% otherwise. (Common ATC for individual professional fees: <b>WI010</b>/<b>WI011</b> — confirm against your payor's 2307.)<br><b>Corporate payees</b> (professional partnerships, etc.): 10% if current-year gross income ≤ ₱720K; 15% once it exceeds ₱720K.<br><b>Top Withholding Agent purchases (different rule):</b> 1% on goods, 2% on services. These are separate ATCs and are reflected on a different line of the 2307.<br>They issue BIR Form 2307 within 20 days after quarter-end. <b>Collect every 2307 — each one is a tax credit.</b> ATC codes change with each RR/RMC revision; always defer to the code printed on the issued 2307.</div></div></div>
 <div class="guide-step teal"><div class="guide-step-num">2</div><div class="guide-step-body"><div class="guide-step-title">File quarterly income tax return (1701Q) — cumulative method</div><div class="guide-step-desc">Each 1701Q reports <b>year-to-date gross receipts</b>, not just the quarter's. Q2 reports Q1+Q2, Q3 reports Q1+Q2+Q3.<br><b>Tax computation:</b> Apply 8% or graduated rate to cumulative income → subtract prior quarterly payments → subtract 2307 credits → result is the installment due this quarter.<br><b>Deadlines:</b> Q1: May 15 · Q2: Aug 15 · Q3: Nov 15</div></div></div>
 <div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-body"><div class="guide-step-title">Attach SAWT (.dat file) and all 2307s</div><div class="guide-step-desc">The <b>SAWT (Summary of Alphalist of Withholding Taxes)</b> is a .dat file generated from your 2307s using BIR's eSubmission software. You must submit it before or with each 1701Q and your annual return.<br><b>Steps:</b> Encode all 2307s → generate SAWT → submit via eSubmission portal → attach validation to your return.</div></div></div>
 <div class="guide-step amber"><div class="guide-step-num">4</div><div class="guide-step-body"><div class="guide-step-title">File annual return (1701A or 1701) — reconcile everything</div><div class="guide-step-desc">The annual return covers the full year (including Q4 which has no separate quarterly filing). It reconciles all three quarterly payments and all 2307 credits.<br><b>Use 1701A</b> if: purely self-employed, using 8% or OSD.<br><b>Use 1701</b> if: itemized deductions or mixed income.<br><b>Deadline:</b> April 15 of the following year.</div></div></div>
@@ -1057,6 +1057,21 @@ body:not(.pro-mode) .mc{display:none}
 // Escape untrusted strings before interpolating into HTML template literals.
 const _ESC_MAP={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>_ESC_MAP[c]);}
+// Lightweight non-blocking toast — replaces alert() for transient notices.
+let _toastTimer=null;
+function toast(msg,kind){
+  let el=document.getElementById('tpvToast');
+  if(!el){
+    el=document.createElement('div');el.id='tpvToast';el.setAttribute('role','status');el.setAttribute('aria-live','polite');
+    el.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink);color:#fff;padding:.7rem 1.1rem;border-radius:8px;font-family:var(--sa);font-size:.85rem;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.25);z-index:10000;opacity:0;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center;pointer-events:none';
+    document.body.appendChild(el);
+  }
+  el.textContent=msg;
+  el.style.background=kind==='err'?'var(--red)':kind==='ok'?'var(--green)':'var(--ink)';
+  requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='translateX(-50%) translateY(0)';});
+  if(_toastTimer)clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(-50%) translateY(12px)';},3800);
+}
 // Safe localStorage writes — swallow quota / private-mode errors, surface a console warning.
 function safeSet(k,v){try{localStorage.setItem(k,v);return true;}catch(e){console.warn('localStorage.setItem failed:',k,e);return false;}}
 function safeRemove(k){try{localStorage.removeItem(k);}catch(e){/* ignore */}}
@@ -1066,8 +1081,27 @@ function debounce(fn,ms){let t;return function(){clearTimeout(t);const a=argumen
 const applySearchDebounced=debounce(function(v){SQ=(v||'').toLowerCase();ren();},140);
 
 // ══════════ PAGE NAV ══════════
-function showPg(p,btn){document.querySelectorAll('.page').forEach(e=>e.classList.remove('vis'));document.getElementById({cal:'pgCal',ref:'pgRef',calc:'pgCalc',tools:'pgTools'}[p]).classList.add('vis');document.querySelectorAll('.pnav button').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});btn.classList.add('active');btn.setAttribute('aria-current','page');if(p==='calc')refreshCorpGuard();}
+function showPg(p,btn){
+  const pageId={cal:'pgCal',ref:'pgRef',calc:'pgCalc',tools:'pgTools'}[p];
+  document.querySelectorAll('.page').forEach(e=>{e.classList.remove('vis');e.removeAttribute('id-main');});
+  const pg=document.getElementById(pageId);pg.classList.add('vis');
+  // Move the skip-link target onto whichever page is now visible so the skip link
+  // works from any tab, not just Calendar.
+  document.querySelectorAll('[data-skiptarget]').forEach(el=>{el.removeAttribute('id');el.removeAttribute('data-skiptarget');});
+  const m=pg.querySelector('main')||pg;m.setAttribute('id','mainContent');m.setAttribute('data-skiptarget','1');
+  document.querySelectorAll('.pnav button').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});
+  btn.classList.add('active');btn.setAttribute('aria-current','page');
+  if(p==='calc')refreshCorpGuard();
+}
 function refreshCorpGuard(){const g=document.getElementById('corpCalcGuard');if(!g)return;const isCorp=(typeof cT!=='undefined'&&cT==='corp')||(window._tpvSetup&&window._tpvSetup.type==='corp');g.style.display=isCorp?'block':'none';}
+// Mirror the calendar's taxpayer type (cT) onto the Calculator's `tS` dropdown so the
+// Compensation field shows up automatically for mixed-income earners coming from the wizard.
+function syncCalculatorTaxpayerType(){
+  const tS=document.getElementById('tS');if(!tS)return;
+  if(typeof cT==='undefined')return;
+  if(cT==='mi'&&tS.value!=='mixed'){tS.value='mixed';onTaxpayerTypeChange();}
+  else if((cT==='se'||cT==='corp'||cT==='emp')&&tS.value!=='pure'){tS.value='pure';onTaxpayerTypeChange();}
+}
 
 // ══════════ TOOLTIP SYSTEM ══════════
 const TIPS={
@@ -1376,8 +1410,9 @@ OB.push({month:0,day:5,title:"File Documentary Stamp Tax Return",form:"2000",cat
     "File Annual ITR — Mixed Income, Grad+OSD":"Mixed earners deduct 40% from business income; rest taxed at graduated rates.",
     "File Annual ITR — Graduated, Itemized":"Claim all actual business expenses to reduce taxable income under graduated rates.",
     "Confirm Substituted Filing (Employee ITR)":"Your employer filed on your behalf; confirm the 2316 is your return.",
-    "Submit Audited Financial Statements to SEC":"Corporations must submit BIR-stamped financial statements to the SEC annually.",
-    "Submit General Information Sheet to SEC":"Annual corporate update on officers and stockholders filed with the SEC.",
+    "Attach AFS to Annual ITR (BIR)":"BIR-stamped Audited Financial Statements are an attachment to the 1702-RT filed on April 15.",
+    "File AFS with SEC (staggered schedule)":"SEC AFS submission is staggered by your registration number per the annual SEC Memorandum Circular — usually April through July.",
+    "File General Information Sheet to SEC":"GIS is due within 30 calendar days after your annual stockholders' meeting (Revised Corporation Code §177). Date depends on your by-laws.",
     "Release 13th Month Pay to Employees":"Law requires 13th month pay for all rank-and-file employees by Dec 24.",
     "Complete Year-End Bookkeeping":"Close your annual accounts to prepare accurate tax filings and statements.",
     "Verify 2316 from Employer":"Your tax certificate shows income and withholding; needed if you file an ITR.",
@@ -1619,7 +1654,7 @@ function renderFeed(){
 
 function isV(o){if(!o.r.includes(cR))return false;if(!aC.has(o.cat))return false;if(SQ){const h=(o.title+' '+(o.form||'')+' '+(o.desc||'')+' '+(o.pq||'')).toLowerCase();if(!h.includes(SQ))return false;}const sa=document.getElementById('saT')?.checked;if(!sa&&o.pq&&!cQ.has(o.pq))return false;if(!sa&&o.npq&&cQ.has(o.npq))return false;return true;}
 function gF(){return OB.filter(isV);}function cntQ(k){return OB.filter(o=>o.pq===k&&o.r.includes(cR)).length;}
-function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{const isActive=['se','mi','corp','emp'][i]===t;b.classList.toggle('act',isActive);b.setAttribute('aria-pressed',isActive?'true':'false');});rRB();rCL();rCF();ren();updSmBar();}
+function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{const isActive=['se','mi','corp','emp'][i]===t;b.classList.toggle('act',isActive);b.setAttribute('aria-pressed',isActive?'true':'false');});rRB();rCL();rCF();ren();updSmBar();syncCalculatorTaxpayerType();refreshCorpGuard();}
 function setReg(r){cR=r;rRB();rCL();ren();}function setV(v,b){vM=v;document.querySelectorAll('.vt button').forEach(x=>{x.classList.remove('act');x.setAttribute('aria-selected','false');});b.classList.add('act');b.setAttribute('aria-selected','true');ren();}
 function tgQ(k){cQ.has(k)?cQ.delete(k):cQ.add(k);rCL();ren();}function tgC(c){aC.has(c)?aC.delete(c):aC.add(c);rCF();ren();}function tgM(m){document.querySelector(`.ms[data-m="${m}"]`)?.classList.toggle('act');}
 function rRB(){document.getElementById('rBar').innerHTML='<span class="tl-l">Regime</span>'+Object.entries(TYPES[cT].regimes).map(([k,v])=>`<button class="rb ${k===cR?'act':''}" onclick="setReg('${k}')">${v.n}</button>`).join('');}
@@ -1633,7 +1668,18 @@ function setCalQ(q){cQuarter=q;cMonth=(q-1)*3+1;ren();}
 function getObGrp(o){const f=o.form||'';if(['1601-C','0619-E','0619-F','1600'].includes(f))return'wh-m';if(['1701A','1701','1700'].includes(f)||(f==='2316'&&o.cat==='inc'))return'itr-a';if(f==='1702-RT')return'itr-ac';if(['1604-C','1604-F','1604-E'].includes(f))return'wh-a';if(f==='1701Q')return'itr-q';if(f==='1702Q')return'itr-qc';if(['2550Q','2551Q','SLSP'].includes(f))return'biz-q';if(['1601-EQ','1601-FQ','2307','2306'].includes(f))return'wh-q';if(f==='Agency'||o.cat==='emp')return'contrib';if(f==='SEC'||o.cat==='sec')return'sec';return'adm';}
 function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='obn_'+obsId(o);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);const shift=shiftedDeadlineNote(o);return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div><span class="ob-row-title">${o.title}${obTip(o.title)}</span>${o.form&&o.form!=='—'?`<span class="form-ref">${o.form}</span>`:''}</div><div class="ob-row-meta">${shift?`<span class="ob-row-pq" style="background:var(--as);color:var(--amber)">${shift}</span>`:''}${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.5rem;padding-top:.4rem;border-top:1px solid rgba(65,105,225,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.78rem;color:var(--ch);padding:.15rem 0;display:flex;align-items:center;gap:.35rem"><span aria-hidden="true" style="font-size:.72rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<button type="button" style="margin-top:.5rem;font-size:.75rem;color:var(--royal);font-weight:600;cursor:pointer;background:none;border:none;padding:.3rem .4rem;border-radius:4px;min-height:32px" onclick="event.stopPropagation();document.querySelector('.pnav button:nth-child(2)').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">&#8594; View ${o.form} in Form Reference</button>`:''}</div></div></div>`;}
 function renMon(month,obs){let h='';if(MONTH_NOTES[month])h+=`<div class="cal-note"><span class="cal-note-lbl">Deadline note</span>${MONTH_NOTES[month]}</div>`;const hols=HOLIDAYS[month]||[];if(hols.length){h+=`<div class="cal-holidays"><div class="cal-hol-hdr">Public holidays this month</div>`;hols.forEach(([d,name,type])=>{const dn=getDayName(month,d);h+=`<div class="cal-hol-item"><span class="cal-hol-date">${MN[month].substr(0,3)} ${d}, ${YEAR}</span><span class="cal-hol-name">${dn} &middot; ${name}</span><span class="cal-hol-badge ${type}">${type==='reg'?'Regular holiday':'Special non-working'}</span></div>`;});h+=`</div>`;}if(!obs.length)return h+`<div class="cal-empty">No obligations match your current filters for ${MN[month]}.</div>`;const grps={};[...obs].sort((a,b)=>a.day-b.day).forEach(o=>{const g=getObGrp(o);if(!grps[g])grps[g]=[];grps[g].push(o);});let first=true;GROUP_ORDER.forEach(gk=>{if(!grps[gk])return;h+=`<div class="cal-grp-hdr"${first?' style="margin-top:0"':''}>${GROUP_LABELS[gk]||gk}</div>`;h+=grps[gk].map(rObNew).join('');first=false;});return h;}
-function renPen(ongoingObs){let h=`<p class="cal-pen-intro">Under EOPT (RR 6-2024), penalties for micro and small businesses (gross &lt; &#8369;20M) are substantially reduced. Always verify your BIR classification before computing penalties.</p>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Surcharge on Tax Due</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">10%</div><div class="cal-pen-note">Gross receipts &lt; &#8369;20M &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard — Late Filing/Payment</div><div class="cal-pen-val">25%</div><div class="cal-pen-note">NIRC Sec. 248</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard — Fraud / Willful</div><div class="cal-pen-val">50%</div><div class="cal-pen-note">Fraudulent return or willful neglect</div></div></div>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Interest on Unpaid Tax</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">6% / year</div><div class="cal-pen-note">Double the legal interest rate &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">12% / year</div><div class="cal-pen-note">NIRC Sec. 249 &middot; from due date to payment</div></div></div>`;h+=`<div style="font-family:var(--sa);font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.45rem 0 .22rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">Failure to File (per return)</div><div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT — Micro/Small</div><div class="cal-pen-val">&#8369;500</div><div class="cal-pen-note">Max &#8369;12,500/year &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">&#8369;1,000</div><div class="cal-pen-note">Max &#8369;25,000/year &middot; NIRC Sec. 250</div></div></div>`;if(ongoingObs.length){h+=`<div class="cal-ongoing-hdr">Ongoing &amp; Recurring Obligations</div>`;h+=ongoingObs.map(rObNew).join('');}return h;}
+function renPen(ongoingObs){
+  const sectionHdr=t=>`<div style="font-family:var(--sa);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.6rem 0 .3rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">${t}</div>`;
+  let h=`<p class="cal-pen-intro">Under EOPT (RA 11976 §47 / RR 6-2024), Micro (&lt;&#8369;3M) and Small (&#8369;3M&ndash;&lt;&#8369;20M) taxpayers get reduced surcharge and interest. Failure-to-file caps differ between the two tiers. Always verify your BIR classification before computing penalties.</p>`;
+  h+=sectionHdr('Surcharge on Tax Due');
+  h+=`<div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT &mdash; Micro/Small</div><div class="cal-pen-val">10%</div><div class="cal-pen-note">Gross receipts &lt; &#8369;20M &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard &mdash; Late Filing/Payment</div><div class="cal-pen-val">25%</div><div class="cal-pen-note">NIRC &sect;248</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard &mdash; Fraud / Willful</div><div class="cal-pen-val">50%</div><div class="cal-pen-note">Fraudulent return or willful neglect</div></div></div>`;
+  h+=sectionHdr('Interest on Unpaid Tax');
+  h+=`<div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT &mdash; Micro/Small</div><div class="cal-pen-val">6% / year</div><div class="cal-pen-note">Double the legal interest rate &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">12% / year</div><div class="cal-pen-note">NIRC &sect;249 &middot; from due date to payment</div></div></div>`;
+  h+=sectionHdr('Failure to File (per return)');
+  h+=`<div class="cal-pen-grid"><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT &mdash; Micro</div><div class="cal-pen-val">&#8369;500</div><div class="cal-pen-note">Gross &lt; &#8369;3M &middot; max &#8369;12,500/yr &middot; RR 6-2024</div></div><div class="cal-pen-card lo"><div class="cal-pen-lbl">EOPT &mdash; Small</div><div class="cal-pen-val">&#8369;1,000</div><div class="cal-pen-note">&#8369;3M&ndash;&lt;&#8369;20M &middot; max &#8369;25,000/yr &middot; RR 6-2024</div></div><div class="cal-pen-card hi"><div class="cal-pen-lbl">Standard</div><div class="cal-pen-val">&#8369;1,000</div><div class="cal-pen-note">Max &#8369;25,000/yr &middot; NIRC &sect;250</div></div></div>`;
+  if(ongoingObs.length){h+=`<div class="cal-ongoing-hdr">Ongoing &amp; Recurring Obligations</div>`;h+=ongoingObs.map(rObNew).join('');}
+  return h;
+}
 function renderTL(f){const el=document.getElementById('tl');const bm={};f.forEach(o=>{if(!bm[o.month])bm[o.month]=[];bm[o.month].push(o);});const qm=[[1,2,3],[4,5,6],[7,8,9],[10,11,12]];const qlbl=['Q1 \u2014 January to March','Q2 \u2014 April to June','Q3 \u2014 July to September','Q4 \u2014 October to December'];const months=qm[cQuarter-1];let h=`<div class="cal-qhdr"><span class="cal-qtitle">${YEAR} ${qlbl[cQuarter-1]}</span><div class="cal-qnav">`;['Q1','Q2','Q3','Q4'].forEach((qn,qi)=>{h+=`<button class="cal-qbtn${qi+1===cQuarter?' act':''}" onclick="setCalQ(${qi+1})">${qn}</button>`;});h+=`</div></div>`;h+=`<div class="cal-legend">`;[{l:'Income Tax',c:'var(--royal)'},{l:'Business Tax',c:'var(--green)'},{l:'Withholding',c:'var(--purple)'},{l:'Employer / Contributions',c:'var(--teal)'},{l:'DST',c:'var(--rose)'},{l:'Admin',c:'var(--amber)'},{l:'SEC',c:'var(--slate)'}].forEach(li=>{h+=`<span class="cal-leg-item"><span class="cal-leg-dot" style="background:${li.c}"></span>${li.l}</span>`;});h+=`</div>`;h+=`<div class="cal-tabs">`;months.forEach(m=>{h+=`<button class="cal-tab${m===cMonth?' act':''}" onclick="setCalM(${m})">${MN[m]}</button>`;});h+=`<button class="cal-tab${cMonth===0?' act':''}" onclick="setCalM(0)">Penalties</button></div>`;if(cMonth===0){h+=renPen(bm[0]||[]);}else{h+=renMon(cMonth,bm[cMonth]||[]);}el.innerHTML=h;}
 // ══ DYNAMIC HOLIDAY & DEADLINE-NOTE BUILDERS ══
 function buildHolidays(yr){
@@ -1914,8 +1960,8 @@ function generateWarnings(g,expData,best,mode,ctx){
   // EXPENSE RATIO
   if(ratio>0.85)W.push({sev:'high',icon:'🚨',title:'Very High Expense Ratio',msg:`Declared expenses are <b>${(ratio*100).toFixed(0)}%</b> of gross sales — well above industry norms and a known BIR audit trigger. Per RMC 81-2025, expenses must be ordinary, necessary, and reasonable in amount; excessive or disproportionate expenses may be disallowed. Maintain complete documentation. <span class="ref">RMC 81-2025; RR 11-2018</span>`});
   else if(ratio>0.70)W.push({sev:'med',icon:'⚠',title:'High Expense Ratio',msg:`Your expense ratio of <b>${(ratio*100).toFixed(0)}%</b> is on the higher side. Make sure all expenses are ordinary, necessary, and properly substantiated with official receipts and invoices. <span class="ref">RMC 81-2025</span>`});
-  // 8% ELECTION
-  if(g<=3000000&&best.k==='a')W.push({sev:'info',icon:'ℹ',title:'Q1 Election Lock-In Reminder',msg:`The 8% flat rate must be elected on your <b>first quarterly filing (1701Q for Q1, due May 15)</b>. The election is <b>irrevocable</b> for the entire taxable year. Missing this window defaults you to graduated rates plus 3% percentage tax. <span class="ref">NIRC Sec. 24(A)(2)(b); RR 8-2018</span>`});
+  // 8% ELECTION REMINDER (only when 8% wins AND user confirmed election; ineligibility cases are handled above)
+  if(g<=3000000&&best.k==='a'&&ctx.elected8)W.push({sev:'info',icon:'ℹ',title:'8% Election Lock-In',msg:`The 8% rate is <b>irrevocable for ${YEAR}</b> — once signified on Q1 1701Q, you cannot switch to graduated mid-year. Re-evaluate annually before Q1 of the next taxable year (May 15, ${YEAR+1}). <span class="ref">NIRC §24(A)(2)(b); RR 8-2018 §3(C)</span>`});
   // RETURN CONSISTENCY
   if(g>0&&expData.allowed>0&&mode!=='lump')W.push({sev:'info',icon:'✓',title:'Return Consistency Check',msg:`Ensure your declared figures reconcile across all returns: 1701Q (income tax), 2551Q or 2550Q (business tax), and 1604-C/1604-E (withholding). Mismatches between VAT and ITR sales are a top BIR audit trigger. <span class="ref">RR 11-2018</span>`});
   // CAPS
@@ -1994,19 +2040,28 @@ function bracketBreakdown(ti){
   return out;
 }
 
-function renderComputation(g,expData,R,best,isPure,cwt,over){
+function renderComputation(g,expData,R,best,isPure,cwt,over,extras){
+  extras=extras||{};
+  const comp=extras.comp||0;
+  const aBizIG=extras.aBizIG||0;
+  const aCompTax=extras.aCompTax||0;
+  const nop=extras.nop||0;
   const d250=isPure?250000:0;
   let h=`<div class="compset open"><div class="compset-h" onclick="this.parentElement.classList.toggle('open')"><h3>📐 Supporting Computations</h3><span class="chev">▾</span></div><div class="compset-b">`;
   // --- 8% Flat ---
   h+=`<div class="comp-regime ${best.k==='a'?'winner':''}"><div class="comp-regime-hdr"><span class="comp-regime-name">8% Flat Rate</span><span class="comp-regime-total">${R[0].av?fmt(R[0].t):'Not Available'}</span></div>`;
-  if(!R[0].av){h+=`<div class="comp-steps"><div class="comp-step"><span class="comp-step-num"></span><span class="comp-step-desc">Gross sales of <b>${fmt(g)}</b> exceeds ₱3M threshold. 8% option unavailable under NIRC Sec. 24(A)(2)(b).</span><span class="comp-step-val neg">—</span></div></div>`;}
+  if(!R[0].av){h+=`<div class="comp-steps"><div class="comp-step"><span class="comp-step-num"></span><span class="comp-step-desc">8% option unavailable for the current inputs.</span><span class="comp-step-val neg">—</span></div></div>`;}
   else{
     h+=`<div class="comp-steps">`;
     h+=`<div class="comp-step"><span class="comp-step-num">1</span><span class="comp-step-desc">Gross sales / receipts</span><span class="comp-step-val">${fmt(g)}</span></div>`;
+    if(nop>0)h+=`<div class="comp-step"><span class="comp-step-num">1a</span><span class="comp-step-desc">Plus: non-operating income</span><span class="comp-step-val">${fmt(nop)}</span></div>`;
     if(isPure)h+=`<div class="comp-step"><span class="comp-step-num">2</span><span class="comp-step-desc">Less: ₱250,000 exemption <b>(purely self-employed only)</b></span><span class="comp-step-val neg">(${fmt(250000)})</span></div>`;
-    else h+=`<div class="comp-step"><span class="comp-step-num">2</span><span class="comp-step-desc">No ₱250K exemption <b>(mixed income earner)</b></span><span class="comp-step-val">${fmt(0)}</span></div>`;
-    h+=`<div class="comp-step"><span class="comp-step-num">3</span><span class="comp-step-desc">Tax base (A − B)</span><span class="comp-step-val">${fmt(Math.max(0,g-d250))}</span></div>`;
-    h+=`<div class="comp-step"><span class="comp-step-num">4</span><span class="comp-step-desc">× 8% flat rate</span><span class="comp-step-val">${fmt(R[0].iG)}</span></div>`;
+    else h+=`<div class="comp-step"><span class="comp-step-num">2</span><span class="comp-step-desc">No ₱250K exemption on the business side <b>(mixed income earner — absorbed by compensation bracket)</b></span><span class="comp-step-val">${fmt(0)}</span></div>`;
+    h+=`<div class="comp-step"><span class="comp-step-num">3</span><span class="comp-step-desc">Business tax base</span><span class="comp-step-val">${fmt(Math.max(0,g+nop-d250))}</span></div>`;
+    h+=`<div class="comp-step"><span class="comp-step-num">4</span><span class="comp-step-desc">× 8% on business income</span><span class="comp-step-val">${fmt(aBizIG)}</span></div>`;
+    if(!isPure&&comp>0){
+      h+=`<div class="comp-step"><span class="comp-step-num">4a</span><span class="comp-step-desc">Plus: graduated tax on compensation income of ${fmt(comp)} <b>(per RR 8-2018 §3(B)(1))</b></span><span class="comp-step-val">${fmt(aCompTax)}</span></div>`;
+    }
     h+=`<div class="comp-step"><span class="comp-step-num">5</span><span class="comp-step-desc">Less: CWT (Form 2307 credits)</span><span class="comp-step-val neg">(${fmt(cwt)})</span></div>`;
     h+=`<div class="comp-step"><span class="comp-step-num">6</span><span class="comp-step-desc">Percentage tax <b>(exempt — 8% filers do not file 2551Q)</b></span><span class="comp-step-val pos">${fmt(0)}</span></div>`;
     h+=`<div class="comp-step total"><span class="comp-step-num"></span><span class="comp-step-desc">Total annual tax</span><span class="comp-step-val">${fmt(R[0].t)}</span></div>`;
@@ -2285,7 +2340,7 @@ function calc(){
   if(calcErr){calcErr.style.display='none';calcErr.textContent='';}
   if(g<=0){
     if(calcErr){calcErr.textContent='Enter your gross sales or receipts above to compare regimes.';calcErr.style.display='block';calcErr.focus?.();}
-    else{alert('Enter gross sales / receipts.');}
+    else{toast('Enter gross sales / receipts.','err');}
     return;
   }
   const expData=getEffectiveExpenses(g);
@@ -2309,9 +2364,15 @@ function calc(){
   if(!elected8)eightIneligReasons.push('election not signified on Q1 1701Q');
   // 8% base = gross sales + non-operating income, minus the ₱250K allowance for purely SE.
   // Mixed earners cannot deduct ₱250K from the business side because it is consumed by
-  // compensation at graduated rates (RR 8-2018 §3(B)(1)).
+  // compensation at graduated rates (RR 8-2018 §3(B)(1)). For mixed earners electing 8%,
+  // compensation is taxed separately at graduated rates and added to the 8% on business.
   const aBase=Math.max(0,g+nop-d250);
-  const aAv=eightAvailable,aIG=aAv?aBase*.08:0,aIN=aAv?Math.max(0,aIG-cwt):0,aT=aAv?aIN:Infinity;
+  const aCompTax=isPure?0:gradTax(comp);
+  const aAv=eightAvailable;
+  const aBizIG=aAv?aBase*.08:0;
+  const aIG=aBizIG+aCompTax;
+  const aIN=aAv?Math.max(0,aIG-cwt):0;
+  const aT=aAv?aIN:Infinity;
   // OSD — graduated rates applied to (business taxable income + compensation). Mixed income
   // earners add compensation on top before brackets per NIRC §24(A)(2).
   const bBizTI=Math.max(0,g-g*.4+nop);
@@ -2370,7 +2431,7 @@ function calc(){
     // User left cI blank; use log total as annual CWT across the rest of this calc.
   }
   // COMPUTATION BREAKDOWN + RATIONALE + BIR FORM PREVIEW
-  renderComputation(g,expData,R,best,isPure,cwt,over);
+  renderComputation(g,expData,R,best,isPure,cwt,over,{comp,aBizIG,aCompTax,nop});
   renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo);
 
   // QUARTERLY BREAKDOWN
@@ -2407,8 +2468,8 @@ function calc(){
 // Explicit save — no more autosave on every calc click.
 let _pendingYoYSnapshot=null;
 function saveYoYSnapshot(){
-  if(!_pendingYoYSnapshot){alert('Run the calculator first.');return;}
-  if(!safeSet('tpv_calc_'+YEAR,JSON.stringify(_pendingYoYSnapshot))){alert('Could not save snapshot — storage quota reached.');return;}
+  if(!_pendingYoYSnapshot){toast('Run the calculator first.','err');return;}
+  if(!safeSet('tpv_calc_'+YEAR,JSON.stringify(_pendingYoYSnapshot))){toast('Could not save snapshot — storage quota reached.','err');return;}
   const btn=document.getElementById('yoySaveBtn');
   if(btn){btn.textContent='✓ Snapshot saved';btn.disabled=true;btn.style.opacity='.6';btn.style.cursor='default';}
 }
@@ -2520,7 +2581,6 @@ function renderWzStep(){
   const s=WZ_STEPS[WZ.step];
   const vis=wzVisSteps();
   const visIdx=vis.indexOf(s);
-  const totalSteps=Math.max(vis.length,WZ_STEPS.filter(x=>!x.show).length);
   const pct=Math.round(((visIdx+1)/vis.length)*100);
   document.getElementById('wzBar').style.width=pct+'%';
   const meta=document.getElementById('wzStepMeta');
@@ -2671,10 +2731,22 @@ rRB();rCL();rCF();ren();renderForms();
   }
   updSmBar();
 })();
-// Show setup wizard on first visit; restore saved setup on return visits
+// Show setup wizard on first visit; restore saved setup on return visits.
+// Migrate pre-eight_elect setups: any saved 8pct rate predates the gate, so assume
+// the user previously elected and is not subject to other percentage tax. They can
+// re-run the wizard if either is now wrong.
 const _setup=localStorage.getItem('tpv_setup');
 if(!_setup){showWizard();}
-else if(_setup!=='skipped'){try{applySetup(JSON.parse(_setup));}catch(e){}}
+else if(_setup!=='skipped'){
+  try{
+    const _saved=JSON.parse(_setup);
+    if(_saved.rate==='8pct'){
+      if(_saved.eight_elect===undefined)_saved.eight_elect='yes';
+      if(_saved.other_pt===undefined)_saved.other_pt='no';
+    }
+    applySetup(_saved);
+  }catch(e){}
+}
 
 // One-time disclaimer banner — shown until explicitly dismissed
 if(!localStorage.getItem('tpv_disclaimer_ack')){
@@ -2706,8 +2778,8 @@ window._tpvLastSeenDate=new Date().toISOString().split('T')[0];
 // There is no Service Worker here, so a closed browser won't surface reminders.
 function toggleNotifications(){
   const btn=document.getElementById('notifBtn');
-  if(!('Notification' in window)){alert('Your browser does not support push notifications.');return;}
-  if(Notification.permission==='denied'){alert('Notifications are blocked. Please enable them in your browser settings.');return;}
+  if(!('Notification' in window)){toast('Your browser does not support push notifications.','err');return;}
+  if(Notification.permission==='denied'){toast('Notifications are blocked. Enable them in your browser settings.','err');return;}
   if(localStorage.getItem('tpv_notif')==='on'){
     safeRemove('tpv_notif');
     btn.classList.remove('on');btn.innerHTML='<span aria-hidden="true">🔔</span> Reminders';btn.setAttribute('aria-pressed','false');
@@ -2842,7 +2914,7 @@ function calcWithholding(){
 
 // ══════════ 2307 CREDIT LOG ══════════
 function get2307Log(){try{return JSON.parse(localStorage.getItem('tpv_2307log')||'[]');}catch{return[];}}
-function save2307Log(l){if(!safeSet('tpv_2307log',JSON.stringify(l))){alert('Could not save 2307 log — storage is full. Try deleting old entries.');}}
+function save2307Log(l){if(!safeSet('tpv_2307log',JSON.stringify(l))){toast('Could not save 2307 log — storage is full. Delete old entries.','err');}}
 function add2307Entry(){
   const payor=document.getElementById('logPayor').value.trim();
   const atc=document.getElementById('logAtc').value.trim();
