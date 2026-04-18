@@ -2076,9 +2076,9 @@ const CAT_GROUPS=[
 
 let SALES_MODE='lump';
 
-function setSalesMode(m,btn){SALES_MODE=m;const grp=btn.parentElement;grp.querySelectorAll('.em-btn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');['lump','q','m'].forEach(x=>document.getElementById('sp-'+x).classList.remove('vis'));document.getElementById('sp-'+m).classList.add('vis');updateTotals();}
+function setSalesMode(m,btn){SALES_MODE=m;const grp=btn.parentElement;grp.querySelectorAll('.em-btn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');['lump','q','m'].forEach(x=>document.getElementById('sp-'+x).classList.remove('vis'));document.getElementById('sp-'+m).classList.add('vis');updateTotals();if(typeof _calcRecompute==='function')_calcRecompute();}
 
-function setExpMode(m,btn){EXP_MODE=m;const grp=btn.parentElement;grp.querySelectorAll('.em-btn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');['lump','q','m','cat'].forEach(x=>document.getElementById('ep-'+x).classList.remove('vis'));document.getElementById('ep-'+m).classList.add('vis');updateTotals();}
+function setExpMode(m,btn){EXP_MODE=m;const grp=btn.parentElement;grp.querySelectorAll('.em-btn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');['lump','q','m','cat'].forEach(x=>document.getElementById('ep-'+x).classList.remove('vis'));document.getElementById('ep-'+m).classList.add('vis');updateTotals();if(typeof _calcRecompute==='function')_calcRecompute();}
 
 function initMonthGrid(){
   let h1='';for(let i=1;i<=12;i++)h1+=`<div class="fld"><label>${MONTHS[i-1]}</label><input type="text" class="qsI" id="sM${i}" placeholder="0" inputmode="numeric"></div>`;
