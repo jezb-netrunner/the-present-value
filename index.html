@@ -1373,7 +1373,20 @@ const MONTH_NOTES=buildMonthNotes(YEAR);
 const GROUP_LABELS={'itr-a':'Annual Income Tax Returns','itr-ac':'Annual Corporate Income Tax','itr-q':'Quarterly Income Tax (Individuals)','itr-qc':'Quarterly Corporate Income Tax','wh-m':'BIR Monthly Returns','wh-a':'Annual Information Returns','wh-q':'Quarterly Withholding Returns','biz-q':'Quarterly Business Tax','contrib':'Mandatory Contributions','sec':'SEC Filings','adm':'Administrative Requirements'};
 const GROUP_ORDER=['itr-a','itr-ac','itr-q','itr-qc','wh-m','wh-a','wh-q','biz-q','contrib','sec','adm'];
 
-function mW(m,fn,r){return[{month:m,day:10,title:`Remit Withholding — Compensation (${fn})`,form:"1601-C",cat:"emp",r,pq:"employees"},{month:m,day:10,title:`Remit Expanded Withholding Tax (${fn})`,form:"0619-E",cat:"wh",r,pq:"ewt"},{month:m,day:10,title:`Remit Final Withholding Tax (${fn})`,form:"0619-F",cat:"wh",r,pq:"fwt"}];}
+function mW(m,fn,r){
+  // 1601-C (compensation) is monthly for all 12 months.
+  // 0619-E / 0619-F are ONLY for months 1 & 2 of each quarter — month 3
+  // (Mar/Jun/Sep/Dec) is absorbed by the quarterly 1601-EQ / 1601-FQ per
+  // RR 11-2018 §2.58. Deadline m=1,4,7,10 would cover the prior month 3
+  // (Dec/Mar/Jun/Sep) and must NOT create a 0619-E/F obligation.
+  const prevMonthWasQEnd=(m===1||m===4||m===7||m===10);
+  const out=[{month:m,day:10,title:`Remit Withholding — Compensation (${fn})`,form:"1601-C",cat:"emp",r,pq:"employees"}];
+  if(!prevMonthWasQEnd){
+    out.push({month:m,day:10,title:`Remit Expanded Withholding Tax (${fn})`,form:"0619-E",cat:"wh",r,pq:"ewt"});
+    out.push({month:m,day:10,title:`Remit Final Withholding Tax (${fn})`,form:"0619-F",cat:"wh",r,pq:"fwt"});
+  }
+  return out;
+}
 function gC(m,fn,r){return{month:m,day:15,title:`Pay Mandatory Contributions (${fn})`,form:"Agency",cat:"emp",r,pq:"employees"};}
 function qC(m,q,r){return[{month:m,day:20,title:`Issue EWT Certificates (${q})`,form:"2307",cat:"wh",r,pq:"ewt"},{month:m,day:20,title:`Issue Final WT Certificates (${q})`,form:"2306",cat:"wh",r,pq:"fwt"}];}
 function qE(m,q,d,r){return[{month:m,day:d,title:`File Quarterly EWT Return (${q})`,form:"1601-EQ",cat:"wh",r,pq:"ewt",att:["QAP (.dat)"]},{month:m,day:d,title:`File Quarterly Final WT Return (${q})`,form:"1601-FQ",cat:"wh",r,pq:"fwt",att:["Alphalist (.dat)"]}];}
@@ -1848,7 +1861,7 @@ function initCatGrid(){
   let h='';
   // 1) CAPPED DEDUCTIONS — pinned, always visible
   h+=`<div class="cat-group pinned open"><div class="cat-group-hdr" onclick="toggleCatGroup(this)"><span style="color:var(--amber)">⚠</span><span class="cg-title">Capped Deductions</span><span class="cg-total" id="cgt_capped">₱0</span><span class="cg-chev">▾</span></div><div class="cat-group-body">`;
-  h+=`<div class="cat-row"><div class="cat-name"><span class="nm">Representation &amp; Entertainment</span><span class="cat-cap">Cap: 0.5% net sales (goods) / 1% net revenue (services) · RR 10-2002</span></div><input type="text" class="cat-input qeI" id="cat_rep" placeholder="0" inputmode="numeric"></div>`;
+  h+=`<div class="cat-row"><div class="cat-name"><span class="nm">Representation &amp; Entertainment</span><span class="cat-cap">Cap: 0.5% net sales (goods) / 1% net revenue (services), where "net" = gross less returns, allowances &amp; discounts · RR 10-2002</span></div><input type="text" class="cat-input qeI" id="cat_rep" placeholder="0" inputmode="numeric"></div>`;
   h+=`<div class="cat-row"><div class="cat-name"><span class="nm">Charitable Contributions</span><span class="cat-cap">Cap: 10% of taxable income before contributions · NIRC Sec. 34(H)</span></div><input type="text" class="cat-input qeI" id="cat_charity" placeholder="0" inputmode="numeric"></div>`;
   h+=`<div class="cat-row"><div class="cat-name"><span class="nm">Interest Expense</span><span class="cat-cap">Reduced by 20% of interest income subject to FWT · RR 5-2021 (post-CREATE); RMC 19-2024</span></div><input type="text" class="cat-input qeI" id="cat_interest" placeholder="0" inputmode="numeric"></div>`;
   h+=`<div class="cat-row" style="background:var(--rs);border-radius:6px;padding:.35rem .5rem"><div class="cat-name"><span class="nm" style="color:var(--royal)">Interest Income subject to FWT</span><span class="cat-cap" style="color:var(--royal)">Used to compute the arbitrage reduction</span></div><input type="text" class="cat-input qeI" id="cat_intIncome" placeholder="0" inputmode="numeric"></div>`;
@@ -1952,9 +1965,10 @@ function generateWarnings(g,expData,best,mode,ctx){
   if(ctx.comp&&ctx.comp>0){
     W.push({sev:'info',icon:'ℹ',title:'Mixed income — compensation stacks onto business income',msg:`Compensation income of <b>${fmt(ctx.comp)}</b> is added to your business net taxable income before applying graduated brackets (NIRC §24(A)(2)). The 8% option, if eligible, applies only to business gross sales (+ non-op) and does not include compensation — compensation remains at graduated rates regardless. <span class="ref">NIRC §24(A)(2); RR 8-2018 §3(B)(1)</span>`});
   }
-  // VAT THRESHOLD
-  if(g>3000000)W.push({sev:'high',icon:'⚠',title:'Above VAT Threshold',msg:`Gross sales of <b>${fmt(g)}</b> exceed the ₱3M VAT threshold. The 8% flat rate is unavailable, and you must register for VAT (12%) instead of percentage tax. <span class="ref">NIRC §109(CC) (post-EOPT renumbering); RR 13-2018</span>`});
-  else if(g>2700000)W.push({sev:'med',icon:'⚠',title:'Approaching VAT Threshold',msg:`You are within <b>${fmt(3000000-g)}</b> of the ₱3M VAT registration threshold. Crossing it triggers mandatory VAT registration and disqualifies you from the 8% flat rate. Plan growth carefully. <span class="ref">NIRC §109(CC) (post-EOPT renumbering)</span>`});
+  // VAT THRESHOLD — test combined gross + non-operating income per RR 8-2018 §3(B)(2).
+  const vatBase=g+(ctx.nop||0);
+  if(vatBase>3000000)W.push({sev:'high',icon:'⚠',title:'Above VAT Threshold',msg:`Combined gross sales + non-op of <b>${fmt(vatBase)}</b> exceed the ₱3M VAT threshold. The 8% flat rate is unavailable, and you must register for VAT (12%) instead of percentage tax. <span class="ref">NIRC §109(CC) (post-EOPT renumbering); RR 13-2018</span>`});
+  else if(vatBase>2700000)W.push({sev:'med',icon:'⚠',title:'Approaching VAT Threshold',msg:`Combined gross + non-op is within <b>${fmt(3000000-vatBase)}</b> of the ₱3M VAT registration threshold. Crossing it triggers mandatory VAT registration and disqualifies you from the 8% flat rate. Plan growth carefully. <span class="ref">NIRC §109(CC) (post-EOPT renumbering)</span>`});
   // AFS
   if(g>3000000)W.push({sev:'med',icon:'📋',title:'Audited Financial Statements Required',msg:`Gross sales above <b>₱3M</b> require an AFS prepared by a BIR-accredited independent CPA, attached to your annual ITR (Form 1701). Budget for CPA fees and begin preparation early. <span class="ref">NIRC §232 as amended by RA 11976 (EOPT)</span>`});
   // EXPENSE RATIO
@@ -2006,6 +2020,22 @@ function getCumulativeExpenses(annualEx){
     return[c1,c2,c3,c4];
   }
   return[annualEx*.25,annualEx*.5,annualEx*.75,annualEx];
+}
+
+// Build cumulative sales array per quarter based on the active sales mode.
+// Mirrors getCumulativeExpenses so the quarterly breakdown respects user
+// intent when they enter seasonal data in Quarterly or Monthly mode.
+function getCumulativeSales(annualG){
+  if(SALES_MODE==='q'){
+    const q1=pN('sQ1'),q2=pN('sQ2'),q3=pN('sQ3'),q4=pN('sQ4');
+    return[q1,q1+q2,q1+q2+q3,q1+q2+q3+q4];
+  }
+  if(SALES_MODE==='m'){
+    const m=[];for(let i=1;i<=12;i++)m.push(pN('sM'+i));
+    const c1=m[0]+m[1]+m[2],c2=c1+m[3]+m[4]+m[5],c3=c2+m[6]+m[7]+m[8],c4=c3+m[9]+m[10]+m[11];
+    return[c1,c2,c3,c4];
+  }
+  return[annualG*.25,annualG*.5,annualG*.75,annualG];
 }
 
 function renderCapAnalysis(expData){
@@ -2069,11 +2099,15 @@ function renderComputation(g,expData,R,best,isPure,cwt,over,extras){
   }
   h+=`</div>`;
   // --- Graduated + OSD ---
-  const bN=g-g*.4;
+  // OSD is 40% of GROSS sales only (NIRC §34(L)); non-op and compensation
+  // are added AFTER the deduction so the bracket base matches calc().
+  const bN=Math.max(0,g-g*.4)+nop+comp;
   const bBrk=bracketBreakdown(bN);
   h+=`<div class="comp-regime ${best.k==='b'?'winner':''}"><div class="comp-regime-hdr"><span class="comp-regime-name">Graduated + 40% OSD${mkTip(TIPS.osd)}</span><span class="comp-regime-total">${fmt(R[1].t)}</span></div><div class="comp-steps">`;
   h+=`<div class="comp-step"><span class="comp-step-num">1</span><span class="comp-step-desc">Gross sales / receipts</span><span class="comp-step-val">${fmt(g)}</span></div>`;
   h+=`<div class="comp-step"><span class="comp-step-num">2</span><span class="comp-step-desc">Less: 40% Optional Standard Deduction <b>(NIRC Sec. 34(L))</b></span><span class="comp-step-val neg">(${fmt(g*.4)})</span></div>`;
+  if(nop>0)h+=`<div class="comp-step"><span class="comp-step-num">2a</span><span class="comp-step-desc">Plus: non-operating income <b>(not reduced by OSD)</b></span><span class="comp-step-val">${fmt(nop)}</span></div>`;
+  if(!isPure&&comp>0)h+=`<div class="comp-step"><span class="comp-step-num">2b</span><span class="comp-step-desc">Plus: taxable compensation income <b>(mixed earner — stacked at graduated rates)</b></span><span class="comp-step-val">${fmt(comp)}</span></div>`;
   h+=`<div class="comp-step"><span class="comp-step-num">3</span><span class="comp-step-desc">Taxable income</span><span class="comp-step-val">${fmt(bN)}</span></div>`;
   h+=`<div class="comp-step"><span class="comp-step-num">4</span><span class="comp-step-desc">Apply TRAIN graduated brackets:</span><span class="comp-step-val">${fmt(R[1].iG)}</span></div>`;
   if(bBrk.length){
@@ -2088,7 +2122,12 @@ function renderComputation(g,expData,R,best,isPure,cwt,over,extras){
   h+=`<div class="comp-step total"><span class="comp-step-num"></span><span class="comp-step-desc">Total annual tax</span><span class="comp-step-val">${fmt(R[1].t)}</span></div>`;
   h+=`</div></div>`;
   // --- Graduated + Itemized ---
-  const ex=expData.allowed;const cN=Math.max(0,g-ex);
+  // Matches calc()'s cBizTI = max(0, g-ex+nop); compensation stacks on top.
+  // Using max(0, g-ex+nop) (not max(0,g-ex)+nop) handles NOLCO loss positions
+  // where expenses exceed gross but non-op income partially absorbs the loss.
+  const ex=expData.allowed;
+  const cBizTIDisp=Math.max(0,g-ex+nop);
+  const cN=cBizTIDisp+comp;
   const cBrk=bracketBreakdown(cN);
   h+=`<div class="comp-regime ${best.k==='c'?'winner':''}"><div class="comp-regime-hdr"><span class="comp-regime-name">Graduated + Itemized</span><span class="comp-regime-total">${fmt(R[2].t)}</span></div><div class="comp-steps">`;
   h+=`<div class="comp-step"><span class="comp-step-num">1</span><span class="comp-step-desc">Gross sales / receipts</span><span class="comp-step-val">${fmt(g)}</span></div>`;
@@ -2099,6 +2138,8 @@ function renderComputation(g,expData,R,best,isPure,cwt,over,extras){
   }else{
     h+=`<div class="comp-step"><span class="comp-step-num">2</span><span class="comp-step-desc">Less: Itemized deductions <b>(NIRC Sec. 34)</b></span><span class="comp-step-val neg">(${fmt(ex)})</span></div>`;
   }
+  if(nop>0)h+=`<div class="comp-step"><span class="comp-step-num">2d</span><span class="comp-step-desc">Plus: non-operating income</span><span class="comp-step-val">${fmt(nop)}</span></div>`;
+  if(!isPure&&comp>0)h+=`<div class="comp-step"><span class="comp-step-num">2e</span><span class="comp-step-desc">Plus: taxable compensation income <b>(mixed earner)</b></span><span class="comp-step-val">${fmt(comp)}</span></div>`;
   h+=`<div class="comp-step"><span class="comp-step-num">3</span><span class="comp-step-desc">Taxable income</span><span class="comp-step-val">${fmt(cN)}</span></div>`;
   h+=`<div class="comp-step"><span class="comp-step-num">4</span><span class="comp-step-desc">Apply TRAIN graduated brackets:</span><span class="comp-step-val">${fmt(R[2].iG)}</span></div>`;
   if(cBrk.length){
@@ -2143,7 +2184,10 @@ function renderComputation(g,expData,R,best,isPure,cwt,over,extras){
 //   1701A (Jan 2018) — Parts IV.A, IV.B, IV.C
 //   1701  (Jan 2018 ENCS) — Schedule 3.A, Part VI, Part VII, Part II
 //   2551Q (Jan 2018 ENCS) — Schedule 1, Part II
-function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo){
+function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,extras){
+  extras=extras||{};
+  const nop=extras.nop||0;
+  const comp=extras.comp||0;
   // Distribute CWT across Q1-Q3 vs Q4 using the 2307 log when available.
   // Fallback: linear 75/25 split, labelled as an estimate.
   let cwtQ13=cwt*0.75,cwtQ4=cwt*0.25,cwtSrcNote='';
@@ -2200,8 +2244,8 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo){
       h+=`<div class="form-line"><span class="form-line-num">38</span><span class="form-line-lbl">Net Sales/Revenues/Receipts/Fees (Item 36 less Item 37)</span><span class="form-line-val">${fmt(g)}</span></div>`;
       h+=`<div class="form-line"><span class="form-line-num">39</span><span class="form-line-lbl">Less: Optional Standard Deduction (40% of Item 38)</span><span class="form-line-val">${fmt(g*.4)}</span></div>`;
       h+=`<div class="form-line"><span class="form-line-num">40</span><span class="form-line-lbl">Net Income (Item 38 less Item 39)</span><span class="form-line-val">${fmt(g-g*.4)}</span></div>`;
-      h+=`<div class="form-line"><span class="form-line-num">44</span><span class="form-line-lbl">Total Other Non-Operating Income</span><span class="form-line-val">${fmt(0)}</span></div>`;
-      h+=`<div class="form-line"><span class="form-line-num">45</span><span class="form-line-lbl">Total Taxable Income (Sum of Items 40 and 44)</span><span class="form-line-val">${fmt(g-g*.4)}</span></div>`;
+      h+=`<div class="form-line"><span class="form-line-num">44</span><span class="form-line-lbl">Total Other Non-Operating Income</span><span class="form-line-val">${fmt(nop)}</span></div>`;
+      h+=`<div class="form-line"><span class="form-line-num">45</span><span class="form-line-lbl">Total Taxable Income (Sum of Items 40 and 44)</span><span class="form-line-val">${fmt(g-g*.4+nop)}</span></div>`;
       h+=`<div class="form-line tot"><span class="form-line-num">46</span><span class="form-line-lbl">TAX DUE (Item 45 × Graduated Rate per Tax Table) → Part II Item 20</span><span class="form-line-val">${fmt(R[1].iG)}</span></div>`;
       h+=`</div>`;
     }else{
@@ -2210,10 +2254,10 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo){
       h+=`<div class="form-line"><span class="form-line-num">47</span><span class="form-line-lbl">Sales/Revenues/Receipts/Fees</span><span class="form-line-val">${fmt(g)}</span></div>`;
       h+=`<div class="form-line"><span class="form-line-num">48</span><span class="form-line-lbl">Less: Sales Returns, Allowances and Discounts</span><span class="form-line-val">${fmt(0)}</span></div>`;
       h+=`<div class="form-line"><span class="form-line-num">49</span><span class="form-line-lbl">Net Sales/Revenues/Receipts/Fees (Item 47 less Item 48)</span><span class="form-line-val">${fmt(g)}</span></div>`;
-      h+=`<div class="form-line"><span class="form-line-num">52</span><span class="form-line-lbl">Total Other Non-Operating Income</span><span class="form-line-val">${fmt(0)}</span></div>`;
-      h+=`<div class="form-line"><span class="form-line-num">53</span><span class="form-line-lbl">Total Taxable Income (Sum of Items 49 and 52)</span><span class="form-line-val">${fmt(g)}</span></div>`;
+      h+=`<div class="form-line"><span class="form-line-num">52</span><span class="form-line-lbl">Total Other Non-Operating Income</span><span class="form-line-val">${fmt(nop)}</span></div>`;
+      h+=`<div class="form-line"><span class="form-line-num">53</span><span class="form-line-lbl">Total Taxable Income (Sum of Items 49 and 52)</span><span class="form-line-val">${fmt(g+nop)}</span></div>`;
       h+=`<div class="form-line"><span class="form-line-num">54</span><span class="form-line-lbl">Less: Allowable reduction (₱250,000 — purely SE only)</span><span class="form-line-val">${fmt(d250)}</span></div>`;
-      h+=`<div class="form-line"><span class="form-line-num">55</span><span class="form-line-lbl">Taxable Income/(Loss) (Item 53 less Item 54)</span><span class="form-line-val">${fmt(Math.max(0,g-d250))}</span></div>`;
+      h+=`<div class="form-line"><span class="form-line-num">55</span><span class="form-line-lbl">Taxable Income/(Loss) (Item 53 less Item 54)</span><span class="form-line-val">${fmt(Math.max(0,g+nop-d250))}</span></div>`;
       h+=`<div class="form-line tot"><span class="form-line-num">56</span><span class="form-line-lbl">TAX DUE (Item 55 × 8%) → Part II Item 20</span><span class="form-line-val">${fmt(R[0].iG)}</span></div>`;
       h+=`</div>`;
     }
@@ -2247,9 +2291,11 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo){
     h+=`<div class="form-line"><span class="form-line-num">15</span><span class="form-line-lbl">Allowance for NOLCO</span><span class="form-line-val">${fmt(0)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">16</span><span class="form-line-lbl">Total Allowable Itemized Deductions (Sum of Items 13 to 15)</span><span class="form-line-val">${fmt(opEx)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">18</span><span class="form-line-lbl">Net Income/(Loss) (Item 12 less Item 16)</span><span class="form-line-val">${fmt(Math.max(0,g-ex))}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">22</span><span class="form-line-lbl">Total Other Non-Operating Income</span><span class="form-line-val">${fmt(0)}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">23</span><span class="form-line-lbl">Taxable Income — Business (Sum of Items 18 and 22)</span><span class="form-line-val">${fmt(Math.max(0,g-ex))}</span></div>`;
-    h+=`<div class="form-line"><span class="form-line-num">24</span><span class="form-line-lbl">Total Taxable Income — Compensation &amp; Business</span><span class="form-line-val">${fmt(Math.max(0,g-ex))}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">22</span><span class="form-line-lbl">Total Other Non-Operating Income</span><span class="form-line-val">${fmt(nop)}</span></div>`;
+    const bizTI=Math.max(0,g-ex)+nop;
+    h+=`<div class="form-line"><span class="form-line-num">23</span><span class="form-line-lbl">Taxable Income — Business (Sum of Items 18 and 22)</span><span class="form-line-val">${fmt(bizTI)}</span></div>`;
+    if(!isPure&&comp>0)h+=`<div class="form-line"><span class="form-line-num">23a</span><span class="form-line-lbl">Plus: Taxable Compensation Income (from 2316)</span><span class="form-line-val">${fmt(comp)}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">24</span><span class="form-line-lbl">Total Taxable Income — Compensation &amp; Business</span><span class="form-line-val">${fmt(bizTI+comp)}</span></div>`;
     h+=`<div class="form-line tot"><span class="form-line-num">25</span><span class="form-line-lbl">TOTAL TAX DUE — Comp &amp; Business (graduated) → Part VI Item 1</span><span class="form-line-val">${fmt(R[2].iG)}</span></div>`;
     h+=`</div>`;
     // 1701 Part VI — Summary
@@ -2432,27 +2478,45 @@ function calc(){
   }
   // COMPUTATION BREAKDOWN + RATIONALE + BIR FORM PREVIEW
   renderComputation(g,expData,R,best,isPure,cwt,over,{comp,aBizIG,aCompTax,nop});
-  renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo);
+  renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,{nop,comp});
 
   // QUARTERLY BREAKDOWN
+  // Uses the cumulative method per NIRC §74(A) / RR 8-2018: each quarterly
+  // installment = (tax on cumulative YTD base) − (prior quarterly payments) − (cumulative CWT).
+  // Sales cumulatives respect Quarterly/Monthly entry modes (B-1);
+  // non-operating income and compensation are apportioned per quarter so
+  // the sum of quarterly installments reconciles to the annual total (B-2).
   const cumExp=getCumulativeExpenses(ex);
+  const cumSales=getCumulativeSales(g);
   let qh=`<table class="qt"><thead><tr><th>Period</th><th>8% Flat</th><th>Grad+OSD</th><th>Grad+Item</th></tr></thead><tbody>`;
   const qL=['Q1','Q2','Q3','Annual'],qF=[.25,.5,.75,1];
   for(let q=0;q<4;q++){
-    const f=qF[q],pg=g*f;
+    const f=qF[q];
+    const pg=cumSales[q],prevPg=q>0?cumSales[q-1]:0;
+    // Non-op and compensation are assumed to accrue evenly across the year.
+    const nopCum=nop*f,nopPrev=q>0?nop*qF[q-1]:0;
+    const compCum=comp*f,compPrev=q>0?comp*qF[q-1]:0;
     const cwtCurF=cwtCum[q],cwtPrevF=q>0?cwtCum[q-1]:0;
-    const qA=aAv?Math.max(0,(pg-d250)*.08-cwtCurF):0;
-    const pA=q>0?(aAv?Math.max(0,(g*qF[q-1]-d250)*.08-cwtPrevF):0):0;
-    const qB=Math.max(0,gradTax(pg-pg*.4)-cwtCurF);
-    const pB=q>0?Math.max(0,gradTax(g*qF[q-1]-g*qF[q-1]*.4)-cwtPrevF):0;
+    // 8% — business base is (cumulative gross + nop − ₱250K for pure SE);
+    // mixed earners add graduated tax on cumulative compensation.
+    const aBase8=Math.max(0,pg+nopCum-d250);
+    const aBase8p=Math.max(0,prevPg+nopPrev-d250);
+    const qA=aAv?Math.max(0,aBase8*.08+gradTax(compCum)-cwtCurF):0;
+    const pA=q>0?(aAv?Math.max(0,aBase8p*.08+gradTax(compPrev)-cwtPrevF):0):0;
+    // Grad + OSD — 40% OSD on gross only; add nop and compensation on top.
+    const qB=Math.max(0,gradTax(pg-pg*.4+nopCum+compCum)-cwtCurF);
+    const pB=q>0?Math.max(0,gradTax(prevPg-prevPg*.4+nopPrev+compPrev)-cwtPrevF):0;
+    // Grad + Itemized — deduct cumulative actual expenses; add nop + comp.
     const cumE=cumExp[q],prevCumE=q>0?cumExp[q-1]:0;
-    const qC=Math.max(0,gradTax(Math.max(0,pg-cumE))-cwtCurF);
-    const pC=q>0?Math.max(0,gradTax(Math.max(0,g*qF[q-1]-prevCumE))-cwtPrevF):0;
+    const qC=Math.max(0,gradTax(Math.max(0,pg-cumE)+nopCum+compCum)-cwtCurF);
+    const pC=q>0?Math.max(0,gradTax(Math.max(0,prevPg-prevCumE)+nopPrev+compPrev)-cwtPrevF):0;
     const dA=Math.max(0,qA-pA),dB=Math.max(0,qB-pB),dC=Math.max(0,qC-pC);
     const vs=[aAv?dA:null,dB,dC],mn=Math.min(...vs.filter(v=>v!==null));
     qh+=`<tr><td style="font-weight:600">${qL[q]}</td><td class="${vs[0]===mn&&aAv?'bc':''}">${aAv?fmt(dA):'N/A'}</td><td class="${vs[1]===mn?'bc':''}">${fmt(dB)}</td><td class="${vs[2]===mn?'bc':''}">${fmt(dC)}</td></tr>`;
   }
-  if(!over)qh+=`<tr style="border-top:2px solid var(--bd)"><td style="font-weight:600">+3% Pct Tax</td><td>${aAv?'Exempt':'N/A'}</td><td>${fmt(g*.03)}</td><td>${fmt(g*.03)}</td></tr>`;
+  // Percentage tax is filed quarterly (2551Q) — split the annual 3% evenly by quarter
+  // so the row is consistent with the per-quarter installments above (B-7).
+  if(!over)qh+=`<tr style="border-top:2px solid var(--bd)"><td style="font-weight:600">+3% Pct Tax (per Q)</td><td>${aAv?'Exempt':'N/A'}</td><td>${fmt(g*.03/4)}</td><td>${fmt(g*.03/4)}</td></tr>`;
   qh+=`<tr style="background:var(--s2);font-weight:700"><td>TOTAL</td><td class="${best.k==='a'?'bc':''}">${aAv?fmt(R[0].t):'N/A'}</td><td class="${best.k==='b'?'bc':''}">${fmt(R[1].t)}</td><td class="${best.k==='c'?'bc':''}">${fmt(R[2].t)}</td></tr></tbody></table>`;
   // Source of CWT distribution — explicit so the user knows whether numbers reflect real 2307s.
   const cwtSrcLabel=cwtInfo.source==='log'
