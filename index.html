@@ -8,7 +8,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#f9f9fa;--sf:#fff;--s2:#f0f1f3;--s3:#e8e9ec;--bd:#e0e2e6;--bl:#b5b8bd;--ink:#111;--ch:#333;--dim:#595959;--mu:#707070;--lt:#8a8a8a;--royal:#4169e1;--rs:rgba(65,105,225,.07);--rm:rgba(65,105,225,.14);--navy:#2c3e50;--green:#2d8a4e;--gs:rgba(45,138,78,.07);--amber:#d4850a;--as:rgba(212,133,10,.07);--red:#c0392b;--rds:rgba(192,57,43,.07);--teal:#1a8a7a;--ts:rgba(26,138,122,.07);--purple:#6c5ce7;--ps:rgba(108,92,231,.07);--rose:#c44569;--ros:rgba(196,69,105,.07);--slate:#5a6c7d;--sls:rgba(90,108,125,.07);--se:'Source Serif 4',Georgia,serif;--sa:'Inter',system-ui,sans-serif;--r:8px;--rr:5px;--sh:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.06);--shs:0 1px 2px rgba(0,0,0,.04),0 2px 8px rgba(0,0,0,.04);--hdr-h:68px;}
-html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);color:var(--ch);line-height:1.6;-webkit-font-smoothing:antialiased;}
+html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);color:var(--ch);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .sr-only{position:absolute !important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .skip-link{position:absolute;top:-44px;left:8px;background:var(--ink);color:#fff;padding:.5rem .9rem;border-radius:4px;font-weight:700;z-index:1000;text-decoration:none;font-size:.85rem}
 .skip-link:focus{top:8px}
@@ -284,6 +284,19 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .cap-table tr.totalrow td{font-family:var(--sa)}
 
 @media(max-width:768px){
+  .hdr{padding:.7rem 1rem}
+  .hdr-i{gap:.4rem}
+  .hdr-r{max-width:100%;min-width:0;flex:1 1 100%}
+  .tbar{padding:.5rem 1rem}
+  .tbar-i,.rbar{max-width:100%}
+  .rbar{padding:0 1rem}
+  .cls{padding:0 1rem}
+  .sm-bar{padding:0 1rem}
+  .bp{padding:0 1rem 2rem}
+  .ftr{padding:1rem}
+  .pnav{overflow-x:auto;max-width:100%;min-width:0;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-radius:var(--rr)}
+  .pnav::-webkit-scrollbar{display:none}
+  .pnav button{padding:.5rem .75rem;font-size:.78rem;flex-shrink:0}
   .mn{padding:.6rem 1rem 1.5rem}
   .inp{padding:1rem}
   .form-paper{padding:.85rem .85rem}
@@ -296,6 +309,17 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
   .form-section-t{font-size:.58rem}
 }
 @media(max-width:480px){
+  .hdr{padding:.6rem .75rem}
+  .hdr-r{width:100%;justify-content:flex-start}
+  .brand h1{font-size:1.05rem}
+  .brand .tl{font-size:.6rem}
+  .pnav button{padding:.45rem .7rem;font-size:.72rem;min-height:34px}
+  .notif-btn,.mode-toggle{font-size:.72rem;padding:.4rem .7rem;min-height:34px}
+  .tbar{padding:.45rem .75rem}
+  .rbar{padding:0 .75rem}
+  .cls{padding:0 .75rem}
+  .sm-bar{padding:0 .75rem;font-size:.75rem}
+  .mn{padding:.55rem .75rem 1.4rem}
   .cat-row,.int-row{grid-template-columns:1fr;gap:.25rem}
   .cat-input{text-align:left}
   .form-paper{padding:.7rem .6rem}
@@ -494,8 +518,6 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .calc-right #plainSummary .ps-action{color:var(--ink);font-weight:600}
 .calc-right #warnBox:empty{display:none}
 .cr-empty{padding:1.1rem .9rem;text-align:center;font-family:var(--se);font-size:.82rem;color:var(--mu);line-height:1.5;border:1.5px dashed var(--bd);border-radius:var(--r)}
-.cr-footer{margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--s2);display:flex;justify-content:flex-end}
-.cr-footer .cbtn{font-size:.7rem;padding:.4rem 1rem}
 
 .calc-details{margin-top:1.1rem}
 .cd-sec{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);margin-bottom:.45rem;overflow:hidden}
@@ -934,7 +956,6 @@ body:not(.pro-mode) .mc{display:none}
 <div id="rcBox"></div>
 <div id="plainSummary"></div>
 <div id="warnBox"></div>
-<div class="cr-footer"><button type="button" id="yoySavePanelBtn" class="cbtn" onclick="saveYoYSnapshot()">Save YoY snapshot</button></div>
 </aside>
 </div>
 
@@ -1261,7 +1282,6 @@ function renderCalcEmptyState(){
   ['rcBox','plainSummary','warnBox','compSetBox','formPrevBox','capBox','qB','yoyBox'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.innerHTML='';
   });
-  _pendingYoYSnapshot=null;
 }
 
 // ══════════ TOOLTIP SYSTEM ══════════
@@ -2816,35 +2836,9 @@ function calc(){
   }else{
     document.getElementById('qB').innerHTML='';
   }
-  // Cache the current computation in memory for an explicit "Save as YoY snapshot" action.
-  const _newSnap={g,cwt,ex,best:{k:best.k,t:best.t,iG:best.iG,iN:best.iN},R:[{t:R[0].t,av:R[0].av},{t:R[1].t},{t:R[2].t}]};
-  const _newSnapKey=JSON.stringify(_newSnap);
-  // Re-enable the Save-YoY button only when the model actually changes from the last save;
-  // identical recomputes (e.g. a stray blur-triggered change event) leave the ✓ state intact.
-  const _ysb=document.getElementById('yoySavePanelBtn');
-  if(_ysb&&_ysb.dataset.saved==='1'&&_ysb.dataset.savedKey!==_newSnapKey){
-    _ysb.textContent='Save YoY snapshot';_ysb.disabled=false;_ysb.style.opacity='';_ysb.style.cursor='';delete _ysb.dataset.saved;delete _ysb.dataset.savedKey;
-  }
-  _pendingYoYSnapshot=_newSnap;
+  safeSet('tpv_calc_'+YEAR,JSON.stringify({g,cwt,ex,best:{k:best.k,t:best.t,iG:best.iG,iN:best.iN},R:[{t:R[0].t,av:R[0].av},{t:R[1].t},{t:R[2].t}]}));
   if(document.getElementById('cdYoY')?.open)renderYoY(g,R,best,cwt,ex);
   else document.getElementById('yoyBox').innerHTML='';
-}
-// Explicit save — no more autosave on every calc click.
-let _pendingYoYSnapshot=null;
-function saveYoYSnapshot(){
-  if(!_pendingYoYSnapshot){toast('Enter gross sales first — nothing to snapshot yet.','err');return;}
-  if(!safeSet('tpv_calc_'+YEAR,JSON.stringify(_pendingYoYSnapshot))){toast('Could not save snapshot — storage quota reached.','err');return;}
-  // Update both the in-panel button and the in-details button if present. Stamp the
-  // saved model's JSON so subsequent identical recomputes don't clobber the ✓ state.
-  const _sk=JSON.stringify(_pendingYoYSnapshot);
-  ['yoySaveBtn','yoySavePanelBtn'].forEach(id=>{
-    const btn=document.getElementById(id);
-    if(btn){btn.textContent='✓ Snapshot saved';btn.disabled=true;btn.style.opacity='.6';btn.style.cursor='default';btn.dataset.saved='1';btn.dataset.savedKey=_sk;}
-  });
-  // Refresh the YoY details section so the new snapshot shows up if it's open.
-  if(document.getElementById('cdYoY')?.open&&_pendingYoYSnapshot){
-    try{renderYoY(_pendingYoYSnapshot.g,[{t:_pendingYoYSnapshot.R[0].t,av:_pendingYoYSnapshot.R[0].av},{t:_pendingYoYSnapshot.R[1].t},{t:_pendingYoYSnapshot.R[2].t}],{k:_pendingYoYSnapshot.best.k,t:_pendingYoYSnapshot.best.t,iG:_pendingYoYSnapshot.best.iG,iN:_pendingYoYSnapshot.best.iN},_pendingYoYSnapshot.cwt,_pendingYoYSnapshot.ex);}catch(e){/* ignore */}
-  }
 }
 
 // Init number formatters on all numeric inputs
@@ -3491,9 +3485,7 @@ function renderYoY(g,R,best,cwt,ex){
   const el=document.getElementById('yoyBox');
   if(!el)return;
   const prev=localStorage.getItem('tpv_calc_'+(YEAR-1));
-  const curSaved=localStorage.getItem('tpv_calc_'+YEAR);
-  const saveBtn=`<button id="yoySaveBtn" onclick="saveYoYSnapshot()" style="font-family:var(--sa);font-size:.62rem;font-weight:700;padding:.25rem .7rem;border-radius:100px;border:1.5px solid var(--royal);background:${curSaved?'var(--rs)':'transparent'};color:var(--royal);cursor:${curSaved?'default':'pointer'};opacity:${curSaved?'.7':'1'}" ${curSaved?'disabled':''}>${curSaved?'✓ Saved for YoY':'💾 Save snapshot for YoY'}</button>`;
-  if(!prev){el.innerHTML=`<div class="yoy-panel"><h3>Year-over-Year Comparison</h3><p style="font-size:.7rem;color:var(--dim);margin:.4rem 0 .6rem">No snapshot from ${YEAR-1} found. Save this year's snapshot so you can compare next year.</p>${saveBtn}</div>`;return;}
+  if(!prev){el.innerHTML=`<div class="yoy-panel"><h3>Year-over-Year Comparison</h3><p style="font-size:.7rem;color:var(--dim);margin:.4rem 0 0">No snapshot from ${YEAR-1} found. This year's computation is saved automatically so you can compare next year.</p></div>`;return;}
   let p;try{p=JSON.parse(prev);}catch{el.innerHTML='';return;}
   function delta(cur,prv){
     if(!prv)return'<span class="yoy-flat">—</span>';
@@ -3515,7 +3507,6 @@ function renderYoY(g,R,best,cwt,ex){
     const pv=r.prv!=null?fmt(r.prv):'—';
     h+=`<div class="yoy-row"><span class="yoy-lbl">${r.lbl}</span><span class="yoy-val">${pv}</span><span class="yoy-val">${fmt(r.cur)}</span><span class="yoy-delta">${delta(r.cur,r.prv)}</span></div>`;
   });
-  h+=`<div style="margin-top:.6rem;display:flex;justify-content:flex-end">${saveBtn}</div>`;
   h+=`</div>`;
   el.innerHTML=h;
 }
