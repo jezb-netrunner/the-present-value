@@ -3025,7 +3025,7 @@ function initNumberFormatters(){
   });
 }
 
-initMonthGrid();initCatGrid();initNumberFormatters();onTaxpayerTypeChange();refreshCorpGuard();initDedMethod();
+initMonthGrid();initCatGrid();initNumberFormatters();onTaxpayerTypeChange();refreshCorpGuard();
 // Ensure all extended calc inputs run through the same comma formatter.
 document.querySelectorAll('#compI,#nopI,#zeroRatedSales,#inputVAT,#priorExcess,#q1Paid,#q2Paid,#q3Paid').forEach(el=>{
   el.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});
@@ -3050,6 +3050,10 @@ const _calcRecompute=debounce(function(){
     sec.addEventListener('toggle',()=>{if(sec.open){try{calc();}catch(e){/* ignore */}}});
   });
   initProfileStrip();
+  // Must run after _calcRecompute is defined — setDedMethod probes it via
+  // `typeof`, and a TDZ access on the const binding throws a ReferenceError
+  // that halts every init call after it (the calendar render among them).
+  initDedMethod();
   applyProfileVisibility();
   updateProfileSummary();
   // Seed the right panel with an empty state so users see the live-compute scaffolding immediately.
