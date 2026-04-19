@@ -818,20 +818,59 @@ body:not(.pro-mode) .mc{display:none}
 /* Advanced details styled in line with the existing .cd-sec sections. */
 .adv-credits{margin-top:.85rem}
 
+/* ══ MOBILE BOTTOM NAV + COMPACT HEADER ══ */
+:root{--btmnav-h:56px}
+.cp-sum{-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;scroll-snap-type:x proximity}
+.cp-sum .chip{scroll-snap-align:start}
+.btmnav{display:none}
+.brand-badge{display:none}
+.hdr-mobile-icons{display:none}
+.brand-row{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+@media(max-width:768px){
+  /* Compact calculator intro */
+  .calc-intro{margin-bottom:.55rem}
+  .calc-intro h2{font-size:1.15rem;line-height:1.2;margin-bottom:0}
+  .calc-intro p{display:none}
+  /* Hide top nav + Reminders + Mode toggle in favor of bottom bar + mobile icons */
+  .pnav{display:none!important}
+  .hdr-r .notif-btn,.hdr-r .mode-toggle{display:none!important}
+  .hdr-r{flex:0 0 auto!important;width:auto!important;justify-content:flex-end!important;max-width:none}
+  .hdr-i{flex-wrap:nowrap;justify-content:space-between}
+  .brand{flex:1;min-width:0}
+  .hdr-mobile-icons{display:inline-flex;align-items:center;gap:.4rem}
+  .hdr-mobile-icons button{background:var(--sf);border:1.5px solid var(--bd);border-radius:50%;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--dim);flex-shrink:0;padding:0}
+  .hdr-mobile-icons button:hover{border-color:var(--royal);color:var(--royal)}
+  .hdr-mobile-icons button.on{border-color:var(--green);color:var(--green);background:var(--gs)}
+  .hdr-mobile-icons button svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  /* Pro / Simple badge next to brand title */
+  .brand-badge{display:inline-flex;align-items:center;padding:.1rem .5rem;border-radius:100px;background:var(--s2);color:var(--mu);font-family:var(--sa);font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--bd);min-height:22px;line-height:1;white-space:nowrap}
+  body.pro-mode .brand-badge{background:var(--rs);color:var(--royal);border-color:var(--royal)}
+  /* Bottom tab nav */
+  .btmnav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--sf);border-top:1px solid var(--bd);z-index:299;box-shadow:0 -1px 4px rgba(0,0,0,.05);padding-bottom:env(safe-area-inset-bottom)}
+  .btmnav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.12rem;padding:.3rem .25rem;min-height:var(--btmnav-h);background:none;border:none;cursor:pointer;color:var(--mu);font-family:var(--sa);font-size:.6rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+  .btmnav button.active{color:var(--royal)}
+  .btmnav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  /* Simple mode hides Form Reference + Tools in bottom bar; Pro mode restores them */
+  .btmnav button[data-pg="ref"],.btmnav button[data-pg="tools"]{display:none}
+  body.pro-mode .btmnav button[data-pg="ref"],body.pro-mode .btmnav button[data-pg="tools"]{display:flex}
+  /* Global body padding so content clears the bottom bar */
+  body{padding-bottom:var(--btmnav-h)}
+  /* Calc content: reserve extra room for sticky summary above the bottom bar */
+  #pgCalc.vis main.mn{padding-bottom:calc(var(--btmnav-h) + 16px)}
+}
 /* ══ MOBILE STICKY CALCULATOR DRAWER (≤480px) ══ */
 .cr-mob-bar{display:none}
 @media(max-width:480px){
-  #pgCalc.vis main.mn{padding-bottom:84px}
+  #pgCalc.vis main.mn{padding-bottom:calc(var(--btmnav-h) + 80px)}
   .calc-grid{grid-template-columns:1fr}
   .calc-right{
-    position:fixed !important;left:0;right:0;bottom:0;top:auto;
+    position:fixed !important;left:0;right:0;bottom:var(--btmnav-h);top:auto;
     z-index:300;border:none;border-top:1px solid var(--bd);
     border-radius:14px 14px 0 0;background:var(--sf);
     box-shadow:0 -4px 18px rgba(0,0,0,.14);
     max-height:64px;overflow:hidden;
     padding:0;transition:max-height .3s cubic-bezier(.4,0,.2,1);
   }
-  .calc-right.expanded{max-height:78vh;overflow:auto;padding-bottom:.85rem}
   .calc-right .cr-mob-bar{
     display:flex;width:100%;align-items:center;justify-content:space-between;
     padding:.7rem .9rem;background:var(--sf);border:none;
@@ -842,17 +881,16 @@ body:not(.pro-mode) .mc{display:none}
   .cr-mob-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mu)}
   .cr-mob-name{font-family:var(--se);font-size:.92rem;font-weight:600;color:var(--green);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cr-mob-amt{font-family:var(--sa);font-size:.78rem;font-weight:700;color:var(--ink);white-space:nowrap}
-  .cr-mob-toggle{font-family:var(--sa);font-size:.78rem;font-weight:700;color:var(--royal);padding:.42rem .85rem;background:var(--rs);border-radius:100px;flex-shrink:0;border:1px solid transparent;min-height:36px;display:inline-flex;align-items:center}
+  .cr-mob-toggle{font-family:var(--sa);font-size:.75rem;font-weight:700;color:var(--royal);padding:.42rem .75rem;background:var(--rs);border-radius:100px;flex-shrink:0;border:1px solid transparent;min-height:36px;display:inline-flex;align-items:center;white-space:nowrap}
+  /* Hide ccards + extras inline — full comparison now lives in #regimeSheet */
   .calc-right .ccards,
   .calc-right #rcBox,
   .calc-right #plainSummary,
-  .calc-right #warnBox{padding-left:.85rem;padding-right:.85rem}
-  .calc-right.expanded .ccards{margin-top:.5rem}
-  .calc-right:not(.expanded) .ccards,
-  .calc-right:not(.expanded) #rcBox,
-  .calc-right:not(.expanded) #plainSummary,
-  .calc-right:not(.expanded) #warnBox{display:none}
+  .calc-right #warnBox{display:none}
 }
+/* Regime sheet body styling — stacked cards take full width */
+#regimeSheet .ccards{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1rem}
+#regimeSheet .ccard{min-width:0}
 </style>
 </head>
 <body>
@@ -884,18 +922,27 @@ body:not(.pro-mode) .mc{display:none}
 </div>
 
 <header class="hdr" role="banner"><div class="hdr-i">
-<div class="brand"><h1>The Present Value<span>.</span></h1><div class="tl">Markets, Taxes &amp; Daily Life</div></div>
+<div class="brand"><div class="brand-row"><h1>The Present Value<span>.</span></h1><button type="button" class="brand-badge" id="brandBadge" onclick="tgMode()" aria-label="Toggle between Simple and Pro modes"><span id="brandBadgeLbl">Simple</span></button></div><div class="tl">Markets, Taxes &amp; Daily Life</div></div>
 <div class="hdr-r">
 <nav class="pnav" aria-label="Primary">
-  <button type="button" class="active" onclick="showPg('cal',this)" aria-current="page">Tax Calendar</button>
-  <button type="button" onclick="showPg('ref',this)">Form Reference</button>
-  <button type="button" onclick="showPg('calc',this)">Regime Calculator</button>
-  <button type="button" onclick="showPg('tools',this)">Tools &amp; Guides</button>
+  <button type="button" class="active" data-pg="cal" onclick="showPg('cal',this)" aria-current="page">Tax Calendar</button>
+  <button type="button" data-pg="ref" onclick="showPg('ref',this)">Form Reference</button>
+  <button type="button" data-pg="calc" onclick="showPg('calc',this)">Regime Calculator</button>
+  <button type="button" data-pg="tools" onclick="showPg('tools',this)">Tools &amp; Guides</button>
 </nav>
 <button type="button" class="notif-btn" id="notifBtn" onclick="toggleNotifications()" aria-pressed="false" aria-label="Toggle BIR deadline reminders"><span aria-hidden="true">🔔</span> Reminders</button>
 <button type="button" class="mode-toggle" onclick="tgMode()" aria-pressed="false" aria-label="Toggle between Simple and Pro (Accountant) modes"><span class="mt-pip" aria-hidden="true"></span><span class="mt-label">Simple</span></button>
+<div class="hdr-mobile-icons">
+  <button type="button" id="notifBtnMobile" onclick="toggleNotifications()" aria-pressed="false" aria-label="Toggle BIR deadline reminders"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></button>
+</div>
 </div>
 </div></header>
+<nav class="btmnav" aria-label="Primary mobile">
+  <button type="button" class="active" data-pg="cal" onclick="showPg('cal',this)" aria-current="page" aria-label="Tax Calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg><span>Calendar</span></button>
+  <button type="button" data-pg="ref" onclick="showPg('ref',this)" aria-label="Form Reference"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h11a4 4 0 0 1 4 4v12H7a3 3 0 0 0-3 3V4z"/><path d="M8 8h7M8 12h7"/></svg><span>Forms</span></button>
+  <button type="button" data-pg="calc" onclick="showPg('calc',this)" aria-label="Regime Calculator"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></svg><span>Calculator</span></button>
+  <button type="button" data-pg="tools" onclick="showPg('tools',this)" aria-label="Tools and Guides"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 1 0 3 3l4 4-3 3-4-4a4 4 0 0 0-3-3l-4 4-3-3 4-4a4 4 0 0 0 3 3z"/></svg><span>Tools</span></button>
+</nav>
 
 <!-- ═══ PAGE 1: CALENDAR ═══ -->
 <div class="page vis" id="pgCal" role="region" aria-labelledby="calHeading"><h2 id="calHeading" class="sr-only">Tax Calendar</h2>
@@ -1002,20 +1049,17 @@ body:not(.pro-mode) .mc{display:none}
 <div class="calc-left" id="calcLeft">
 <div class="inp inp-flat">
 
-<!-- Conditional context inputs (compensation + VAT). Each .fld is hidden by
-     applyProfileVisibility() until the relevant profile state turns it on. -->
+<!-- Conditional VAT context inputs. Each .fld is hidden by applyProfileVisibility()
+     until VAT-registration turns it on. Annual Compensation Income is rendered
+     below Gross Sales so it only appears once the user has scrolled past it. -->
 <div class="fg ctx-fg" id="ctxFields">
-<div class="fld hidden" id="fldComp"><label for="compI">Annual Compensation Income (₱)</label><input type="text" id="compI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 <div class="fld" id="fldZeroRated"><label for="zeroRatedSales">Zero-rated Sales (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Zero-rated VAT sales" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">Sales subject to 0% VAT under NIRC §106(A)(2)(a) / §108(B) — typically direct exports, services to non-residents paid in acceptable foreign currency, and sales to SEZs. Included in your gross sales figure above. The 2550Q preview will split output VAT between 12% and 0% portions.</span></span></label><input type="text" id="zeroRatedSales" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 <div class="fld" id="fldInputVAT"><label for="inputVAT">Input VAT on Purchases (₱)<span class="tip"><button type="button" class="tip-i" aria-label="Help: Input VAT on purchases" aria-expanded="false" onclick="tipTgl(this.parentNode,event)">i</button><span class="tip-b" role="tooltip">The 12% VAT you paid on business purchases (from VAT-registered suppliers, per official VAT invoices/receipts). Creditable against output VAT on 2550Q per NIRC §110. Only applicable if you are VAT-registered.</span></span></label><input type="text" id="inputVAT" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
 </div>
 
 <!-- SALES INPUT -->
 <div class="exp-section first-section">
-<div class="exp-title" style="display:flex;align-items:center;justify-content:space-between">
-  <span>Gross Sales / Receipts</span>
-  <span id="salesTotalBadge" style="font-family:var(--sa);font-size:.72rem;font-weight:700;color:var(--royal)">₱0</span>
-</div>
+<div class="exp-title"><span>Gross Sales / Receipts</span></div>
 <div class="exp-modes" role="tablist" aria-label="Sales input mode" style="margin-bottom:.55rem">
 <button type="button" class="em-btn act" onclick="setSalesMode('lump',this)" role="tab" aria-selected="true">Annual Total</button>
 <button type="button" class="em-btn" onclick="setSalesMode('q',this)" role="tab" aria-selected="false">Quarterly</button>
@@ -1037,14 +1081,16 @@ body:not(.pro-mode) .mc{display:none}
 </div>
 </div>
 
+<!-- Annual compensation income — shown only for mixed-income earners
+     (applyProfileVisibility toggles .hidden). Placed after Sales so the
+     primary input surfaces first on mobile. -->
+<div class="fld hidden" id="fldComp" style="margin:0 0 1rem"><label for="compI">Annual Compensation Income (₱)</label><input type="text" id="compI" placeholder="0" inputmode="numeric" value="0" autocomplete="off"></div>
+
 <!-- DEDUCTIONS — Step 1: OSD vs Itemized method picker.
      Step 2: granularity (Annual/Quarterly/Monthly/Categorized) appears only
      when Itemized is selected. -->
 <div class="exp-section">
-<div class="exp-title" style="display:flex;align-items:center;justify-content:space-between">
-  <span>Deductions</span>
-  <span id="expTotalBadge" style="font-family:var(--sa);font-size:.72rem;font-weight:700;color:var(--royal)">₱0</span>
-</div>
+<div class="exp-title"><span>Deductions</span></div>
 <div class="ded-method-row" role="radiogroup" aria-label="Deduction method">
 <button type="button" class="ded-method-card" id="dedCardOsd" data-m="osd" onclick="setDedMethod('osd',this)" role="radio" aria-checked="false">
   <span class="ded-method-name">OSD</span>
@@ -1104,19 +1150,27 @@ body:not(.pro-mode) .mc{display:none}
 </div>
 
 <aside class="calc-right" id="calcRight" aria-label="Live regime comparison">
-<button type="button" class="cr-mob-bar" id="crMobBar" onclick="toggleMobileCalcDrawer()" aria-expanded="false" aria-controls="calcRight">
+<button type="button" class="cr-mob-bar" id="crMobBar" onclick="openRegimeSheet()" aria-haspopup="dialog" aria-controls="regimeSheet">
   <div class="cr-mob-info">
     <span class="cr-mob-lbl" id="crMobLbl">Lowest</span>
     <span class="cr-mob-name" id="crMobName">Enter sales</span>
     <span class="cr-mob-amt" id="crMobAmt"></span>
   </div>
-  <span class="cr-mob-toggle" id="crMobToggle" aria-hidden="true">Expand</span>
+  <span class="cr-mob-toggle" id="crMobToggle" aria-hidden="true">See all 3 regimes →</span>
 </button>
 <div class="ccards" id="cCards"></div>
 <div id="rcBox"></div>
 <div id="plainSummary"></div>
 <div id="warnBox"></div>
 </aside>
+</div>
+<!-- Regime sheet: on mobile, tapping the sticky bar reparents the live
+     comparison nodes here so users can see the three cards stacked. -->
+<div class="sheet-ov" id="regimeSheet" role="dialog" aria-modal="true" aria-labelledby="regimeSheetTitle" onclick="if(event.target===this)closeRegimeSheet()">
+  <div class="sheet-card">
+    <div class="sheet-hdr"><span class="sheet-title" id="regimeSheetTitle">Regime comparison</span><button type="button" class="sheet-x" onclick="closeRegimeSheet()" aria-label="Close">×</button></div>
+    <div class="sheet-body" id="regimeSheetBody"></div>
+  </div>
 </div>
 
 <section class="calc-details" aria-label="Detailed breakdowns">
@@ -1365,8 +1419,12 @@ function showPg(p,btn){
   // works from any tab, not just Calendar.
   document.querySelectorAll('[data-skiptarget]').forEach(el=>{el.removeAttribute('id');el.removeAttribute('data-skiptarget');});
   const m=pg.querySelector('main')||pg;m.setAttribute('id','mainContent');m.setAttribute('data-skiptarget','1');
-  document.querySelectorAll('.pnav button').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});
-  btn.classList.add('active');btn.setAttribute('aria-current','page');
+  // Sync both the top .pnav and the mobile .btmnav active states off data-pg.
+  document.querySelectorAll('.pnav button,.btmnav button').forEach(b=>{
+    const on=b.getAttribute('data-pg')===p;
+    b.classList.toggle('active',on);
+    if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+  });
   if(p==='calc'){
     refreshCorpGuard();
     // Prime the sticky live panel on tab show so the user isn't staring at blank cards.
@@ -1419,7 +1477,7 @@ function updateProfileSummary(){
   // states are muted ("Non-GPP", "Non-BMBE") so users see status at a glance
   // without the row growing/shrinking on every selection.
   const chips=[];
-  if(tS==='pure')chips.push({l:'Self-Employed'});else if(tS==='mixed')chips.push({l:'Mixed Income'});
+  if(tS==='pure')chips.push({l:'Self-Employed'});else if(tS==='mixed')chips.push({l:'Mixed'});
   if(bizT==='services')chips.push({l:'Services'});else if(bizT==='goods')chips.push({l:'Goods'});
   chips.push({l:vatOn?'VAT':'Non-VAT'});
   if(!vatOn&&(g+nop)<=3e6)chips.push({l:document.getElementById('eightElect')?.value==='yes'?'8% elected':'Graduated',muted:document.getElementById('eightElect')?.value!=='yes'});
@@ -1507,18 +1565,37 @@ function positionTip(tip){
 }
 function tipTgl(el,e){e.stopPropagation();const wasOn=el.classList.contains('on');document.querySelectorAll('.tip.on').forEach(t=>{t.classList.remove('on');const b=t.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','false');});if(!wasOn){el.classList.add('on');const b=el.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','true');positionTip(el);}}
 
-// ══════════ MOBILE STICKY CALC DRAWER ══════════
+// ══════════ MOBILE STICKY CALC BAR + REGIME SHEET ══════════
 // On phones (≤480px) the right pane is converted to a sticky bottom bar
-// showing only the winning regime. Tap "Expand" to slide the full pane up.
-function toggleMobileCalcDrawer(){
-  const cr=document.getElementById('calcRight');if(!cr)return;
-  const open=!cr.classList.contains('expanded');
-  cr.classList.toggle('expanded',open);
-  const bar=document.getElementById('crMobBar');
-  if(bar)bar.setAttribute('aria-expanded',open?'true':'false');
-  const tog=document.getElementById('crMobToggle');
-  if(tog)tog.textContent=open?'Collapse':'Expand';
+// showing only the winning regime. Tapping "See all 3 regimes" reparents
+// the live comparison nodes into #regimeSheet so the user sees all cards
+// stacked in a proper bottom sheet (no full-page navigation).
+const _REGIME_SHEET_NODE_IDS=['cCards','rcBox','plainSummary','warnBox'];
+let _regimeSheetLastFocus=null;
+function openRegimeSheet(){
+  const ov=document.getElementById('regimeSheet');if(!ov)return;
+  const body=document.getElementById('regimeSheetBody');
+  const src=document.getElementById('calcRight');
+  if(body&&src){
+    _REGIME_SHEET_NODE_IDS.forEach(id=>{const el=document.getElementById(id);if(el&&el.parentElement!==body)body.appendChild(el);});
+  }
+  _regimeSheetLastFocus=document.activeElement;
+  ov.classList.add('vis');
+  document.body.style.overflow='hidden';
+  document.addEventListener('keydown',_regimeSheetKeyHandler);
+  try{if(typeof calc==='function')calc();}catch(e){}
+  setTimeout(()=>{const f=ov.querySelector('.sheet-x');if(f)try{f.focus();}catch(e){}},40);
 }
+function closeRegimeSheet(){
+  const ov=document.getElementById('regimeSheet');if(!ov)return;
+  const dest=document.getElementById('calcRight');
+  if(dest){_REGIME_SHEET_NODE_IDS.forEach(id=>{const el=document.getElementById(id);if(el&&el.parentElement!==dest)dest.appendChild(el);});}
+  ov.classList.remove('vis');
+  document.body.style.overflow='';
+  document.removeEventListener('keydown',_regimeSheetKeyHandler);
+  if(_regimeSheetLastFocus&&typeof _regimeSheetLastFocus.focus==='function')try{_regimeSheetLastFocus.focus();}catch(e){}
+}
+function _regimeSheetKeyHandler(e){if(e.key==='Escape')closeRegimeSheet();}
 function updateMobileCalcBar(){
   const name=document.getElementById('crMobName');
   const amt=document.getElementById('crMobAmt');
@@ -2491,28 +2568,17 @@ function getSales(){
 }
 
 function updateTotals(){
-  document.getElementById('salesTotalBadge').textContent=fmt(getSales());
-  // OSD has no entered expenses — surface the auto-computed 40% in the badge
-  // so the user sees what the deduction will be without leaving the card.
-  if(DED_METHOD==='osd'){
-    const auto=getSales()*0.40;
-    document.getElementById('expTotalBadge').textContent=fmt(auto)+' (40% OSD)';
-    return;
-  }
-  let ex=0;
-  if(EXP_MODE==='lump')ex=pN('eI');
-  else if(EXP_MODE==='q')ex=pN('eQ1')+pN('eQ2')+pN('eQ3')+pN('eQ4');
-  else if(EXP_MODE==='m'){for(let i=1;i<=12;i++)ex+=pN('eM'+i);}
-  else if(EXP_MODE==='cat'){
+  // Sales/Deductions section totals moved to the sticky regime bar.
+  // Sub-group totals inside Categorized Deductions still update in place.
+  if(DED_METHOD==='osd')return;
+  if(EXP_MODE==='cat'){
     const capped=pN('cat_rep')+pN('cat_charity')+pN('cat_interest');
     const operating=['cogs','salaries','rent','utilities','supplies','profFees','depreciation','repairs','insurance','taxesLic','travel','communication'].reduce((s,k)=>s+pN('cat_'+k),0);
     const other=pN('cat_badDebts')+pN('cat_otherExp');
-    ex=capped+operating+other;
     const cgc=document.getElementById('cgt_capped');if(cgc)cgc.textContent=fmt(capped);
     const cgo=document.getElementById('cgt_operating');if(cgo)cgo.textContent=fmt(operating);
     const cgx=document.getElementById('cgt_other');if(cgx)cgx.textContent=fmt(other);
   }
-  document.getElementById('expTotalBadge').textContent=fmt(ex);
 }
 
 function computeCategoryDeductions(g){
@@ -3243,6 +3309,8 @@ function tgMode(){
   document.body.classList.toggle('pro-mode',isPro);
   document.querySelector('.mode-toggle .mt-label').textContent=isPro?'Pro':'Simple';
   const mt=document.querySelector('.mode-toggle');if(mt)mt.setAttribute('aria-pressed',isPro?'true':'false');
+  const bbLbl=document.getElementById('brandBadgeLbl');if(bbLbl)bbLbl.textContent=isPro?'Pro':'Simple';
+  const bb=document.getElementById('brandBadge');if(bb)bb.setAttribute('aria-pressed',isPro?'true':'false');
   safeSet('tpv_mode',isPro?'pro':'simple');
   if(!isPro){
     // Switched to Simple — redirect away from tabs hidden in Simple mode (Form Reference and Tools & Guides)
@@ -3520,6 +3588,8 @@ rRB();rCL();rCF();ren();renderForms();
     document.body.classList.add('pro-mode');
     const lbl=document.querySelector('.mode-toggle .mt-label');if(lbl)lbl.textContent='Pro';
     const mt=document.querySelector('.mode-toggle');if(mt)mt.setAttribute('aria-pressed','true');
+    const bbLbl=document.getElementById('brandBadgeLbl');if(bbLbl)bbLbl.textContent='Pro';
+    const bb=document.getElementById('brandBadge');if(bb)bb.setAttribute('aria-pressed','true');
     // Restore persisted view mode, else default to Timeline for Pro
     const vmToUse=(savedVM&&VM_KEYS.includes(savedVM))?savedVM:'tl';
     setV(vmToUse,null);
@@ -3574,19 +3644,24 @@ window._tpvLastSeenDate=new Date().toISOString().split('T')[0];
 // ══════════ PUSH NOTIFICATIONS ══════════
 // Best-effort only: notifications fire when the page is opened on a new day.
 // There is no Service Worker here, so a closed browser won't surface reminders.
-function toggleNotifications(){
+function _setNotifUI(on){
   const btn=document.getElementById('notifBtn');
+  if(btn){btn.classList.toggle('on',on);btn.innerHTML=`<span aria-hidden="true">🔔</span> Reminders${on?' On':''}`;btn.setAttribute('aria-pressed',on?'true':'false');}
+  const mb=document.getElementById('notifBtnMobile');
+  if(mb){mb.classList.toggle('on',on);mb.setAttribute('aria-pressed',on?'true':'false');}
+}
+function toggleNotifications(){
   if(!('Notification' in window)){toast('Your browser does not support push notifications.','err');return;}
   if(Notification.permission==='denied'){toast('Notifications are blocked. Enable them in your browser settings.','err');return;}
   if(localStorage.getItem('tpv_notif')==='on'){
     safeRemove('tpv_notif');
-    btn.classList.remove('on');btn.innerHTML='<span aria-hidden="true">🔔</span> Reminders';btn.setAttribute('aria-pressed','false');
+    _setNotifUI(false);
     return;
   }
   Notification.requestPermission().then(perm=>{
     if(perm==='granted'){
       safeSet('tpv_notif','on');
-      btn.classList.add('on');btn.innerHTML='<span aria-hidden="true">🔔</span> Reminders On';btn.setAttribute('aria-pressed','true');
+      _setNotifUI(true);
       scheduleNotifications();
       new Notification('The Present Value',{body:'Reminders on. Each time you open this page, upcoming deadlines within 7 days will show a notification (once per day).',icon:''});
     }
@@ -3612,10 +3687,9 @@ function scheduleNotifications(){
   },2000);
 }
 function initNotifBtn(){
-  const btn=document.getElementById('notifBtn');
-  if(!btn)return;
-  if(localStorage.getItem('tpv_notif')==='on'){btn.classList.add('on');btn.textContent='🔔 Reminders On';}
-  if(Notification.permission==='granted'&&localStorage.getItem('tpv_notif')==='on')scheduleNotifications();
+  const on=localStorage.getItem('tpv_notif')==='on';
+  if(on)_setNotifUI(true);
+  if(Notification.permission==='granted'&&on)scheduleNotifications();
 }
 
 // ══════════ PENALTY CALCULATOR ══════════
