@@ -645,13 +645,13 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 /* ══ INLINE TOOLTIPS ══ */
 .tip{position:relative;display:inline-flex;align-items:center;cursor:default;line-height:1}
 .tip-i{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--s3);color:var(--dim);font-family:var(--sa);font-size:.72rem;font-weight:700;font-style:normal;text-transform:none;letter-spacing:0;margin-left:.3rem;border:1px solid var(--bl);cursor:pointer;transition:all .15s;flex-shrink:0;user-select:none;vertical-align:middle}
-.tip.on .tip-i,.tip:hover .tip-i,.tip:focus-within .tip-i{background:var(--royal);color:#fff;border-color:var(--royal)}
+.tip:hover .tip-i,.tip.hov .tip-i,.tip.on .tip-i,.tip:focus-within .tip-i{background:var(--royal);color:#fff;border-color:var(--royal)}
 .tip .tip-i:focus-visible{outline:2px solid var(--royal);outline-offset:2px}
 /* Tooltip bubble is position:fixed so it escapes any overflow:hidden ancestor
    (cards, accordions, form previews, etc.). Placement is set by JS in
    positionTip() relative to the trigger button. */
 .tip-b{display:none;position:fixed;top:0;left:0;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);padding:.55rem .72rem;min-width:180px;max-width:min(280px,calc(100vw - 16px));font-family:var(--se);font-size:.8rem;font-weight:400;font-style:normal;color:var(--ch);line-height:1.5;z-index:100000;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:normal;text-align:left;text-transform:none;letter-spacing:0;pointer-events:auto;box-sizing:border-box}
-.tip:hover .tip-b,.tip.on .tip-b,.tip:focus-within .tip-b{display:block}
+.tip.hov .tip-b,.tip.on .tip-b,.tip:focus-within .tip-b{display:block}
 .form-ref{font-family:var(--sa);font-size:.72rem;font-weight:600;color:var(--mu);margin-left:.3rem;vertical-align:middle;white-space:nowrap}
 #plainSummary:not(:empty){background:#fff;border-left:4px solid var(--green);border-radius:var(--rr);padding:.9rem 1.1rem;margin-bottom:.75rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 #plainSummary .ps-action{font-family:var(--se);font-size:1rem;font-weight:700;color:var(--ink);line-height:1.35;margin:0 0 .35rem}
@@ -1618,13 +1618,30 @@ function updateMobileCalcBar(){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);
   else start();
 })();
-// Hover and keyboard-focus reveal: CSS still handles visibility, but we need
-// to compute position on each show since the trigger may have scrolled.
-document.addEventListener('mouseover',e=>{const t=e.target.closest('.tip');if(t)positionTip(t);});
+// Hover and keyboard-focus reveal: positionTip must run BEFORE the bubble
+// is shown so there's no single-frame flash at top-left. We drive visibility
+// from a .hov class (mouse) / .on class (click) / :focus-within (keyboard)
+// instead of relying on CSS :hover, which races positionTip.
+let _tipHovered=null;
+document.addEventListener('mouseover',e=>{
+  const t=e.target.closest('.tip');
+  if(t===_tipHovered)return;
+  if(_tipHovered&&_tipHovered!==t){_tipHovered.classList.remove('hov');}
+  _tipHovered=t;
+  if(t){positionTip(t);t.classList.add('hov');}
+});
+document.addEventListener('mouseout',e=>{
+  const t=e.target.closest('.tip');if(!t)return;
+  // Only drop hov when leaving the tip subtree entirely (ignore child-to-child moves).
+  const to=e.relatedTarget;
+  if(to&&t.contains(to))return;
+  t.classList.remove('hov');
+  if(_tipHovered===t)_tipHovered=null;
+});
 document.addEventListener('focusin',e=>{const t=e.target.closest('.tip');if(t)positionTip(t);});
 // Reposition any open/hovered tooltip on scroll/resize; if it can't fit,
 // hiding is preferable to floating-wrong-place.
-let _tipRAF=0;function _retipAll(){cancelAnimationFrame(_tipRAF);_tipRAF=requestAnimationFrame(()=>{document.querySelectorAll('.tip.on,.tip:hover,.tip:focus-within').forEach(positionTip);});}
+let _tipRAF=0;function _retipAll(){cancelAnimationFrame(_tipRAF);_tipRAF=requestAnimationFrame(()=>{document.querySelectorAll('.tip.on,.tip.hov,.tip:focus-within').forEach(positionTip);});}
 window.addEventListener('scroll',_retipAll,{passive:true,capture:true});
 window.addEventListener('resize',_retipAll);
 document.addEventListener('click',e=>{if(e.target.closest('.tip'))return;document.querySelectorAll('.tip.on').forEach(t=>{t.classList.remove('on');const b=t.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','false');});});
