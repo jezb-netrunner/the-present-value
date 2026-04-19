@@ -699,6 +699,57 @@ body:not(.pro-mode) .mc{display:none}
 .pro-mode .clp{display:block}
 .pro-mode .sm-bar{display:none}
 
+/* ══ PRO MOBILE COMPACT HEADER ══ */
+.calhdr-cm{display:none;align-items:center;gap:.35rem;padding:.45rem 1rem .25rem;max-width:1200px;margin:0 auto}
+.calhdr-cm .chm-who{flex:1;min-width:0;font-family:var(--sa);font-size:.78rem;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3}
+.calhdr-cm .chm-who strong{color:var(--ink);font-weight:700}
+.calhdr-cm button{background:var(--sf);border:1.5px solid var(--bd);border-radius:100px;min-height:36px;min-width:36px;padding:0 .6rem;display:inline-flex;align-items:center;justify-content:center;gap:.3rem;cursor:pointer;color:var(--dim);font-family:var(--sa);font-size:.75rem;font-weight:700;box-shadow:var(--shs);flex-shrink:0}
+.calhdr-cm button:hover{background:var(--s2);color:var(--ink)}
+.calhdr-cm button svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.calhdr-cm button .chm-lbl{max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calhdr-stat{display:none;font-family:var(--sa);font-size:.82rem;font-weight:600;color:var(--dim);padding:.1rem 0 .5rem;margin-bottom:.35rem;cursor:pointer;user-select:none;line-height:1.35}
+.calhdr-stat:focus-visible{outline:2px solid var(--royal);outline-offset:2px;border-radius:4px}
+.calhdr-stat .cst-over{color:var(--red);font-weight:700}
+.calhdr-stat .cst-n{color:var(--ink);font-weight:700}
+.calhdr-stat .cst-sep{color:var(--lt);margin:0 .3rem}
+.calhdr-stat:empty{display:none!important}
+.pro-mode .calhdr-stat{display:block}
+@media(max-width:767px){
+  .pro-mode .calhdr-cm{display:flex}
+  .pro-mode .tbar,
+  .pro-mode .rbar,
+  .pro-mode .clp,
+  .pro-mode .vc,
+  .pro-mode .stb{display:none!important}
+  .pro-mode .mn{padding-top:.35rem}
+}
+
+/* ══ SHEET MODAL (reusable bottom/center overlay) ══ */
+.sheet-ov{position:fixed;inset:0;background:rgba(0,0,0,.46);z-index:500;display:none;align-items:flex-end;justify-content:center;padding:0}
+.sheet-ov.vis{display:flex}
+@media(min-width:600px){.sheet-ov{align-items:center;padding:1rem}}
+.sheet-card{background:var(--sf);border-radius:var(--r) var(--r) 0 0;box-shadow:0 -8px 40px rgba(0,0,0,.18);width:100%;max-width:520px;max-height:85vh;display:flex;flex-direction:column;animation:wzIn .22s ease}
+@media(min-width:600px){.sheet-card{border-radius:var(--r)}}
+.sheet-hdr{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1px solid var(--bd);flex-shrink:0}
+.sheet-title{font-family:var(--se);font-size:1rem;font-weight:700;color:var(--ink)}
+.sheet-x{background:none;border:none;font-size:1.35rem;color:var(--dim);cursor:pointer;padding:.1rem .45rem;border-radius:4px;min-height:32px;min-width:32px;line-height:1}
+.sheet-x:hover{background:var(--s2);color:var(--ink)}
+.sheet-body{padding:.85rem 1.1rem 1rem;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.sheet-grp{margin-bottom:1rem}
+.sheet-grp:last-child{margin-bottom:0}
+.sheet-grp-lbl{font-family:var(--sa);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin-bottom:.4rem}
+.sheet-opts{display:flex;flex-direction:column;gap:.35rem}
+.sheet-opt{display:flex;align-items:center;gap:.5rem;padding:.65rem .8rem;border-radius:var(--rr);border:1.5px solid var(--bd);background:var(--sf);color:var(--ch);font-family:var(--sa);font-size:.85rem;font-weight:600;cursor:pointer;text-align:left;width:100%;min-height:44px;transition:all .15s}
+.sheet-opt:hover{background:var(--s2)}
+.sheet-opt.act{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sheet-opt-sub{font-family:var(--sa);font-size:.7rem;font-weight:500;color:var(--mu);margin-left:auto}
+.sheet-opt.act .sheet-opt-sub{color:rgba(255,255,255,.75)}
+.sheet-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.6rem .2rem;font-family:var(--sa);font-size:.82rem;color:var(--ch)}
+.sheet-row .sheet-row-sub{font-size:.7rem;color:var(--mu);font-weight:500}
+.sheet-search{width:100%;font-family:var(--sa);font-size:.9rem;padding:.65rem .8rem;border-radius:var(--rr);border:1.5px solid var(--bd);background:var(--sf);color:var(--ch);outline:none;box-sizing:border-box;min-height:44px}
+.sheet-search:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}
+.sheet-chips{display:flex;flex-wrap:wrap;gap:.3rem}
+
 /* ══ WORKFLOW VIEW ══ */
 .wv{display:none}.wv.vis{display:block}
 .wf-sec{margin-bottom:.55rem;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);overflow:hidden}
@@ -857,6 +908,12 @@ body:not(.pro-mode) .mc{display:none}
 </div></div>
 <div class="rbar" id="rBar" role="group" aria-label="Tax regime"></div>
 <div class="sm-bar" id="smBar">Showing obligations for <strong id="smTpLabel">Self-Employed</strong>. <button type="button" class="sm-upd" onclick="showWizard()">Update Setup →</button></div>
+<div class="calhdr-cm" id="calHdrCm" role="group" aria-label="Calendar controls">
+<span class="chm-who" id="calHdrWho"></span>
+<button type="button" onclick="openCalSearchSheet()" aria-label="Search and filter obligations"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+<button type="button" onclick="openCalViewSheet()" aria-label="Change calendar view"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="11" width="18" height="4" rx="1"/><rect x="3" y="18" width="18" height="3" rx="1"/></svg><span class="chm-lbl" id="calHdrViewLbl">Feed</span></button>
+<button type="button" onclick="openCalSettingsSheet()" aria-label="Calendar settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+</div>
 <section class="cls"><div class="clp" id="clP">
 <div class="clh" onclick="document.getElementById('clP').classList.toggle('open')" role="button" tabindex="0" aria-expanded="false" aria-controls="clG" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('clP').classList.toggle('open');this.setAttribute('aria-expanded',document.getElementById('clP').classList.contains('open'));}"><h2>Your Situation</h2>
 <div class="cta"><label class="sat" onclick="event.stopPropagation()"><span>Show all</span><input type="checkbox" id="saT" onchange="ren()"><span class="tt" aria-hidden="true"></span></label><span class="clch" aria-hidden="true">▾</span></div></div>
@@ -870,12 +927,32 @@ body:not(.pro-mode) .mc{display:none}
 <input type="text" id="calSearch" class="sb" placeholder="Search…" oninput="applySearchDebounced(this.value)" aria-label="Search obligations">
 </div><div class="ft" id="cF" role="group" aria-label="Category filters"></div></div>
 <div class="stb" id="st"></div>
+<div class="calhdr-stat" id="calHdrStat" role="button" tabindex="0" onclick="onCalStatTap()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();onCalStatTap();}"></div>
 <div class="fv vis" id="fv"></div>
 <div class="tl" id="tl"></div>
 <div class="tv" id="tv"></div>
 <div class="wv" id="wv"></div>
 <div class="qck" id="qck"></div>
-</main></div>
+</main>
+<div class="sheet-ov" id="calSettingsSheet" role="dialog" aria-modal="true" aria-labelledby="calSettingsTitle" onclick="if(event.target===this)closeCalSheet('calSettingsSheet')">
+  <div class="sheet-card">
+    <div class="sheet-hdr"><span class="sheet-title" id="calSettingsTitle">Calendar settings</span><button type="button" class="sheet-x" onclick="closeCalSheet('calSettingsSheet')" aria-label="Close">×</button></div>
+    <div class="sheet-body" id="calSettingsBody"></div>
+  </div>
+</div>
+<div class="sheet-ov" id="calViewSheet" role="dialog" aria-modal="true" aria-labelledby="calViewTitle" onclick="if(event.target===this)closeCalSheet('calViewSheet')">
+  <div class="sheet-card">
+    <div class="sheet-hdr"><span class="sheet-title" id="calViewTitle">Choose view</span><button type="button" class="sheet-x" onclick="closeCalSheet('calViewSheet')" aria-label="Close">×</button></div>
+    <div class="sheet-body" id="calViewBody"></div>
+  </div>
+</div>
+<div class="sheet-ov" id="calSearchSheet" role="dialog" aria-modal="true" aria-labelledby="calSearchTitle" onclick="if(event.target===this)closeCalSheet('calSearchSheet')">
+  <div class="sheet-card">
+    <div class="sheet-hdr"><span class="sheet-title" id="calSearchTitle">Search &amp; filter</span><button type="button" class="sheet-x" onclick="closeCalSheet('calSearchSheet')" aria-label="Close">×</button></div>
+    <div class="sheet-body" id="calSearchBody"></div>
+  </div>
+</div>
+</div>
 
 <!-- ═══ PAGE 2: FORM REFERENCE ═══ -->
 <div class="page" id="pgRef">
@@ -1955,20 +2032,10 @@ function urgLevel(d,o){
 }
 function renderFeed(){
   const today=new Date();today.setHours(0,0,0,0);
-  const cm=today.getMonth()+1;
   const all=gF();
   const dated=all.filter(o=>o.month>0&&o.day>0);
   const ongoing=all.filter(o=>o.month===0||o.day===0);
-  const mobs=dated.filter(o=>{const e=effectiveDeadline(o);return e&&(e.getMonth()+1)===cm;});
-  const Y=mobs.length;
   let h='';
-  if(Y){
-    const X=mobs.filter(o=>isFiled(o)).length;
-    const pct=X?Math.round(X/Y*100):0;
-    const fc=X===Y?'var(--green)':'var(--royal)';
-    const stat=X===Y?`All ${Y} filed ✓`:`${X} of ${Y} filed`;
-    h+=`<div class="fprog"><span class="fprog-lbl">${MN[cm]} Filings</span><div class="fprog-track"><div class="fprog-fill" style="width:${pct}%;background:${fc}"></div></div><span class="fprog-stat">${stat}</span></div>`;
-  }
   const _sdStr=localStorage.getItem('tpv_setup_date');
   const _sd=_sdStr?new Date(_sdStr):null;if(_sd)_sd.setHours(0,0,0,0);
   const items=dated.filter(o=>{
@@ -2065,11 +2132,120 @@ function renderFeed(){
 function isV(o){if(!o.r.includes(cR))return false;if(!aC.has(o.cat))return false;if(SQ){const h=(o.title+' '+(o.form||'')+' '+(o.desc||'')+' '+(o.pq||'')).toLowerCase();if(!h.includes(SQ))return false;}const sa=document.getElementById('saT')?.checked;if(!sa&&o.pq&&!cQ.has(o.pq))return false;if(!sa&&o.npq&&cQ.has(o.npq))return false;return true;}
 function gF(){return OB.filter(isV);}function cntQ(k){return OB.filter(o=>o.pq===k&&o.r.includes(cR)).length;}
 function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{const isActive=['se','mi','corp','emp'][i]===t;b.classList.toggle('act',isActive);b.setAttribute('aria-pressed',isActive?'true':'false');});rRB();rCL();rCF();ren();updSmBar();syncCalculatorTaxpayerType();refreshCorpGuard();}
-function setReg(r){cR=r;rRB();rCL();ren();}function setV(v,b){vM=v;document.querySelectorAll('.vt button').forEach(x=>{x.classList.remove('act');x.setAttribute('aria-selected','false');});b.classList.add('act');b.setAttribute('aria-selected','true');ren();}
+function setReg(r){cR=r;rRB();rCL();ren();}
+const VM_LABELS={fd:'Feed',tl:'Timeline',tb:'Table',wf:'Workflow',qck:'Q-Checklist'};
+const VM_KEYS=['fd','tl','tb','wf','qck'];
+function setV(v,b){vM=v;try{safeSet('tpv_vm',v);}catch(e){}const btns=document.querySelectorAll('.vt button');btns.forEach((x,i)=>{const active=b?x===b:VM_KEYS[i]===v;x.classList.toggle('act',active);x.setAttribute('aria-selected',active?'true':'false');});ren();}
 function tgQ(k){cQ.has(k)?cQ.delete(k):cQ.add(k);rCL();ren();}function tgC(c){aC.has(c)?aC.delete(c):aC.add(c);rCF();ren();}function tgM(m){document.querySelector(`.ms[data-m="${m}"]`)?.classList.toggle('act');}
 function rRB(){document.getElementById('rBar').innerHTML='<span class="tl-l">Regime</span>'+Object.entries(TYPES[cT].regimes).map(([k,v])=>`<button class="rb ${k===cR?'act':''}" onclick="setReg('${k}')">${v.n}</button>`).join('');}
 function rCL(){const qs=QS[cT]||[];document.getElementById('clG').innerHTML=qs.map(q=>`<div class="ci ${cQ.has(q.key)?'ck':''}" onclick="tgQ('${q.key}')"><div class="cbox"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></div><div><div class="ciq">${q.q}${cqTip(q.key)}</div><div class="cid">${q.d}</div></div><div class="cic">${cntQ(q.key)>0?'+'+cntQ(q.key):0}</div></div>`).join('');const sa=document.getElementById('saT')?.checked,tot=OB.filter(o=>o.r.includes(cR)).length,hid=OB.filter(o=>o.r.includes(cR)&&o.pq&&!cQ.has(o.pq)).length;document.getElementById('clS').innerHTML=sa?`<strong>${tot}</strong> total`:`<strong>${tot-hid}</strong> shown · <strong style="color:var(--amber)">${hid} hidden</strong>`;}
 function rCF(){document.getElementById('cF').innerHTML=Object.entries(CATS).map(([k,v])=>`<button class="fb ${aC.has(k)?'fba':''}" onclick="tgC('${k}')"><span class="fd" style="background:${v.c}"></span>${v.l}</button>`).join('');}
+// ══ COMPACT HEADER STAT + SHEETS ══
+function updCalHdrLabels(){
+  const who=document.getElementById('calHdrWho');
+  if(who){const tn=TYPES[cT]?.name||'';const rn=TYPES[cT]?.regimes?.[cR]?.n||'';who.innerHTML=`<strong>${tn}</strong>${rn?' · '+rn:''}`;}
+  const vl=document.getElementById('calHdrViewLbl');
+  if(vl)vl.textContent=VM_LABELS[vM]||'Feed';
+}
+function updCalStat(){
+  const el=document.getElementById('calHdrStat');if(!el)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const cm=today.getMonth()+1;
+  const f=gF().filter(o=>o.month>0&&o.day>0);
+  let overdue=0,thisMonth=0;
+  f.forEach(o=>{
+    if(isFiled(o))return;
+    const eff=effectiveDeadline(o);if(!eff)return;
+    if(eff<today){overdue++;return;}
+    if((eff.getMonth()+1)===cm)thisMonth++;
+  });
+  if(!overdue&&!thisMonth){el.innerHTML='';el.removeAttribute('aria-label');return;}
+  const parts=[];
+  if(overdue)parts.push(`<span class="cst-over">${overdue} overdue</span>`);
+  if(thisMonth)parts.push(`<span class="cst-n">${thisMonth}</span> this month`);
+  el.innerHTML=parts.join('<span class="cst-sep">·</span>');
+  el.setAttribute('aria-label',`${overdue} overdue, ${thisMonth} due this month. Tap to view.`);
+}
+function onCalStatTap(){
+  if(vM!=='fd')setV('fd',null);
+  const fv=document.getElementById('fv');
+  if(fv&&fv.scrollIntoView)fv.scrollIntoView({behavior:'smooth',block:'start'});
+}
+// Sheet open/close
+let _calSheetLastFocus=null;
+function openCalSheet(id,focusSel){
+  const ov=document.getElementById(id);if(!ov)return;
+  const wasOpen=ov.classList.contains('vis');
+  if(!wasOpen){_calSheetLastFocus=document.activeElement;}
+  ov.classList.add('vis');
+  document.body.style.overflow='hidden';
+  document.addEventListener('keydown',calSheetKeyHandler);
+  if(!wasOpen)setTimeout(()=>{const f=focusSel?ov.querySelector(focusSel):ov.querySelector('.sheet-x');if(f)try{f.focus();}catch(e){}},40);
+}
+function closeCalSheet(id){
+  const ov=document.getElementById(id);if(!ov)return;
+  ov.classList.remove('vis');
+  document.body.style.overflow='';
+  document.removeEventListener('keydown',calSheetKeyHandler);
+  if(_calSheetLastFocus&&typeof _calSheetLastFocus.focus==='function')try{_calSheetLastFocus.focus();}catch(e){}
+}
+function calSheetKeyHandler(e){if(e.key==='Escape'){['calSettingsSheet','calViewSheet','calSearchSheet'].forEach(id=>{const o=document.getElementById(id);if(o&&o.classList.contains('vis'))closeCalSheet(id);});}}
+// Settings sheet — taxpayer + regime + show-all toggle + situation checklist
+function openCalSettingsSheet(){
+  const body=document.getElementById('calSettingsBody');if(!body)return;
+  const types=[['se','Self-Employed'],['mi','Mixed Income'],['corp','Corporation'],['emp','Employee']];
+  const regimes=Object.entries(TYPES[cT]?.regimes||{});
+  const qs=QS[cT]||[];
+  const sa=document.getElementById('saT')?.checked?true:false;
+  const tot=OB.filter(o=>o.r.includes(cR)).length;
+  const hid=OB.filter(o=>o.r.includes(cR)&&o.pq&&!cQ.has(o.pq)).length;
+  let h='';
+  h+=`<div class="sheet-grp"><div class="sheet-grp-lbl">Taxpayer type</div><div class="sheet-opts">`;
+  types.forEach(([k,n])=>{h+=`<button class="sheet-opt ${cT===k?'act':''}" onclick="setType('${k}');openCalSettingsSheet();">${n}</button>`;});
+  h+=`</div></div>`;
+  if(regimes.length){
+    h+=`<div class="sheet-grp"><div class="sheet-grp-lbl">Tax regime</div><div class="sheet-opts">`;
+    regimes.forEach(([k,v])=>{h+=`<button class="sheet-opt ${cR===k?'act':''}" onclick="setReg('${k}');openCalSettingsSheet();">${v.n}</button>`;});
+    h+=`</div></div>`;
+  }
+  h+=`<div class="sheet-grp"><div class="sheet-grp-lbl">Filters</div>`;
+  h+=`<label class="sheet-row" style="cursor:pointer"><span>Show all obligations<div class="sheet-row-sub">${sa?`${tot} total`:`${tot-hid} shown · ${hid} hidden`}</div></span><label class="sat" style="margin:0" onclick="event.stopPropagation()"><input type="checkbox" ${sa?'checked':''} onchange="document.getElementById('saT').checked=this.checked;rCL();ren();openCalSettingsSheet();"><span class="tt" aria-hidden="true"></span></label></label>`;
+  h+=`</div>`;
+  if(qs.length){
+    h+=`<div class="sheet-grp"><div class="sheet-grp-lbl">Your situation</div><div class="sheet-opts">`;
+    qs.forEach(q=>{const on=cQ.has(q.key);const n=cntQ(q.key);h+=`<button class="sheet-opt ${on?'act':''}" onclick="tgQ('${q.key}');openCalSettingsSheet();"><span>${q.q}</span><span class="sheet-opt-sub">${n?'+'+n:'0'}</span></button>`;});
+    h+=`</div></div>`;
+  }
+  h+=`<div class="sheet-grp"><button class="sheet-opt" style="justify-content:center" onclick="closeCalSheet('calSettingsSheet');showWizard();">⚙ Re-run setup wizard</button></div>`;
+  body.innerHTML=h;
+  openCalSheet('calSettingsSheet');
+}
+// View mode sheet
+function openCalViewSheet(){
+  const body=document.getElementById('calViewBody');if(!body)return;
+  const opts=[['fd','Feed','Due-date grouped cards'],['tl','Timeline','By month & quarter'],['tb','Table','Compact sortable list'],['wf','By Workflow','Grouped by workflow'],['qck','Q-Checklist','Quarterly checkboxes']];
+  let h=`<div class="sheet-opts">`;
+  opts.forEach(([k,n,d])=>{h+=`<button class="sheet-opt ${vM===k?'act':''}" onclick="setV('${k}',null);closeCalSheet('calViewSheet');"><span>${n}<div class="sheet-row-sub">${d}</div></span></button>`;});
+  h+=`</div>`;
+  body.innerHTML=h;
+  openCalSheet('calViewSheet');
+}
+// Search & filter sheet
+function calSearchToggleCat(k,btn){
+  aC.has(k)?aC.delete(k):aC.add(k);
+  btn.classList.toggle('fba',aC.has(k));
+  rCF();ren();
+}
+function openCalSearchSheet(){
+  const body=document.getElementById('calSearchBody');if(!body)return;
+  let h='';
+  h+=`<div class="sheet-grp"><input type="search" class="sheet-search" id="calSearchSheetInput" placeholder="Search obligations, forms, keywords…" value="${esc(SQ)}" oninput="applySearchDebounced(this.value)" aria-label="Search obligations"></div>`;
+  h+=`<div class="sheet-grp"><div class="sheet-grp-lbl">Categories</div><div class="sheet-chips" id="calSearchChips">`;
+  Object.entries(CATS).forEach(([k,v])=>{h+=`<button class="fb ${aC.has(k)?'fba':''}" onclick="calSearchToggleCat('${k}',this)"><span class="fd" style="background:${v.c}"></span>${v.l}</button>`;});
+  h+=`</div></div>`;
+  body.innerHTML=h;
+  openCalSheet('calSearchSheet','#calSearchSheetInput');
+}
 function pqL(k){const q=[...Object.values(QS)].flat().find(x=>x.key===k);return q?q.q.replace(/\?$/,''):'Conditional';}
 // ══ CALENDAR REDESIGN: HELPER FUNCTIONS ══
 function getDayName(m,d){return['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(YEAR,m-1,d).getDay()];}
@@ -2203,7 +2379,7 @@ function getLayman(o){
   if(t.includes('year-end')||t.includes('bookkeeping'))return'<b>What:</b> Reminder to close out the books, reconcile all accounts, prepare for the January-April compliance season, and verify all withholding taxes match payroll records.';
   return'<b>What:</b> '+(o.title)+'. See Form Reference for the full briefer.';
 }
-function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>{const eff=effectiveDeadline(o);const shift=shiftedDeadlineNote(o);const dateCell=eff?`${ms(eff.getMonth()+1)} ${eff.getDate()}${shift?` <span style="color:var(--amber);font-size:.54rem">· ${shift}</span>`:''}`:'Ongoing';return `<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${dateCell}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`;}).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');const fe=document.getElementById('fv');fe.classList.toggle('vis',vM==='fd');const qe=document.getElementById('qck');qe.classList.toggle('vis',vM==='qck');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);else if(vM==='fd')renderFeed();else if(vM==='qck')renderQChecklist(f);}
+function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>{const eff=effectiveDeadline(o);const shift=shiftedDeadlineNote(o);const dateCell=eff?`${ms(eff.getMonth()+1)} ${eff.getDate()}${shift?` <span style="color:var(--amber);font-size:.54rem">· ${shift}</span>`:''}`:'Ongoing';return `<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${dateCell}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`;}).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');const fe=document.getElementById('fv');fe.classList.toggle('vis',vM==='fd');const qe=document.getElementById('qck');qe.classList.toggle('vis',vM==='qck');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);else if(vM==='fd')renderFeed();else if(vM==='qck')renderQChecklist(f);updCalStat();updCalHdrLabels();}
 
 // ══════════ CALCULATOR ══════════
 function gradTax(ti){ti=Math.max(0,ti);if(ti<=250000)return 0;if(ti<=400000)return(ti-250000)*.15;if(ti<=800000)return 22500+(ti-400000)*.20;if(ti<=2000000)return 102500+(ti-800000)*.25;if(ti<=8000000)return 402500+(ti-2000000)*.30;return 2202500+(ti-8000000)*.35;}
@@ -3339,14 +3515,19 @@ rRB();rCL();rCF();ren();renderForms();
 // Restore persisted mode
 (function(){
   const m=localStorage.getItem('tpv_mode')||'simple';
+  const savedVM=localStorage.getItem('tpv_vm');
   if(m==='pro'){
     document.body.classList.add('pro-mode');
     const lbl=document.querySelector('.mode-toggle .mt-label');if(lbl)lbl.textContent='Pro';
     const mt=document.querySelector('.mode-toggle');if(mt)mt.setAttribute('aria-pressed','true');
-    // Pro mode default: Timeline
-    const tlBtn=document.querySelector('.vt button:nth-child(2)');if(tlBtn)setV('tl',tlBtn);
+    // Restore persisted view mode, else default to Timeline for Pro
+    const vmToUse=(savedVM&&VM_KEYS.includes(savedVM))?savedVM:'tl';
+    setV(vmToUse,null);
+  }else if(savedVM&&VM_KEYS.includes(savedVM)){
+    setV(savedVM,null);
   }
   updSmBar();
+  updCalHdrLabels();
 })();
 // Show setup wizard on first visit; restore saved setup on return visits.
 // Migrate pre-eight_elect setups: any saved 8pct rate predates the gate, so assume
