@@ -124,11 +124,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .fv-empty-sub{font-family:var(--sa);font-size:.78rem;color:var(--mu);margin-top:.5rem;font-style:normal}
 .fgh{font-family:var(--sa);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);border-bottom:1px solid var(--bd);margin:1rem 0 .5rem;display:flex;align-items:center;justify-content:space-between;padding-bottom:.3rem}
 .fgh-tog{font-family:var(--sa);font-size:.72rem;font-weight:500;color:var(--royal);background:none;border:none;cursor:pointer;padding:.15rem .25rem;text-transform:none;letter-spacing:normal;min-height:24px}
-.fprog{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;padding:.65rem .8rem;background:var(--sf);border-radius:var(--r);border:1px solid var(--bd)}
-.fprog-lbl{font-family:var(--sa);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);white-space:nowrap}
-.fprog-track{flex:1;height:5px;border-radius:100px;background:var(--s3);overflow:hidden}
-.fprog-fill{height:100%;border-radius:100px;transition:width .3s ease}
-.fprog-stat{font-family:var(--sa);font-size:.78rem;font-weight:600;color:var(--ink);white-space:nowrap}
 
 /* TABLE */
 .tv{display:none}.tv.vis{display:block}.tl.hid{display:none}
@@ -707,13 +702,12 @@ body:not(.pro-mode) .mc{display:none}
 .calhdr-cm button:hover{background:var(--s2);color:var(--ink)}
 .calhdr-cm button svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .calhdr-cm button .chm-lbl{max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.calhdr-stat{display:none;font-family:var(--sa);font-size:.82rem;font-weight:600;color:var(--dim);padding:.1rem 0 .5rem;margin-bottom:.35rem;cursor:pointer;user-select:none;line-height:1.35}
+.calhdr-stat{display:block;font-family:var(--sa);font-size:.82rem;font-weight:600;color:var(--dim);padding:.1rem 0 .5rem;margin-bottom:.35rem;cursor:pointer;user-select:none;line-height:1.35}
 .calhdr-stat:focus-visible{outline:2px solid var(--royal);outline-offset:2px;border-radius:4px}
 .calhdr-stat .cst-over{color:var(--red);font-weight:700}
 .calhdr-stat .cst-n{color:var(--ink);font-weight:700}
 .calhdr-stat .cst-sep{color:var(--lt);margin:0 .3rem}
 .calhdr-stat:empty{display:none!important}
-.pro-mode .calhdr-stat{display:block}
 @media(max-width:767px){
   .pro-mode .calhdr-cm{display:flex}
   .pro-mode .tbar,
