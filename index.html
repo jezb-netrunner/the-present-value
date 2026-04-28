@@ -78,16 +78,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .stb{display:flex;gap:.5rem;margin-bottom:.65rem;flex-wrap:wrap;font-size:.8rem;color:var(--dim)}.stb strong{color:var(--ink);font-weight:700;font-size:.88rem}
 
 /* TIMELINE */
-.tl{display:flex;flex-direction:column}.ms{border-bottom:1px solid var(--bd);animation:fi .2s ease both}.ms:last-child{border-bottom:none}.ms.em{display:none}
+#tl{display:flex;flex-direction:column}
 @keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
-.mh{display:flex;align-items:center;gap:.55rem;padding:.55rem 0;cursor:pointer;user-select:none}
-.mh:hover .mnn{color:var(--ink)}
-.mni{font-size:.7rem;font-weight:700;color:var(--mu);width:1.6rem;text-align:right;flex-shrink:0}
-.mnn{font-family:var(--se);font-size:1.05rem;font-weight:600;color:var(--dim);transition:color .2s;flex:1}.ms.act .mnn{color:var(--ink)}
-.mc{font-size:.7rem;font-weight:700;color:var(--mu);background:var(--s2);padding:.1rem .45rem;border-radius:100px}
-.mchv{color:var(--lt);transition:transform .3s;font-size:.6rem}.ms.act .mchv{transform:rotate(180deg)}
-.mbdy{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}.ms.act .mbdy{max-height:15000px}
-.mbi{padding:0 0 .55rem 1.95rem}
+.mchv{color:var(--lt);transition:transform .3s;font-size:.6rem}
 
 /* OBLIGATION CARDS */
 .ob{background:var(--sf);border-radius:var(--r);padding:.7rem .8rem;margin-bottom:.28rem;position:relative;overflow:hidden;box-shadow:var(--shs);transition:all .2s;border-left:3px solid transparent}
@@ -120,7 +113,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .fgh{font-family:var(--sa);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);border-bottom:1px solid var(--bd);margin:1rem 0 .5rem;padding-bottom:.3rem}
 
 /* TABLE */
-.tv{display:none}.tv.vis{display:block}.tl.hid{display:none}
+.tv{display:none}.tv.vis{display:block}#tl.hid{display:none}
 .tw{overflow-x:auto;border-radius:var(--r);background:var(--sf);box-shadow:var(--shs)}
 table.ct{width:100%;border-collapse:collapse;font-size:.78rem}
 table.ct thead{background:var(--s2)}
@@ -474,7 +467,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .lrt{font-weight:600;color:var(--ch)}.lrc{color:var(--dim);font-size:.74rem}
 .ftr{max-width:1200px;margin:0 auto;padding:1rem 2rem;border-top:1px solid var(--bd);font-family:var(--se);font-size:.8rem;color:var(--dim);font-style:italic;line-height:1.55}
 
-@media(max-width:768px){.hdr{padding:.7rem 1rem}.mn{padding:.6rem 1rem}.mbi{padding:0 0 .35rem .05rem}.clg{grid-template-columns:1fr}.sb{width:100%}.vc{flex-direction:column;align-items:stretch}.vl{flex-direction:column}.lr{grid-template-columns:1fr}.ccards{grid-template-columns:1fr}.fg{grid-template-columns:1fr}.bp{padding:0 1rem 1.5rem}.fr-content{padding-left:.85rem}.hdr-i{flex-direction:column;align-items:flex-start}.calc-grid{grid-template-columns:1fr}.calc-right{position:static !important;max-height:none;overflow:visible}}
+@media(max-width:768px){.hdr{padding:.7rem 1rem}.mn{padding:.6rem 1rem}.clg{grid-template-columns:1fr}.sb{width:100%}.vc{flex-direction:column;align-items:stretch}.vl{flex-direction:column}.lr{grid-template-columns:1fr}.ccards{grid-template-columns:1fr}.fg{grid-template-columns:1fr}.bp{padding:0 1rem 1.5rem}.fr-content{padding-left:.85rem}.hdr-i{flex-direction:column;align-items:flex-start}.calc-grid{grid-template-columns:1fr}.calc-right{position:static !important;max-height:none;overflow:visible}}
 
 /* ══ REGIME CALCULATOR — TWO-PANE LIVE SIMULATOR ══ */
 .calc-shell{display:block}
@@ -643,7 +636,6 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .pro-mode #plainSummary .ps-action{font-size:.82rem}
 .pro-mode #plainSummary .ps-savings{font-size:.7rem}
 /* Simple mode — stricter UI (no .pro-mode) */
-body:not(.pro-mode) .mc{display:none}
 #rBar,.sb,.ft,.stb,.vt,.clp{display:none}
 .sm-bar{font-size:.8rem;color:var(--dim);max-width:1200px;margin:.5rem auto 0;padding:0 2rem;line-height:1.5}
 .sm-upd{color:var(--royal);cursor:pointer;font-weight:600;padding:.2rem .35rem;border-radius:4px;display:inline-block}
@@ -1557,7 +1549,6 @@ function updateMobileCalcBar(){
     amt.textContent='';
     lbl.textContent='Live comparison';
   }
-  document.body.classList.add('has-mobile-cr');
 }
 // Keep the mobile bar in sync as cCards re-renders (calc() updates on every keystroke).
 (function initMobileCalcObserver(){
@@ -2157,7 +2148,7 @@ function setReg(r){cR=r;rRB();rCL();ren();}
 const VM_LABELS={fd:'Feed',tl:'Timeline',tb:'Table',wf:'Workflow'};
 const VM_KEYS=['fd','tl','tb','wf'];
 function setV(v,b){vM=v;try{safeSet('tpv_vm',v);}catch(e){}const btns=document.querySelectorAll('.vt button');btns.forEach((x,i)=>{const active=b?x===b:VM_KEYS[i]===v;x.classList.toggle('act',active);x.setAttribute('aria-selected',active?'true':'false');});ren();}
-function tgQ(k){cQ.has(k)?cQ.delete(k):cQ.add(k);rCL();ren();}function tgC(c){aC.has(c)?aC.delete(c):aC.add(c);rCF();ren();}function tgM(m){document.querySelector(`.ms[data-m="${m}"]`)?.classList.toggle('act');}
+function tgQ(k){cQ.has(k)?cQ.delete(k):cQ.add(k);rCL();ren();}function tgC(c){aC.has(c)?aC.delete(c):aC.add(c);rCF();ren();}
 function rRB(){document.getElementById('rBar').innerHTML='<span class="tl-l">Regime</span>'+Object.entries(TYPES[cT].regimes).map(([k,v])=>`<button class="rb ${k===cR?'act':''}" onclick="setReg('${k}')">${v.n}</button>`).join('');}
 function rCL(){const qs=QS[cT]||[];document.getElementById('clG').innerHTML=qs.map(q=>`<div class="ci ${cQ.has(q.key)?'ck':''}" onclick="tgQ('${q.key}')"><div class="cbox"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></div><div><div class="ciq">${q.q}${cqTip(q.key)}</div><div class="cid">${q.d}</div></div><div class="cic">${cntQ(q.key)>0?'+'+cntQ(q.key):0}</div></div>`).join('');const sa=document.getElementById('saT')?.checked,tot=OB.filter(o=>o.r.includes(cR)).length,hid=OB.filter(o=>o.r.includes(cR)&&o.pq&&!cQ.has(o.pq)).length;document.getElementById('clS').innerHTML=sa?`<strong>${tot}</strong> total`:`<strong>${tot-hid}</strong> shown · <strong style="color:var(--amber)">${hid} hidden</strong>`;}
 function rCF(){document.getElementById('cF').innerHTML=Object.entries(CATS).map(([k,v])=>`<button class="fb ${aC.has(k)?'fba':''}" onclick="tgC('${k}')"><span class="fd" style="background:${v.c}"></span>${v.l}</button>`).join('');}
