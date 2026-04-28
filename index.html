@@ -465,6 +465,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .cpb{padding:.7rem .8rem;display:none}.cpb.vis{display:block}
 .lr{display:grid;grid-template-columns:1fr 2fr;gap:.25rem;padding:.28rem 0;border-bottom:1px solid var(--s2);font-size:.78rem}.lr:last-child{border-bottom:none}
 .lrt{font-weight:600;color:var(--ch)}.lrc{color:var(--dim);font-size:.74rem}
+.dm-tbl{width:100%;border-collapse:collapse;font-size:.76rem;margin:.3rem 0}.dm-tbl th{text-align:left;font-family:var(--sa);font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--mu);border-bottom:1px solid var(--bd);padding:.3rem .35rem}.dm-tbl td{padding:.32rem .35rem;border-bottom:1px solid var(--s2);vertical-align:top;color:var(--dim)}.dm-tbl tr:last-child td{border-bottom:none}.dm-tbl .dma{font-weight:700;color:var(--ink);font-family:var(--se);white-space:nowrap}.dm-tbl .dmn{font-size:.69rem;color:var(--mu)}
 .ftr{max-width:1200px;margin:0 auto;padding:1rem 2rem;border-top:1px solid var(--bd);font-family:var(--se);font-size:.8rem;color:var(--dim);font-style:italic;line-height:1.55}
 
 @media(max-width:768px){.hdr{padding:.7rem 1rem}.mn{padding:.6rem 1rem}.clg{grid-template-columns:1fr}.sb{width:100%}.vc{flex-direction:column;align-items:stretch}.vl{flex-direction:column}.lr{grid-template-columns:1fr}.ccards{grid-template-columns:1fr}.fg{grid-template-columns:1fr}.bp{padding:0 1rem 1.5rem}.fr-content{padding-left:.85rem}.hdr-i{flex-direction:column;align-items:flex-start}.calc-grid{grid-template-columns:1fr}.calc-right{position:static !important;max-height:none;overflow:visible}}
@@ -1316,6 +1317,19 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="lr"><span class="lrt">De Minimis</span><span class="lrc">RR 29-2025 (expanded ceilings eff. Jan 6, 2026)</span></div>
 <div class="lr"><span class="lrt">EOPT Penalties</span><span class="lrc">NIRC Secs. 248-250; RR 6-2024</span></div>
 </div></div>
+<div class="cp"><div class="cph" onclick="let b=document.getElementById('dmB'),c=document.getElementById('dmC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>De Minimis Benefit Ceilings <span style="font-family:var(--sa);font-size:.7rem;font-weight:600;color:var(--mu)">(RR 29-2025, eff. Jan 6, 2026)</span></h3><span class="mchv" id="dmC" style="color:var(--lt);font-size:.6rem">▾</span></div>
+<div class="cpb" id="dmB"><p style="font-family:var(--se);font-size:.74rem;color:var(--mu);padding:.5rem .75rem .25rem;line-height:1.5">Exempt from income tax and withholding tax within these limits — any excess is taxable compensation. These ceilings are separate from and cumulative with the ₱90,000 13th month/bonus ceiling.</p>
+<table class="dm-tbl"><thead><tr><th>Benefit</th><th>Ceiling</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Rice allowance</td><td class="dma">₱3,000/month</td><td class="dmn">RR 29-2025 updated</td></tr>
+<tr><td>Clothing / uniform allowance</td><td class="dma">₱6,000/year</td><td class="dmn">RR 29-2025 ↑ from ₱5,000</td></tr>
+<tr><td>Medical cash allowance to dependents</td><td class="dma">₱1,500/month</td><td class="dmn">RR 29-2025 ↑ from ₱750; per employee</td></tr>
+<tr><td>Laundry allowance</td><td class="dma">₱600/month</td><td class="dmn">RR 29-2025 ↑ from ₱300</td></tr>
+<tr><td>Actual medical benefits</td><td class="dma">₱10,000/year</td><td class="dmn">Unchanged</td></tr>
+<tr><td>Employee achievement awards</td><td class="dma">₱10,000/year</td><td class="dmn">Tangible personal property only; cash excluded</td></tr>
+<tr><td>Gifts — Christmas &amp; major anniversary</td><td class="dma">₱5,000/year</td><td class="dmn">Per employee; cash gifts excluded</td></tr>
+<tr><td>Daily meal allowance (OT / graveyard)</td><td class="dma">25% of min. wage</td><td class="dmn">Per applicable daily minimum wage; per shift</td></tr>
+<tr><td>CBA / productivity incentive benefits</td><td class="dma">₱10,000/year</td><td class="dmn">Per employee; requires collective agreement or plan</td></tr>
+</tbody></table></div></div>
 </section>
 
 <footer class="ftr">This suite is for general reference only — not formal tax advice. Verify against the BIR Interactive Tax Calendar at www.bir.gov.ph. Deadlines on weekends/holidays move to the next business day. Rates current as of April 2026, incorporating TRAIN (RA 10963), CREATE (RA 11534), CREATE MORE (RA 12066), EOPT (RA 11976), CMEPA (RA 12214, eff. 1 Jul 2025), RR 29-2025 expanded de minimis (eff. 6 Jan 2026), and RR 26-2025 e-invoicing (31 Dec 2026 deadline).</footer>
