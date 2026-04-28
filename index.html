@@ -780,24 +780,18 @@ body:not(.pro-mode) .mc{display:none}
 .cp-sum .chip{scroll-snap-align:start}
 .btmnav{display:none}
 .brand-badge{display:none}
-.hdr-mobile-icons{display:none}
 .brand-row{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
 @media(max-width:768px){
   /* Compact calculator intro */
   .calc-intro{margin-bottom:.55rem}
   .calc-intro h2{font-size:1.15rem;line-height:1.2;margin-bottom:0}
   .calc-intro p{display:none}
-  /* Hide top nav + Reminders + Mode toggle in favor of bottom bar + mobile icons */
+  /* Hide top nav + Mode toggle in favor of bottom bar */
   .pnav{display:none!important}
   .hdr-r .mode-toggle{display:none!important}
   .hdr-r{flex:0 0 auto!important;width:auto!important;justify-content:flex-end!important;max-width:none}
   .hdr-i{flex-wrap:nowrap;justify-content:space-between}
   .brand{flex:1;min-width:0}
-  .hdr-mobile-icons{display:inline-flex;align-items:center;gap:.4rem}
-  .hdr-mobile-icons button{background:var(--sf);border:1.5px solid var(--bd);border-radius:50%;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--dim);flex-shrink:0;padding:0}
-  .hdr-mobile-icons button:hover{border-color:var(--royal);color:var(--royal)}
-  .hdr-mobile-icons button.on{border-color:var(--green);color:var(--green);background:var(--gs)}
-  .hdr-mobile-icons button svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   /* Pro / Simple badge next to brand title */
   .brand-badge{display:inline-flex;align-items:center;padding:.1rem .5rem;border-radius:100px;background:var(--s2);color:var(--mu);font-family:var(--sa);font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--bd);min-height:22px;line-height:1;white-space:nowrap}
   body.pro-mode .brand-badge{background:var(--rs);color:var(--royal);border-color:var(--royal)}
