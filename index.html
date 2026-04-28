@@ -107,23 +107,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 /* FEED VIEW */
 .fv{display:none}.fv.vis{display:block}
-.fc{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);padding:.85rem;margin-bottom:.5rem;border-left:3px solid transparent;transition:opacity .25s}
-.fc.filed{opacity:.4}
+.fc{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);padding:.85rem;margin-bottom:.5rem;border-left:3px solid transparent}
 .fc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem}
 .fc-urg{font-size:.72rem;font-weight:700}
 .fc-dl{font-size:.72rem;color:var(--dim)}
 .fc-title{font-family:var(--se);font-size:.98rem;font-weight:600;color:var(--ink);line-height:1.25;margin-bottom:.15rem}
 .fc-form{font-size:.74rem;color:var(--mu);margin-bottom:.45rem;font-weight:500}
 .fc-ctx{font-family:var(--se);font-size:.82rem;color:var(--dim);font-style:italic;margin:.15rem 0 .4rem;line-height:1.45}
-.fc-btm{display:flex;align-items:center;justify-content:space-between;margin-top:.5rem;padding-top:.45rem;border-top:1px solid var(--s2)}
-.fc-mark{font-family:var(--sa);font-size:.74rem;font-weight:700;padding:.35rem .85rem;border-radius:100px;border:1.5px solid var(--royal);background:transparent;color:var(--royal);cursor:pointer;transition:all .15s;min-height:32px}
-.fc-mark:hover{background:var(--royal);color:#fff}
-.fc.filed .fc-mark{border-color:var(--green);color:var(--green)}
-.fc-type{font-size:.7rem;font-weight:600;padding:.15rem .45rem;border-radius:100px;background:var(--s2);color:var(--mu)}
+.fc-type{font-size:.7rem;font-weight:600;padding:.15rem .45rem;border-radius:100px;background:var(--s2);color:var(--mu);display:inline-block;margin-top:.4rem}
 .fv-empty{font-family:var(--se);font-size:.9rem;color:var(--mu);text-align:center;padding:3rem 1rem}
 .fv-empty-sub{font-family:var(--sa);font-size:.78rem;color:var(--mu);margin-top:.5rem;font-style:normal}
-.fgh{font-family:var(--sa);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);border-bottom:1px solid var(--bd);margin:1rem 0 .5rem;display:flex;align-items:center;justify-content:space-between;padding-bottom:.3rem}
-.fgh-tog{font-family:var(--sa);font-size:.72rem;font-weight:500;color:var(--royal);background:none;border:none;cursor:pointer;padding:.15rem .25rem;text-transform:none;letter-spacing:normal;min-height:24px}
+.fgh{font-family:var(--sa);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);border-bottom:1px solid var(--bd);margin:1rem 0 .5rem;padding-bottom:.3rem}
 
 /* TABLE */
 .tv{display:none}.tv.vis{display:block}.tl.hid{display:none}
@@ -309,7 +303,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
   .brand h1{font-size:1.05rem}
   .brand .tl{font-size:.6rem}
   .pnav button{padding:.45rem .7rem;font-size:.72rem;min-height:34px}
-  .notif-btn,.mode-toggle{font-size:.72rem;padding:.4rem .7rem;min-height:34px}
+  .mode-toggle{font-size:.72rem;padding:.4rem .7rem;min-height:34px}
   .tbar{padding:.45rem .75rem}
   .rbar{padding:0 .75rem}
   .cls{padding:0 .75rem}
@@ -577,34 +571,6 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .log-grand-total{display:flex;justify-content:space-between;align-items:center;padding:.5rem .6rem;border-top:2px solid var(--bd);margin-top:.25rem;font-size:.85rem}
 .log-grand-total-lbl{font-weight:700;color:var(--ink)}
 .log-grand-total-val{font-family:var(--sa);font-weight:700;font-size:.88rem;color:var(--royal)}
-/* Quarterly Checklist view */
-.qck{display:none}.qck.vis{display:block}
-.qck-quarter{margin-bottom:.7rem;background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);overflow:hidden}
-.qck-qhdr{display:flex;align-items:center;justify-content:space-between;padding:.55rem .82rem;background:var(--s2);border-bottom:1px solid var(--bd);cursor:pointer;user-select:none}
-.qck-quarter.collapsed>.qck-qhdr{border-bottom:none}
-.qck-qname{font-family:var(--se);font-size:.88rem;font-weight:600;color:var(--ink)}
-.qck-prog{display:flex;align-items:center;gap:.4rem;font-size:.74rem}
-.qck-pbar{width:50px;height:5px;border-radius:100px;background:var(--s3);overflow:hidden;flex-shrink:0}
-.qck-pfill{height:100%;border-radius:100px;transition:width .3s}
-.qck-stat{font-weight:700;color:var(--dim);white-space:nowrap}
-.qck-body{padding:.35rem .62rem .48rem}.qck-quarter.collapsed>.qck-body{display:none}
-.qck-item{display:flex;align-items:center;gap:.5rem;padding:.45rem .35rem;border-bottom:1px solid var(--s2);cursor:pointer;border-radius:var(--rr);transition:background .12s;min-height:44px}
-.qck-item:last-child{border-bottom:none}.qck-item:hover{background:var(--s2)}
-.qck-chk{width:20px;height:20px;border-radius:4px;border:1.5px solid var(--bl);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.qck-item.filed .qck-chk{background:var(--green);border-color:var(--green)}
-.qck-chk svg{width:11px;height:11px;opacity:0;stroke:#fff;stroke-width:2.5}
-.qck-item.filed .qck-chk svg{opacity:1}
-.qck-item.filed .qck-title{opacity:.4}
-.qck-form{font-size:.68rem;font-weight:700;background:var(--rs);color:var(--royal);padding:.1rem .35rem;border-radius:3px;white-space:nowrap;flex-shrink:0}.qck-date{font-size:.72rem;color:var(--mu);white-space:nowrap;flex-shrink:0}
-.qck-title{font-family:var(--se);font-size:.85rem;color:var(--ink);flex:1;line-height:1.3}
-/* Notes on feed cards */
-.fc-note-btn{font-family:var(--sa);font-size:.7rem;font-weight:600;color:var(--mu);background:none;border:1px solid var(--bd);border-radius:100px;padding:.2rem .5rem;cursor:pointer;transition:all .15s;margin-left:.32rem;vertical-align:middle;line-height:1.5;min-height:24px}
-.fc-note-btn:hover,.fc-note-btn.has-note{color:var(--royal);border-color:var(--royal)}
-.fc-note-btn.has-note{background:var(--rs)}
-.fc-note-area{display:none;margin-top:.4rem}
-.fc-note-area.vis{display:block}
-.fc-note-input{font-family:var(--se);font-size:.7rem;width:100%;padding:.28rem .45rem;border:1.5px solid var(--bd);border-radius:var(--rr);background:var(--bg);color:var(--ch);resize:vertical;min-height:42px;outline:none;line-height:1.4}
-.fc-note-input:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}
 /* Guide cards */
 .guide-section{margin-bottom:1.5rem}
 .guide-section-hdr{font-family:var(--se);font-size:.92rem;font-weight:600;color:var(--ink);margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:2px solid var(--amber);display:inline-block}
@@ -628,10 +594,6 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .guide-note{background:var(--as);border:1px solid rgba(212,133,10,.18);border-left:3px solid var(--amber);border-radius:var(--rr);padding:.5rem .7rem;font-family:var(--se);font-size:.82rem;color:var(--ch);line-height:1.5;margin:.45rem 0}
 .guide-note-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8c5400;display:block;margin-bottom:.1rem}
 .guide-note.info{background:var(--rs);border-color:rgba(65,105,225,.18);border-left-color:var(--royal)}.guide-note.info .guide-note-lbl{color:var(--royal)}
-/* Notification button */
-.notif-btn{font-family:var(--sa);font-size:.78rem;font-weight:700;padding:.45rem .85rem;border-radius:100px;border:1.5px solid var(--bd);background:var(--sf);color:var(--dim);cursor:pointer;transition:all .2s;white-space:nowrap;min-height:36px}
-.notif-btn:hover{border-color:var(--royal);color:var(--royal)}
-.notif-btn.on{border-color:var(--green);color:var(--green);background:var(--gs)}
 /* YTD Projector */
 .ytd-inp{font-family:var(--sa);font-size:.7rem;font-weight:600;padding:.2rem .38rem;border:1.5px solid var(--bd);border-radius:var(--rr);background:var(--bg);color:var(--ink);width:100%;outline:none;text-align:right;max-width:110px}
 .ytd-inp:focus{border-color:var(--royal);box-shadow:0 0 0 2px var(--rs)}
@@ -827,7 +789,7 @@ body:not(.pro-mode) .mc{display:none}
   .calc-intro p{display:none}
   /* Hide top nav + Reminders + Mode toggle in favor of bottom bar + mobile icons */
   .pnav{display:none!important}
-  .hdr-r .notif-btn,.hdr-r .mode-toggle{display:none!important}
+  .hdr-r .mode-toggle{display:none!important}
   .hdr-r{flex:0 0 auto!important;width:auto!important;justify-content:flex-end!important;max-width:none}
   .hdr-i{flex-wrap:nowrap;justify-content:space-between}
   .brand{flex:1;min-width:0}
@@ -924,11 +886,7 @@ body:not(.pro-mode) .mc{display:none}
   <button type="button" data-pg="calc" onclick="showPg('calc',this)">Regime Calculator</button>
   <button type="button" data-pg="tools" onclick="showPg('tools',this)">Tools &amp; Guides</button>
 </nav>
-<button type="button" class="notif-btn" id="notifBtn" onclick="toggleNotifications()" aria-pressed="false" aria-label="Toggle BIR deadline reminders"><span aria-hidden="true">🔔</span> Reminders</button>
 <button type="button" class="mode-toggle" onclick="tgMode()" aria-pressed="false" aria-label="Toggle between Simple and Pro (Accountant) modes"><span class="mt-pip" aria-hidden="true"></span><span class="mt-label">Simple</span></button>
-<div class="hdr-mobile-icons">
-  <button type="button" id="notifBtnMobile" onclick="toggleNotifications()" aria-pressed="false" aria-label="Toggle BIR deadline reminders"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></button>
-</div>
 </div>
 </div></header>
 <nav class="btmnav" aria-label="Primary mobile">
@@ -963,7 +921,7 @@ body:not(.pro-mode) .mc{display:none}
 </div></section>
 <main class="mn" id="mainContent" role="main" data-skiptarget="1">
 <div class="vc"><div class="vl">
-<div class="vt" role="tablist" aria-label="Calendar view"><button type="button" class="act" onclick="setV('fd',this)" role="tab" aria-selected="true">Feed</button><button type="button" onclick="setV('tl',this)" role="tab" aria-selected="false">Timeline</button><button type="button" onclick="setV('tb',this)" role="tab" aria-selected="false">Table</button><button type="button" onclick="setV('wf',this)" role="tab" aria-selected="false">By Workflow</button><button type="button" onclick="setV('qck',this)" role="tab" aria-selected="false">Q-Checklist</button></div>
+<div class="vt" role="tablist" aria-label="Calendar view"><button type="button" class="act" onclick="setV('fd',this)" role="tab" aria-selected="true">Feed</button><button type="button" onclick="setV('tl',this)" role="tab" aria-selected="false">Timeline</button><button type="button" onclick="setV('tb',this)" role="tab" aria-selected="false">Table</button><button type="button" onclick="setV('wf',this)" role="tab" aria-selected="false">By Workflow</button></div>
 <label for="calSearch" class="sr-only">Search obligations</label>
 <input type="text" id="calSearch" class="sb" placeholder="Search…" oninput="applySearchDebounced(this.value)" aria-label="Search obligations">
 </div><div class="ft" id="cF" role="group" aria-label="Category filters"></div></div>
@@ -973,7 +931,6 @@ body:not(.pro-mode) .mc{display:none}
 <div class="tl" id="tl"></div>
 <div class="tv" id="tv"></div>
 <div class="wv" id="wv"></div>
-<div class="qck" id="qck"></div>
 </main>
 <div class="sheet-ov" id="calSettingsSheet" role="dialog" aria-modal="true" aria-labelledby="calSettingsTitle" onclick="if(event.target===this)closeCalSheet('calSettingsSheet')">
   <div class="sheet-card">
@@ -2092,8 +2049,6 @@ function shiftedDeadlineNote(o){
   const dayName=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][nom.getDay()];
   return `Shifted from ${MN[nom.getMonth()+1].substring(0,3)} ${nom.getDate()} (${dayName})`;
 }
-function isFiled(o){return localStorage.getItem('tpv_filed_'+obsId(o)+'_'+YEAR)==='1';}
-function tgFiled(id,cardId){const key='tpv_filed_'+id+'_'+YEAR;if(localStorage.getItem(key)==='1')safeRemove(key);else safeSet(key,'1');if(vM==='qck')renderQChecklist(gF());else renderFeed();}
 // ── CWT per quarter sourced from 2307 log (falls back to linear split) ─
 // Returns {q:[Q1,Q2,Q3,Q4], source:'log'|'linear', total:annual} where each
 // entry is the total CWT received in that quarter for the requested year.
@@ -2143,16 +2098,10 @@ function renderFeed(){
     document.getElementById('fv').innerHTML=h+`<div class="fv-empty">No obligations match your current filters.${hint}</div>`;
     return;
   }
-  items.sort((a,b)=>{
-    const fa=isFiled(a)?1:0,fb=isFiled(b)?1:0;
-    if(fa!==fb)return fa-fb;
-    const ea=effectiveDeadline(a),eb=effectiveDeadline(b);
-    return(ea?ea.getTime():0)-(eb?eb.getTime():0);
-  });
+  items.sort((a,b)=>{const ea=effectiveDeadline(a),eb=effectiveDeadline(b);return(ea?ea.getTime():0)-(eb?eb.getTime():0);});
   const tname=TYPES[cT].name;
-  const grps={tw:[],nw:[],tm:[],ip:[],lt:[],done:[]};
+  const grps={tw:[],nw:[],tm:[],ip:[],lt:[]};
   items.forEach(o=>{
-    if(isFiled(o)){grps.done.push(o);return;}
     const d=daysUntil(o);
     if(d<=7)grps.tw.push(o);
     else if(d<=14)grps.nw.push(o);
@@ -2167,32 +2116,28 @@ function renderFeed(){
     }
   });
   function renderCard(o){
-    const id=obsId(o);const filed=isFiled(o);const d=daysUntil(o);const u=urgLevel(d,o);
+    const id=obsId(o);const d=daysUntil(o);const u=urgLevel(d,o);
     const eff=effectiveDeadline(o);
     const dl=eff?`${ms(eff.getMonth()+1)} ${eff.getDate()}, ${eff.getFullYear()}`:(ms(o.month)+' '+o.day+', '+YEAR);
     const shiftNote=shiftedDeadlineNote(o);
-    const noteKey='tpv_note_'+id;const note=localStorage.getItem(noteKey)||'';
-    let c=`<div class="fc${filed?' filed':''}" id="fc_${id}" style="border-left-color:${u.c}">`;
+    let c=`<div class="fc" id="fc_${id}" style="border-left-color:${u.c}">`;
     c+=`<div class="fc-top"><span class="fc-urg" style="color:${u.c}">${u.t}</span><span class="fc-dl">${dl}${shiftNote?` · <em style="color:var(--amber);font-style:normal">${shiftNote}</em>`:''}</span></div>`;
-    c+=`<div class="fc-title">${o.title}<button class="fc-note-btn${note?' has-note':''}" onclick="event.stopPropagation();tgNote('${id}')" title="Add note">${note?'📝':'+ note'}</button></div>`;
+    c+=`<div class="fc-title">${o.title}</div>`;
     if(o.ctx)c+=`<div class="fc-ctx">${o.ctx}</div>`;
     if(o.form&&o.form!=='—')c+=`<div class="fc-form">${o.form}</div>`;
-    c+=`<div class="fc-note-area${note?' vis':''}" id="fn_${id}"><textarea class="fc-note-input" id="fni_${id}" placeholder="Notes for this obligation…" oninput="saveNote('${id}')" onblur="saveNote('${id}')">${esc(note)}</textarea></div>`;
-    c+=`<div class="fc-btm"><button class="fc-mark" onclick="tgFiled('${id}','fc_${id}')">${filed?'✓ Filed':'Mark as Filed →'}</button><span class="fc-type">${tname}</span></div>`;
+    c+=`<span class="fc-type">${tname}</span>`;
     c+=`</div>`;
     return c;
   }
   function renderOngoingCard(o){
-    const id=obsId(o);const filed=isFiled(o);
-    const noteKey='tpv_note_'+id;const note=localStorage.getItem(noteKey)||'';
-    let c=`<div class="fc${filed?' filed':''}" id="fc_${id}" style="border-left-color:var(--slate)">`;
+    const id=obsId(o);
+    let c=`<div class="fc" id="fc_${id}" style="border-left-color:var(--slate)">`;
     c+=`<div class="fc-top"><span class="fc-urg" style="color:var(--slate)">Ongoing / Recurring</span><span class="fc-dl">—</span></div>`;
-    c+=`<div class="fc-title">${o.title}<button class="fc-note-btn${note?' has-note':''}" onclick="event.stopPropagation();tgNote('${id}')" title="Add note">${note?'📝':'+ note'}</button></div>`;
+    c+=`<div class="fc-title">${o.title}</div>`;
     if(o.ctx)c+=`<div class="fc-ctx">${o.ctx}</div>`;
     else if(o.desc)c+=`<div class="fc-ctx">${o.desc}</div>`;
     if(o.form&&o.form!=='—')c+=`<div class="fc-form">${o.form}</div>`;
-    c+=`<div class="fc-note-area${note?' vis':''}" id="fn_${id}"><textarea class="fc-note-input" id="fni_${id}" placeholder="Notes for this obligation…" oninput="saveNote('${id}')" onblur="saveNote('${id}')">${esc(note)}</textarea></div>`;
-    c+=`<div class="fc-btm"><button class="fc-mark" onclick="tgFiled('${id}','fc_${id}')">${filed?'✓ Filed':'Mark as Filed →'}</button><span class="fc-type">${tname}</span></div>`;
+    c+=`<span class="fc-type">${tname}</span>`;
     c+=`</div>`;
     return c;
   }
@@ -2208,13 +2153,6 @@ function renderFeed(){
     first=false;
     ongoing.forEach(o=>{h+=renderOngoingCard(o);});
   }
-  if(grps.done.length){
-    const n=grps.done.length;
-    h+=`<div class="fgh" style="margin-top:${first?'0':'1.4rem'}">Completed <button class="fgh-tog" onclick="var s=document.getElementById('fv-done');var shown=s.style.display!=='none';s.style.display=shown?'none':'block';this.textContent=(shown?'Show ':'Hide ')+${n}+' completed'">Hide ${n} completed</button></div>`;
-    h+=`<div id="fv-done" style="display:block">`;
-    grps.done.forEach(o=>{h+=renderCard(o);});
-    h+=`</div>`;
-  }
   document.getElementById('fv').innerHTML=h;
 }
 
@@ -2222,8 +2160,8 @@ function isV(o){if(!o.r.includes(cR))return false;if(!aC.has(o.cat))return false
 function gF(){return OB.filter(isV);}function cntQ(k){return OB.filter(o=>o.pq===k&&o.r.includes(cR)).length;}
 function setType(t){cT=t;cR=Object.keys(TYPES[t].regimes)[0];cQ.clear();document.querySelectorAll('.tb').forEach((b,i)=>{const isActive=['se','mi','corp','emp'][i]===t;b.classList.toggle('act',isActive);b.setAttribute('aria-pressed',isActive?'true':'false');});rRB();rCL();rCF();ren();updSmBar();syncCalculatorTaxpayerType();refreshCorpGuard();}
 function setReg(r){cR=r;rRB();rCL();ren();}
-const VM_LABELS={fd:'Feed',tl:'Timeline',tb:'Table',wf:'Workflow',qck:'Q-Checklist'};
-const VM_KEYS=['fd','tl','tb','wf','qck'];
+const VM_LABELS={fd:'Feed',tl:'Timeline',tb:'Table',wf:'Workflow'};
+const VM_KEYS=['fd','tl','tb','wf'];
 function setV(v,b){vM=v;try{safeSet('tpv_vm',v);}catch(e){}const btns=document.querySelectorAll('.vt button');btns.forEach((x,i)=>{const active=b?x===b:VM_KEYS[i]===v;x.classList.toggle('act',active);x.setAttribute('aria-selected',active?'true':'false');});ren();}
 function tgQ(k){cQ.has(k)?cQ.delete(k):cQ.add(k);rCL();ren();}function tgC(c){aC.has(c)?aC.delete(c):aC.add(c);rCF();ren();}function tgM(m){document.querySelector(`.ms[data-m="${m}"]`)?.classList.toggle('act');}
 function rRB(){document.getElementById('rBar').innerHTML='<span class="tl-l">Regime</span>'+Object.entries(TYPES[cT].regimes).map(([k,v])=>`<button class="rb ${k===cR?'act':''}" onclick="setReg('${k}')">${v.n}</button>`).join('');}
@@ -2243,7 +2181,6 @@ function updCalStat(){
   const f=gF().filter(o=>o.month>0&&o.day>0);
   let overdue=0,thisMonth=0;
   f.forEach(o=>{
-    if(isFiled(o))return;
     const eff=effectiveDeadline(o);if(!eff)return;
     if(eff<today){overdue++;return;}
     if((eff.getMonth()+1)===cm)thisMonth++;
@@ -2312,7 +2249,7 @@ function openCalSettingsSheet(){
 // View mode sheet
 function openCalViewSheet(){
   const body=document.getElementById('calViewBody');if(!body)return;
-  const opts=[['fd','Feed','Due-date grouped cards'],['tl','Timeline','By month & quarter'],['tb','Table','Compact sortable list'],['wf','By Workflow','Grouped by workflow'],['qck','Q-Checklist','Quarterly checkboxes']];
+  const opts=[['fd','Feed','Due-date grouped cards'],['tl','Timeline','By month & quarter'],['tb','Table','Compact sortable list'],['wf','By Workflow','Grouped by workflow']];
   let h=`<div class="sheet-opts">`;
   opts.forEach(([k,n,d])=>{h+=`<button class="sheet-opt ${vM===k?'act':''}" onclick="setV('${k}',null);closeCalSheet('calViewSheet');"><span>${n}<div class="sheet-row-sub">${d}</div></span></button>`;});
   h+=`</div>`;
@@ -2468,7 +2405,7 @@ function getLayman(o){
   if(t.includes('year-end')||t.includes('bookkeeping'))return'<b>What:</b> Reminder to close out the books, reconcile all accounts, prepare for the January-April compliance season, and verify all withholding taxes match payroll records.';
   return'<b>What:</b> '+(o.title)+'. See Form Reference for the full briefer.';
 }
-function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>{const eff=effectiveDeadline(o);const shift=shiftedDeadlineNote(o);const dateCell=eff?`${ms(eff.getMonth()+1)} ${eff.getDate()}${shift?` <span style="color:var(--amber);font-size:.54rem">· ${shift}</span>`:''}`:'Ongoing';return `<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${dateCell}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`;}).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');const fe=document.getElementById('fv');fe.classList.toggle('vis',vM==='fd');const qe=document.getElementById('qck');qe.classList.toggle('vis',vM==='qck');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);else if(vM==='fd')renderFeed();else if(vM==='qck')renderQChecklist(f);updCalStat();updCalHdrLabels();}
+function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f.length}</strong> obligations · <strong>${f.filter(o=>o.pq).length}</strong> conditional`;const te=document.getElementById('tv'),s=[...f].sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));te.innerHTML=`<div class="tw"><table class="ct"><thead><tr><th>Date</th><th>Obligation</th><th>Form</th><th>Type</th><th>Prerequisite</th></tr></thead><tbody>${s.map(o=>{const eff=effectiveDeadline(o);const shift=shiftedDeadlineNote(o);const dateCell=eff?`${ms(eff.getMonth()+1)} ${eff.getDate()}${shift?` <span style="color:var(--amber);font-size:.54rem">· ${shift}</span>`:''}`:'Ongoing';return `<tr><td style="font-size:.62rem;color:var(--mu);white-space:nowrap">${dateCell}</td><td style="font-weight:600;font-family:var(--se)">${o.title}</td><td style="font-size:.62rem;color:var(--royal)">${o.form||''}</td><td style="font-size:.58rem;color:var(--dim)">${CATS[o.cat]?.l||''}</td><td style="font-size:.58rem;color:var(--teal)">${o.pq?pqL(o.pq):'—'}</td></tr>`;}).join('')}</tbody></table></div>`;const el=document.getElementById('tl');el.classList.toggle('hid',vM!=='tl');te.classList.toggle('vis',vM==='tb');const we=document.getElementById('wv');we.classList.toggle('vis',vM==='wf');const fe=document.getElementById('fv');fe.classList.toggle('vis',vM==='fd');if(vM==='tl')renderTL(f);else if(vM==='wf')renderWF(f);else if(vM==='fd')renderFeed();updCalStat();updCalHdrLabels();}
 
 // ══════════ CALCULATOR ══════════
 function gradTax(ti){ti=Math.max(0,ti);if(ti<=250000)return 0;if(ti<=400000)return(ti-250000)*.15;if(ti<=800000)return 22500+(ti-400000)*.20;if(ti<=2000000)return 102500+(ti-800000)*.25;if(ti<=8000000)return 402500+(ti-2000000)*.30;return 2202500+(ti-8000000)*.35;}
@@ -3653,57 +3590,6 @@ document.addEventListener('visibilitychange',()=>{
 });
 window._tpvLastSeenDate=new Date().toISOString().split('T')[0];
 
-// ══════════ PUSH NOTIFICATIONS ══════════
-// Best-effort only: notifications fire when the page is opened on a new day.
-// There is no Service Worker here, so a closed browser won't surface reminders.
-function _setNotifUI(on){
-  const btn=document.getElementById('notifBtn');
-  if(btn){btn.classList.toggle('on',on);btn.innerHTML=`<span aria-hidden="true">🔔</span> Reminders${on?' On':''}`;btn.setAttribute('aria-pressed',on?'true':'false');}
-  const mb=document.getElementById('notifBtnMobile');
-  if(mb){mb.classList.toggle('on',on);mb.setAttribute('aria-pressed',on?'true':'false');}
-}
-function toggleNotifications(){
-  if(!('Notification' in window)){toast('Your browser does not support push notifications.','err');return;}
-  if(Notification.permission==='denied'){toast('Notifications are blocked. Enable them in your browser settings.','err');return;}
-  if(localStorage.getItem('tpv_notif')==='on'){
-    safeRemove('tpv_notif');
-    _setNotifUI(false);
-    return;
-  }
-  Notification.requestPermission().then(perm=>{
-    if(perm==='granted'){
-      safeSet('tpv_notif','on');
-      _setNotifUI(true);
-      scheduleNotifications();
-      new Notification('The Present Value',{body:'Reminders on. Each time you open this page, upcoming deadlines within 7 days will show a notification (once per day).',icon:''});
-    }
-  });
-}
-function scheduleNotifications(){
-  if(Notification.permission!=='granted'||localStorage.getItem('tpv_notif')!=='on')return;
-  const lastCheck=localStorage.getItem('tpv_notif_last');
-  const today=new Date().toISOString().split('T')[0];
-  if(lastCheck===today)return;
-  safeSet('tpv_notif_last',today);
-  const f=gF();
-  const upcoming=f.filter(o=>{
-    if(o.month===0||o.day===0)return false;
-    const d=daysUntil(o);
-    return d>=0&&d<=7&&!isFiled(o);
-  }).sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));
-  if(!upcoming.length)return;
-  const titles=upcoming.slice(0,3).map(o=>{const eff=effectiveDeadline(o);return `${eff?ms(eff.getMonth()+1)+' '+eff.getDate():ms(o.month)+' '+o.day}: ${o.title}`;}).join('\n');
-  const extra=upcoming.length>3?`\n+ ${upcoming.length-3} more`:'';
-  setTimeout(()=>{
-    new Notification(`${upcoming.length} BIR deadline${upcoming.length>1?'s':''} due within 7 days`,{body:titles+extra,icon:''});
-  },2000);
-}
-function initNotifBtn(){
-  const on=localStorage.getItem('tpv_notif')==='on';
-  if(on)_setNotifUI(true);
-  if(Notification.permission==='granted'&&on)scheduleNotifications();
-}
-
 // ══════════ PENALTY CALCULATOR ══════════
 function calcPenalty(){
   const due=document.getElementById('penDue').value;
@@ -3874,60 +3760,6 @@ function render2307Log(){
   el.innerHTML=h;
 }
 
-// ══════════ QUARTERLY CHECKLIST VIEW ══════════
-function renderQChecklist(f){
-  const el=document.getElementById('qck');
-  const qs=[
-    {name:'Q1 — January to March',months:[1,2,3]},
-    {name:'Q2 — April to June',months:[4,5,6]},
-    {name:'Q3 — July to September',months:[7,8,9]},
-    {name:'Q4 — October to December',months:[10,11,12]},
-  ];
-  let h='';
-  qs.forEach((q,qi)=>{
-    const obs=f.filter(o=>o.month>0&&o.day>0&&q.months.includes(o.month))
-      .sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));
-    if(!obs.length)return;
-    const total=obs.length,filed=obs.filter(o=>isFiled(o)).length;
-    const pct=total?Math.round(filed/total*100):0;
-    const fc=filed===total?'var(--green)':'var(--royal)';
-    h+=`<div class="qck-quarter" id="qck_q${qi}">`;
-    h+=`<div class="qck-qhdr" onclick="document.getElementById('qck_q${qi}').classList.toggle('collapsed')">`;
-    h+=`<span class="qck-qname">${q.name}</span>`;
-    h+=`<div class="qck-prog"><div class="qck-pbar"><div class="qck-pfill" style="width:${pct}%;background:${fc}"></div></div><span class="qck-stat">${filed}/${total} filed</span></div>`;
-    h+=`</div><div class="qck-body">`;
-    obs.forEach(o=>{
-      const id=obsId(o);const fd=isFiled(o);const eff=effectiveDeadline(o);const shift=shiftedDeadlineNote(o);
-      h+=`<div class="qck-item${fd?' filed':''}" onclick="tgFiled('${id}','')">`;
-      h+=`<div class="qck-chk"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5"/></svg></div>`;
-      if(o.form&&o.form!=='—')h+=`<span class="qck-form">${o.form}</span>`;
-      h+=`<span class="qck-title">${o.title}${shift?` <span style="color:var(--amber);font-size:.55rem;font-weight:600">· ${shift}</span>`:''}</span>`;
-      h+=`<span class="qck-date">${eff?ms(eff.getMonth()+1)+' '+eff.getDate():ms(o.month)+' '+o.day}</span>`;
-      h+=`</div>`;
-    });
-    h+=`</div></div>`;
-  });
-  if(!h)h=`<div style="font-family:var(--se);font-size:.85rem;color:var(--mu);text-align:center;padding:2.5rem 1rem">No obligations match your current filters.</div>`;
-  el.innerHTML=h;
-}
-// ══════════ NOTES ══════════
-function tgNote(id){
-  const area=document.getElementById('fn_'+id);
-  const btn=document.querySelector(`#fc_${id} .fc-note-btn`);
-  if(!area)return;
-  area.classList.toggle('vis');
-  if(area.classList.contains('vis'))document.getElementById('fni_'+id)?.focus();
-}
-function saveNote(id){
-  const el=document.getElementById('fni_'+id);
-  if(!el)return;
-  const val=el.value.trim();
-  const key='tpv_note_'+id;
-  if(val)safeSet(key,val);else safeRemove(key);
-  const btn=document.querySelector(`#fc_${id} .fc-note-btn`);
-  if(btn){btn.classList.toggle('has-note',!!val);btn.textContent=val?'📝':'+ note';}
-}
-
 // ══════════ YTD QUARTERLY PROJECTOR ══════════
 function initYTDTable(){
   const tbody=document.getElementById('ytdBody');
@@ -3989,8 +3821,6 @@ function toggleGuide(id){document.getElementById(id)?.classList.toggle('open');}
   render2307Log();
   // YTD projector table
   initYTDTable();
-  // Notification button state
-  initNotifBtn();
   // Penalty date defaults: today
   const today=new Date().toISOString().split('T')[0];
   const penPay=document.getElementById('penPay');
