@@ -1468,6 +1468,8 @@ const TIPS={
   govpay:'Government agencies withhold 5% creditable VAT on payments to VAT-registered suppliers — claimed via BIR Form 2307 against output VAT on 2550Q (NIRC §114(C) as amended by TRAIN, eff. 1 Jan 2021).',
   slsp:'Summary List of Sales and Purchases — quarterly cross-referencing report attached to your VAT return.',
   sawt:'Summary of creditable withholding taxes received. Attached to quarterly and annual income tax returns.',
+  eafs:'BIR eAFS portal — used to electronically submit scanned copies of 2307s and other ITR attachments. Required when claiming CWT credits on the annual ITR.',
+  cwtReceived:'Creditable withholding tax certificates issued by clients who withheld EWT on payments to you — each 2307 is a tax credit claimable on your income tax return.',
   osd:'Optional Standard Deduction — 40% of gross revenue deducted automatically. No receipts needed.',
   afs:'Audited Financial Statements — prepared by a BIR-accredited CPA, required for SEC annual filing.',
   gis:'General Information Sheet — annual corporate disclosure to SEC of officers and shareholders.',
@@ -1589,11 +1591,12 @@ window.addEventListener('scroll',_retipAll,{passive:true,capture:true});
 window.addEventListener('resize',_retipAll);
 document.addEventListener('click',e=>{if(e.target.closest('.tip'))return;document.querySelectorAll('.tip.on').forEach(t=>{t.classList.remove('on');const b=t.querySelector('.tip-i');if(b)b.setAttribute('aria-expanded','false');});});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.tip.on').forEach(t=>{t.classList.remove('on');const b=t.querySelector('.tip-i');if(b){b.setAttribute('aria-expanded','false');b.focus();}});}});
-function cqTip(key){const t={ewt:TIPS.ewt,fwt:TIPS.fwt,dst:TIPS.dst,cas:TIPS.cas,crm:TIPS.crm,mcit:TIPS.mcit,rbe:TIPS.rbe,einv:TIPS.einv,lowerewt:TIPS.lowerewt,govpay:TIPS.govpay}[key];return t?mkTip(t):'';}
+function cqTip(key){const t={ewt:TIPS.ewt,fwt:TIPS.fwt,dst:TIPS.dst,cas:TIPS.cas,crm:TIPS.crm,mcit:TIPS.mcit,rbe:TIPS.rbe,einv:TIPS.einv,lowerewt:TIPS.lowerewt,govpay:TIPS.govpay,cwtReceived:TIPS.cwtReceived}[key];return t?mkTip(t):'';}
 function obTip(title){
   if(/Expanded Withholding|\bEWT\b/.test(title))return mkTip(TIPS.ewt);
   if(/Summary List of Sales|SLSP/.test(title))return mkTip(TIPS.slsp);
   if(/SAWT/.test(title))return mkTip(TIPS.sawt);
+  if(/eAFS/.test(title))return mkTip(TIPS.eafs);
   if(/MCIT/.test(title))return mkTip(TIPS.mcit);
   if(/Audited Financial|\bAFS\b/.test(title))return mkTip(TIPS.afs);
   if(/General Information Sheet|\bGIS\b/.test(title))return mkTip(TIPS.gis);
@@ -1748,6 +1751,13 @@ const FORMS=[
    how:"Use BIR SAWT DEV module or ATSP. Input each 2307: agent TIN, name, ATC, tax base, tax withheld.",
    attach:"N/A — the SAWT itself is the attachment.",
    legal:"RR 1-2014"},
+  {form:"eAFS",name:"Submit Scanned 2307 Copies via eAFS",cat:"adm",brief:"Electronic submission of scanned copies of 2307s received — required alongside annual ITR when claiming CWT credits.",
+   who:"Any taxpayer claiming creditable withholding tax credits on their annual income tax return.",
+   when:"April 15 of the following year — same deadline as the annual ITR (1701A or 1701).",
+   how:"Log in to the BIR eAFS portal (eAFS.bir.gov.ph). Upload scanned copies (PDF) of every BIR Form 2307 you received during the year. Organize by quarter. Save the acknowledgement receipt as proof of submission.",
+   attach:"Scanned PDF copies of all BIR Forms 2307 received during the taxable year.",
+   legal:"RMC 49-2020",
+   tip:"This is separate from the SAWT (.dat) submitted via eSubmission. SAWT is the machine-readable summary; eAFS carries the actual scanned documents. Keep the original physical 2307s on file — eAFS does not replace them."},
   {form:"SLSP",name:"Submit Sales & Purchases List (SLSP)",cat:"adm",brief:"Quarterly VAT cross-referencing report — required even for zero transactions.",
    who:"<span class='hl'>Sales list:</span> All VAT-registered. <span class='hl'>Purchases list:</span> VAT-registered with quarterly purchases > ₱1M (net of VAT).",
    when:"25th of the month after quarter-end (same as 2550Q).",
@@ -1824,8 +1834,8 @@ const AB=[...SE,...MI,...CORP],NV=['se_gnv','mi_gnv','corp_nv'],VAT=['se_gv','mi
 const CATS={inc:{l:"Income Tax",c:"var(--royal)"},biz:{l:"Business Tax",c:"var(--green)"},wh:{l:"Withholding",c:"var(--purple)"},emp:{l:"Employer",c:"var(--teal)"},dst:{l:"DST",c:"var(--rose)"},adm:{l:"Admin",c:"var(--amber)"},sec:{l:"SEC",c:"var(--slate)"}};
 const MN=["","January","February","March","April","May","June","July","August","September","October","November","December"];
 const ms=m=>MN[m]?.substring(0,3)||'—';
-const QS={se:[{key:"itemized",q:"Use itemized deductions?",d:"Form 1701 instead of 1701A"},{key:"employees",q:"Do you have employees?",d:"1601-C, 1604-C, 2316, contributions"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ, 2307, 1604-E"},{key:"fwt",q:"Final WT payments?",d:"0619-F, 1601-FQ, 2306, 1604-F"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"cas",q:"Computerized Accounting?",d:"CAS books Jan 30"},{key:"crm",q:"CRM/POS machine?",d:"Monthly reporting"},{key:"govpay",q:"Government payments?",d:"Form 1600"},{key:"lowerewt",q:"Lower EWT rate?",d:"Sworn declaration"},{key:"einv",q:"E-invoicing covered?",d:"Dec 31, 2026"}],
-  mi:[{key:"itemized",q:"Use itemized deductions?",d:"Form 1701 instead of 1701A"},{key:"employees",q:"Have employees?",d:"1601-C, 1604-C, 2316"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ"},{key:"fwt",q:"Final WT?",d:"0619-F, 1601-FQ"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"cas",q:"Computerized Accounting?",d:"CAS books"},{key:"crm",q:"CRM/POS?",d:"Reports"},{key:"govpay",q:"Gov payments?",d:"1600"},{key:"einv",q:"E-invoicing?",d:"Dec 2026"}],
+const QS={se:[{key:"itemized",q:"Use itemized deductions?",d:"Form 1701 instead of 1701A"},{key:"cwtReceived",q:"Receive 2307 certificates from clients?",d:"SAWT + eAFS scanned copies"},{key:"employees",q:"Do you have employees?",d:"1601-C, 1604-C, 2316, contributions"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ, 2307, 1604-E"},{key:"fwt",q:"Final WT payments?",d:"0619-F, 1601-FQ, 2306, 1604-F"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"cas",q:"Computerized Accounting?",d:"CAS books Jan 30"},{key:"crm",q:"CRM/POS machine?",d:"Monthly reporting"},{key:"govpay",q:"Government payments?",d:"Form 1600"},{key:"lowerewt",q:"Lower EWT rate?",d:"Sworn declaration"},{key:"einv",q:"E-invoicing covered?",d:"Dec 31, 2026"}],
+  mi:[{key:"itemized",q:"Use itemized deductions?",d:"Form 1701 instead of 1701A"},{key:"cwtReceived",q:"Receive 2307 certificates from clients?",d:"SAWT + eAFS scanned copies"},{key:"employees",q:"Have employees?",d:"1601-C, 1604-C, 2316"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ"},{key:"fwt",q:"Final WT?",d:"0619-F, 1601-FQ"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"cas",q:"Computerized Accounting?",d:"CAS books"},{key:"crm",q:"CRM/POS?",d:"Reports"},{key:"govpay",q:"Gov payments?",d:"1600"},{key:"einv",q:"E-invoicing?",d:"Dec 2026"}],
   corp:[{key:"employees",q:"Have employees?",d:"1601-C, 1604-C, 2316"},{key:"ewt",q:"Withhold EWT?",d:"0619-E, 1601-EQ"},{key:"fwt",q:"Final WT?",d:"0619-F, 1601-FQ"},{key:"dst",q:"DST documents?",d:"Form 2000"},{key:"mcit",q:"4th year+ operations?",d:"2% MCIT"},{key:"rbe",q:"RBE (PEZA/BOI)?",d:"IPA reporting"},{key:"cas",q:"Computerized Accounting?",d:"CAS books"},{key:"crm",q:"CRM/POS?",d:"Reports"},{key:"govpay",q:"Gov payments?",d:"1600"},{key:"einv",q:"E-invoicing?",d:"Dec 2026"}],
   emp:[{key:"multi_emp",q:"2+ employers?",d:"Must file 1700"},{key:"other_inc",q:"Non-business income?",d:"File 1700"},{key:"spouse_dq",q:"Spouse not qualified?",d:"Disqualifies you"}]};
 let cT='se',cR='se_8',vM='fd',SQ='',cQ=new Set(),aC=new Set(Object.keys(CATS));
@@ -1903,6 +1913,7 @@ OB.push({month:1,day:15,title:"Bind & Submit Loose-Leaf Books",form:"ORUS",cat:"
 OB.push({month:2,day:28,title:"Submit 2316 Duplicates to BIR",form:"2316",cat:"emp",r:B,pq:"employees"});
 OB.push({month:3,day:1,title:"File Annual EWT Summary",form:"1604-E",cat:"wh",r:B,pq:"ewt",att:["Alphalist (.dat)"]});
 OB.push({month:4,day:15,title:"File Annual ITR — 8% Flat Rate",form:"1701A",cat:"inc",r:['se_8']},{month:4,day:15,title:"File Annual ITR — Mixed Income, 8%",form:"1701",cat:"inc",r:['mi_8']},{month:4,day:15,title:"File Annual ITR — Graduated + OSD",form:"1701A",cat:"inc",r:['se_gnv','se_gv'],npq:'itemized'},{month:4,day:15,title:"File Annual ITR — Mixed Income, Grad+OSD",form:"1701",cat:"inc",r:['mi_gnv','mi_gv'],npq:'itemized'},{month:4,day:15,title:"File Annual ITR — Graduated, Itemized",form:"1701",cat:"inc",r:['se_gnv','se_gv','mi_gnv','mi_gv'],pq:'itemized'},{month:4,day:15,title:"File Annual Corporate Income Tax Return",form:"1702-RT",cat:"inc",r:CORP,desc:"25%/20% RCIT or 2% MCIT"},{month:4,day:15,title:"File Annual ITR — Compensation Income",form:"1700",cat:"inc",r:['emp_f']},{month:4,day:15,title:"Confirm Substituted Filing (Employee ITR)",form:"2316",cat:"inc",r:['emp_s']},{month:4,day:15,title:"Attach AFS to Annual ITR (BIR)",form:"—",cat:"sec",r:CORP,desc:"The BIR-stamped AFS is an attachment to the 1702-RT filing on April 15. The SEC filing is a separate, staggered schedule (see below)."},{month:0,day:0,title:"File AFS with SEC (staggered schedule)",form:"SEC",cat:"sec",r:CORP,desc:"SEC AFS filing is staggered by the LAST digit of your SEC registration number. Typically Apr–Jul per the annual SEC Memorandum Circular. Not a fixed April 15 date."},...qC(4,"Q1",B),{month:4,day:25,title:"File Quarterly Percentage Tax — Q1",form:"2551Q",cat:"biz",r:NV},{month:4,day:25,title:"File Quarterly VAT Return — Q1",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:4,day:25,title:"Submit Sales & Purchases List — Q1",form:"SLSP",cat:"biz",r:VAT},...qE(4,"Q1",30,B));
+OB.push({month:4,day:15,title:"Submit Scanned 2307 Copies via eAFS",form:"eAFS",cat:"adm",r:IND,pq:"cwtReceived"});
 OB.push({month:5,day:15,title:"File Quarterly Income Tax — Q1",form:"1701Q",cat:"inc",r:IND,att:["SAWT","2307s"]},{month:5,day:30,title:"File Corporate Quarterly ITR — Q1",form:"1702Q",cat:"inc",r:CORP});
 OB.push({month:0,day:0,title:"File General Information Sheet to SEC",form:"SEC",cat:"sec",r:CORP,desc:"Within 30 calendar days after your annual stockholders' meeting (Revised Corporation Code § 177). Date depends on your by-laws, not a fixed June 30."});
 OB.push(...qC(7,"Q2",B),{month:7,day:25,title:"File Quarterly Percentage Tax — Q2",form:"2551Q",cat:"biz",r:NV},{month:7,day:25,title:"File Quarterly VAT Return — Q2",form:"2550Q",cat:"biz",r:VAT,att:["SLSP (.dat)"]},{month:7,day:25,title:"Submit Sales & Purchases List — Q2",form:"SLSP",cat:"biz",r:VAT},...qE(7,"Q2",31,B));
@@ -2377,6 +2388,7 @@ function getLayman(o){
   // ── Other specific forms
   if(f==='LGU')return'<b>What:</b> Annual renewal of your business permit at the LGU (city or municipality). Required to legally operate. Different LGUs have different requirements and fees.';
   if(f==='SLSP')return'<b>What:</b> Summary List of Sales and Purchases — quarterly e-submission that cross-references your VAT return. Required even for zero transactions ("No Entry").';
+  if(f==='eAFS')return'<b>What:</b> Upload scanned PDF copies of all BIR Form 2307s you received during the year to the BIR eAFS portal. Required when claiming creditable withholding tax credits on your annual ITR. <b>Plain version:</b> "Here are the digital scanned copies of all 2307 certificates my clients gave me — proof of the tax they withheld that I am now claiming as a credit." <b>Note:</b> This is separate from the SAWT .dat file submitted via eSubmission — SAWT is the machine-readable summary; eAFS carries the actual scanned documents.';
   if(f==='2000')return'<b>What:</b> Documentary Stamp Tax return for any taxable documents executed during the month — leases, loans, share issuances, debt instruments. Filed within 5 days after month-end. <b>Plain version:</b> "I signed a taxable document this month — here is the stamp tax I owe."';
   if(f==='1600')return'<b>What:</b> Filed by the government agency that paid you. As a VAT-registered seller dealing with the government, 5% creditable VAT is withheld at source and reported on BIR Form 2307 — you claim it against your output VAT on 2550Q (creditable, not final, since 1 Jan 2021).';
   if(f==='IPA')return'<b>What:</b> Ongoing reporting to your Investment Promotion Agency (PEZA, BOI, or other) if you are a Registered Business Enterprise enjoying incentives.';
