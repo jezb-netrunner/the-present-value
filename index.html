@@ -929,7 +929,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <button type="button" onclick="openCalSettingsSheet()" aria-label="Calendar settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </div>
 <section class="cls"><div class="clp" id="clP">
-<div class="clh" onclick="document.getElementById('clP').classList.toggle('open')" role="button" tabindex="0" aria-expanded="false" aria-controls="clG" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('clP').classList.toggle('open');this.setAttribute('aria-expanded',document.getElementById('clP').classList.contains('open'));}"><h2>Your Situation</h2>
+<div class="clh" onclick="toggleCLP()" role="button" tabindex="0" aria-expanded="false" aria-controls="clG" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCLP();}"><h2>Your Situation</h2>
 <div class="cta"><label class="sat" onclick="event.stopPropagation()"><span>Show all</span><input type="checkbox" id="saT" onchange="ren()"><span class="tt" aria-hidden="true"></span></label><span class="clch" aria-hidden="true">▾</span></div></div>
 <div class="clb"><div class="clg" id="clG"></div></div>
 <div class="csm" id="clS"></div>
@@ -1124,10 +1124,10 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
   </div>
   <span class="cr-mob-toggle" id="crMobToggle" aria-hidden="true">See all 3 regimes →</span>
 </button>
-<div class="ccards" id="cCards"></div>
+<div class="ccards" id="cCards" aria-live="polite" aria-atomic="true"></div>
 <div id="rcBox"></div>
 <div id="plainSummary"></div>
-<div id="warnBox"></div>
+<div id="warnBox" aria-live="polite" aria-atomic="false"></div>
 </aside>
 </div>
 <!-- Regime sheet: on mobile, tapping the sticky bar reparents the live
@@ -1170,7 +1170,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 </div>
 <div class="crow" style="margin-top:.75rem"><button type="button" class="cbtn" onclick="calcPenalty()">Calculate Penalty</button></div>
 <div id="penErr" role="alert" style="display:none;margin-top:.55rem;padding:.5rem .7rem;background:var(--rds);border-left:3px solid var(--red);border-radius:var(--rr);color:var(--red);font-size:.78rem;font-weight:600"></div>
-<div class="pen-result" id="penResult">
+<div class="pen-result" id="penResult" role="status">
 <div class="pen-row"><span class="pen-row-lbl">Base Tax Due</span><span class="pen-row-val" id="pr-base"></span></div>
 <div class="pen-row"><span class="pen-row-lbl">Surcharge (<span id="pr-stype"></span>)</span><span class="pen-row-val" id="pr-sur"></span></div>
 <div class="pen-row"><span class="pen-row-lbl">Interest (<span id="pr-irate"></span>/yr × <span id="pr-days"></span> days)</span><span class="pen-row-val" id="pr-int"></span></div>
@@ -1200,6 +1200,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="crow" style="margin-top:.75rem"><button type="button" class="cbtn" onclick="calcWithholding()">Compute Withholding</button></div>
 <div class="wh-result" id="whResult">
 <div style="font-size:.62rem;color:var(--mu);margin-bottom:.25rem" id="wh-freq-label"></div>
+<div role="alert" id="whCapAlert" style="font-size:.7rem;color:var(--red);font-weight:600;margin-bottom:.2rem"></div>
 <div class="wh-result-val" id="wh-tax"></div>
 <div class="wh-result-er" id="wh-er"></div>
 <div class="wh-brackets" id="wh-brackets-box">
@@ -1221,7 +1222,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="fld"><label for="logAmt">Amount Withheld (₱)</label><input type="text" id="logAmt" placeholder="0" inputmode="numeric" autocomplete="off"></div>
 <div class="fld"><label for="logQ">Quarter</label>
 <select id="logQ"><option value="Q1">Q1 (Jan–Mar)</option><option value="Q2">Q2 (Apr–Jun)</option><option value="Q3">Q3 (Jul–Sep)</option><option value="Q4">Q4 (Oct–Dec)</option></select></div>
-<div class="fld"><label for="logYear">Year</label><input type="number" id="logYear" min="2020" max="2035" style="font-size:.9rem"></div>
+<div class="fld"><label for="logYear">Year</label><input type="number" id="logYear" min="2020" max="2035" style="font-size:.9rem" onchange="render2307Log()"></div>
 </div>
 <div class="crow" style="margin-top:0;margin-bottom:.65rem"><button type="button" class="cbtn" onclick="add2307Entry()">Add Entry</button></div>
 <div id="log2307Err" role="alert" style="display:none;margin-bottom:.75rem;padding:.5rem .7rem;background:var(--rds);border-left:3px solid var(--red);border-radius:var(--rr);color:var(--red);font-size:.8rem;font-weight:600"></div>
@@ -1244,7 +1245,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 </div>
 <div style="overflow-x:auto">
 <table class="qt" id="ytdTable" style="min-width:500px">
-<thead><tr><th>Quarter</th><th>Actual Gross Income</th><th>Tax Paid This Quarter</th><th>Projected Tax Due</th><th>Still Owed / (Overpaid)</th></tr></thead>
+<thead><tr><th>Quarter</th><th>Actual Gross Income</th><th>Tax Paid This Quarter</th><th>Cumulative Tax Due (YTD)</th><th>Still Owed / (Overpaid)</th></tr></thead>
 <tbody id="ytdBody"></tbody>
 <tfoot id="ytdFoot"></tfoot>
 </table>
@@ -1373,9 +1374,13 @@ function toast(msg,kind){
 function safeSet(k,v){try{localStorage.setItem(k,v);return true;}catch(e){console.warn('localStorage.setItem failed:',k,e);return false;}}
 function safeRemove(k){try{localStorage.removeItem(k);}catch(e){/* ignore */}}
 // Simple leading-edge-skip debounce for input handlers.
-function debounce(fn,ms){let t;return function(){clearTimeout(t);const a=arguments,c=this;t=setTimeout(()=>fn.apply(c,a),ms);};}
+function debounce(fn,ms){let t;return function(...args){clearTimeout(t);t=setTimeout(()=>fn.apply(this,args),ms);};}
 // Search input is debounced so typing doesn't re-render the whole feed per keystroke.
 const applySearchDebounced=debounce(function(v){SQ=(v||'').toLowerCase();ren();},140);
+// Toggle checklist panel and keep aria-expanded in sync with the DOM state.
+function toggleCLP(){const p=document.getElementById('clP');const h=p.querySelector('.clh');const open=p.classList.toggle('open');h.setAttribute('aria-expanded',open?'true':'false');}
+// Module-level state (replaces window._tpv* globals for cleaner encapsulation).
+let _tpvFYE=12,_tpvChannel='ebir',_tpvSetup=null,_tpvLastSeenDate=new Date().toISOString().split('T')[0];
 
 // ══════════ PAGE NAV ══════════
 function showPg(p,btn){
@@ -1400,7 +1405,7 @@ function showPg(p,btn){
     try{if(typeof calc==='function')calc();}catch(e){/* ignore */}
   }
 }
-function refreshCorpGuard(){const g=document.getElementById('corpCalcGuard');if(!g)return;const isCorp=(typeof cT!=='undefined'&&cT==='corp')||(window._tpvSetup&&window._tpvSetup.type==='corp');g.style.display=isCorp?'block':'none';}
+function refreshCorpGuard(){const g=document.getElementById('corpCalcGuard');if(!g)return;const isCorp=(typeof cT!=='undefined'&&cT==='corp')||(_tpvSetup&&_tpvSetup.type==='corp');g.style.display=isCorp?'block':'none';}
 // Mirror the calendar's taxpayer type (cT) onto the Calculator's `tS` dropdown so the
 // Compensation field shows up automatically for mixed-income earners coming from the wizard.
 function syncCalculatorTaxpayerType(){
@@ -1564,7 +1569,7 @@ function closeRegimeSheet(){
   document.removeEventListener('keydown',_regimeSheetKeyHandler);
   if(_regimeSheetLastFocus&&typeof _regimeSheetLastFocus.focus==='function')try{_regimeSheetLastFocus.focus();}catch(e){}
 }
-function _regimeSheetKeyHandler(e){if(e.key==='Escape')closeRegimeSheet();}
+function _regimeSheetKeyHandler(e){const ov=document.getElementById('regimeSheet');if(e.key==='Escape'){closeRegimeSheet();}else if(ov&&ov.classList.contains('vis')){_trapFocus(e,ov);}}
 function updateMobileCalcBar(){
   const name=document.getElementById('crMobName');
   const amt=document.getElementById('crMobAmt');
@@ -1879,7 +1884,7 @@ const GROUP_ORDER=['itr-a','itr-ac','itr-q','itr-qc','wh-m','wh-a','wh-q','biz-q
 // eFPS staggered filing day for 1601-C / 0619-E / 0619-F per RR 26-2002:
 // Group A 15th, B 14th, C 13th, D 12th, E 11th. Default (eBIRForms) 10th.
 function getMonthlyRemitDay(){
-  const ch=(typeof window!=='undefined'&&window._tpvChannel)||'ebir';
+  const ch=_tpvChannel||'ebir';
   return({eA:15,eB:14,eC:13,eD:12,eE:11}[ch])||10;
 }
 // Recompute the corporate 1702Q (60 days after each fiscal quarter-end,
@@ -1951,6 +1956,10 @@ OB.push(...qC(10,"Q3",B),{month:10,day:25,title:"File Quarterly Percentage Tax �
 OB.push({month:11,day:15,title:"File Quarterly Income Tax — Q3",form:"1701Q",cat:"inc",r:IND},{month:11,day:29,title:"File Corporate Quarterly ITR — Q3",form:"1702Q",cat:"inc",r:CORP});
 OB.push({month:12,day:24,title:"Release 13th Month Pay to Employees",form:"—",cat:"emp",r:B,pq:"employees"},{month:12,day:31,title:"Complete Year-End Bookkeeping",form:"—",cat:"adm",r:B},{month:12,day:31,title:"Verify 2316 from Employer",form:"2316",cat:"inc",r:EMP});
 OB.push({month:0,day:5,title:"File Documentary Stamp Tax Return",form:"2000",cat:"dst",r:AB,pq:"dst"},{month:0,day:0,title:"Track Government VAT Withheld",form:"1600",cat:"wh",r:VAT,pq:"govpay"},{month:0,day:0,title:"Submit CRM/POS Monthly Sales Report",form:"—",cat:"adm",r:AB,pq:"crm"},{month:0,day:0,title:"Pay Personal Mandatory Contributions",form:"Agency",cat:"adm",r:[...SE,...MI]},{month:0,day:0,title:"Submit IPA Compliance Report",form:"IPA",cat:"sec",r:CORP,pq:"rbe"},{month:0,day:0,title:"Apply MCIT (Minimum Corporate Income Tax) Check",form:"—",cat:"inc",r:CORP,pq:"mcit",desc:"2% MCIT on gross vs 25%/20% RCIT from 4th yr."},{month:0,day:0,title:"Register for E-Invoicing System",form:"Per RR 11-2025",cat:"adm",r:AB,pq:"einv",desc:"Structured e-invoices by Dec 31, 2026."});
+// Snapshot of original month/day values so applySetup() can safely re-mutate
+// OB across multiple wizard runs without accumulating drift.
+const _OB_ORIGINAL=OB.map(o=>({month:o.month,day:o.day}));
+function resetOBFromOriginal(){_OB_ORIGINAL.forEach((orig,i)=>{OB[i].month=orig.month;OB[i].day=orig.day;});}
 
 // ── ctx: plain-English reason for each obligation (Feed view) ──
 (function(){
@@ -2167,7 +2176,7 @@ function renderFeed(){
     return c;
   }
   let first=true;
-  [['This Week',grps.tw],['Next Week',grps.nw],['This Month',grps.tm],['In Progress',grps.ip],['Later',grps.lt]].forEach(([label,arr])=>{
+  [['This Week',grps.tw],['Next Week',grps.nw],['This Month',grps.tm],['Next Month',grps.ip],['Later',grps.lt]].forEach(([label,arr])=>{
     if(!arr.length)return;
     h+=`<div class="fgh"${first?' style="margin-top:0"':''}>${label}</div>`;
     first=false;
@@ -2240,7 +2249,8 @@ function closeCalSheet(id){
   document.removeEventListener('keydown',calSheetKeyHandler);
   if(_calSheetLastFocus&&typeof _calSheetLastFocus.focus==='function')try{_calSheetLastFocus.focus();}catch(e){}
 }
-function calSheetKeyHandler(e){if(e.key==='Escape'){['calSettingsSheet','calViewSheet','calSearchSheet'].forEach(id=>{const o=document.getElementById(id);if(o&&o.classList.contains('vis'))closeCalSheet(id);});}}
+function _trapFocus(e,container){if(e.key!=='Tab')return;const sel='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';const els=[...container.querySelectorAll(sel)].filter(el=>!el.closest('[hidden]'));if(!els.length)return;const first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+function calSheetKeyHandler(e){const open=['calSettingsSheet','calViewSheet','calSearchSheet'].map(id=>document.getElementById(id)).find(o=>o&&o.classList.contains('vis'));if(e.key==='Escape'&&open){closeCalSheet(open.id);}else if(open){_trapFocus(e,open);}}
 // Settings sheet — taxpayer + regime + show-all toggle + situation checklist
 function openCalSettingsSheet(){
   const body=document.getElementById('calSettingsBody');if(!body)return;
@@ -2445,7 +2455,7 @@ function buildHolidays(yr){
 function buildMonthNotes(yr){
   const notes={};
   const MNX=['','January','February','March','April','May','June','July','August','September','October','November','December'];
-  function chk(m,d){const dow=new Date(yr,m-1,d).getDay();if(dow===6)return{s:true,lbl:'Saturday',nd:d+2};if(dow===0)return{s:true,lbl:'Sunday',nd:d+1};return{s:false};}
+  function chk(m,d){const dow=new Date(yr,m-1,d).getDay();if(dow===6)return{s:true,lbl:'Saturday',nd:d+2};if(dow===0)return{s:true,lbl:'Sunday',nd:d+1};if(typeof isHoliday==='function'&&isHoliday(yr,m,d))return{s:true,lbl:'a public holiday',nd:d+1};return{s:false};}
   // Quarterly VAT/PT/SLSP: 25th of Jan, Apr, Jul, Oct
   [[1],[4],[7],[10]].forEach(([m])=>{const r=chk(m,25);if(r.s)notes[m]=`${MNX[m]} 25 falls on a ${r.lbl} — 2550Q, 2551Q, and SLSP deadlines shift to <strong>Monday, ${MNX[m]} ${r.nd}</strong>.`;});
   // Quarterly income tax 1701Q: 15th of May (Q1), Aug (Q2), Nov (Q3)
@@ -2979,7 +2989,7 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,extras){
   const atc=best.k==='a'?'II015 — Business Income · 8% IT Rate':best.k==='b'?'II012 — Business Income · Graduated IT Rates (OSD)':isPure?'II012 — Business Income · Graduated IT Rates (Itemized)':'II013 — Mixed Income · Graduated IT Rates';
   h+=`<div class="form-line"><span class="form-line-num">${useA?'7':'7'}</span><span class="form-line-lbl">Alphanumeric Tax Code (ATC)</span><span class="form-line-val">${atc}</span></div>`;
   if(useA){
-    h+=`<div class="form-line"><span class="form-line-num">19</span><span class="form-line-lbl">Tax Rate / Method</span><span class="form-line-val">${best.k==='a'?'8% in lieu of Graduated &amp; Sec. 116':'Graduated rates with OSD'}</span></div>`;
+    h+=`<div class="form-line"><span class="form-line-num">19</span><span class="form-line-lbl">Tax Rate / Method</span><span class="form-line-val">${best.k==='a'?'8% In Lieu of Graduated &amp; Sec. 116':'Graduated rates with OSD'}</span></div>`;
   }else{
     h+=`<div class="form-line"><span class="form-line-num">21A</span><span class="form-line-lbl">Method of Deduction</span><span class="form-line-val">${isPure?'Itemized Deduction [Sec. 34(A-J), NIRC]':'Itemized Deduction (Mixed Income)'}</span></div>`;
   }
@@ -3049,7 +3059,7 @@ function renderBIRForm(g,expData,R,best,isPure,cwt,over,cwtInfo,extras){
     h+=`<div class="form-line"><span class="form-line-num">16</span><span class="form-line-lbl">Total Allowable Itemized Deductions (Sum of Items 13 to 15)</span><span class="form-line-val">${fmt(opEx)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">18</span><span class="form-line-lbl">Net Income/(Loss) (Item 12 less Item 16)</span><span class="form-line-val">${fmt(Math.max(0,g-ex))}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">22</span><span class="form-line-lbl">Total Other Non-Operating Income</span><span class="form-line-val">${fmt(nop)}</span></div>`;
-    const bizTI=Math.max(0,g-ex)+nop;
+    const bizTI=Math.max(0,g-ex+nop);
     h+=`<div class="form-line"><span class="form-line-num">23</span><span class="form-line-lbl">Taxable Income — Business (Sum of Items 18 and 22)</span><span class="form-line-val">${fmt(bizTI)}</span></div>`;
     if(!isPure&&comp>0)h+=`<div class="form-line"><span class="form-line-num">23a</span><span class="form-line-lbl">Plus: Taxable Compensation Income (from 2316)</span><span class="form-line-val">${fmt(comp)}</span></div>`;
     h+=`<div class="form-line"><span class="form-line-num">24</span><span class="form-line-lbl">Total Taxable Income — Compensation &amp; Business</span><span class="form-line-val">${fmt(bizTI+comp)}</span></div>`;
@@ -3158,7 +3168,7 @@ function onTaxpayerTypeChange(){
 }
 
 function calc(){
-  const g=getSales(),cwt=pN('cI'),isPure=document.getElementById('tS').value==='pure';
+  const g=getSales();let cwt=pN('cI');if(cwt===0){const lf=getQuarterlyCWT(YEAR,0);if(lf&&lf.total>0)cwt=lf.total;}const isPure=document.getElementById('tS').value==='pure';
   const comp=isPure?0:pN('compI');
   const nop=pN('nopI');
   const elected8=document.getElementById('eightElect')?.value!=='no';
@@ -3534,7 +3544,7 @@ function showWizard(){
   WZ._lastFocus=document.activeElement;
   WZ.step=0;
   const saved=localStorage.getItem('tpv_setup');
-  WZ.answers=(saved&&saved!=='skipped')?JSON.parse(saved):{};
+  try{WZ.answers=(saved&&saved!=='skipped')?JSON.parse(saved):{};}catch(e){safeRemove('tpv_setup');WZ.answers={};}
   // Skip intro when the user is re-running the wizard with saved answers
   if(saved&&saved!=='skipped')WZ.step=1;
   renderWzStep();
@@ -3578,6 +3588,7 @@ function wzPick(key,val){
 }
 
 function applySetup(a){
+  resetOBFromOriginal();
   const t=a.type||'se';
   setType(t);
   // GPP partners are barred from 8% regardless of stated preference (RR 8-2018 §3(B)(4)).
@@ -3587,8 +3598,8 @@ function applySetup(a){
   const gppSel=document.getElementById('gppPartner');if(gppSel)gppSel.value=a.gpp==='yes'?'yes':'no';
   const bmbeSel=document.getElementById('bmbe');if(bmbeSel)bmbeSel.value=a.bmbe==='yes'?'yes':'no';
   // Corporate fiscal year-end (1–12) and filing channel drive the calendar shifts.
-  window._tpvFYE=t==='corp'?(parseInt(a.fye,10)||12):12;
-  window._tpvChannel=a.channel||'ebir';
+  _tpvFYE=t==='corp'?(parseInt(a.fye,10)||12):12;
+  _tpvChannel=a.channel||'ebir';
   // Re-apply the eFPS staggered day to every existing monthly remittance
   // obligation so the calendar matches the current channel.
   const remitDay=getMonthlyRemitDay();
@@ -3596,9 +3607,9 @@ function applySetup(a){
   // Shift corporate-quarterly (1702Q) and annual (1702-RT) dates relative to
   // fiscal year-end. For calendar-year (FYE=12) the original hardcoded
   // calendar already matches; for other FYEs we recompute.
-  shiftCorporateDeadlines(window._tpvFYE);
+  shiftCorporateDeadlines(_tpvFYE);
   // Expose for Calculator gating
-  window._tpvSetup=Object.assign({},a,{effective_rate:is8?'8pct':'grad'});
+  _tpvSetup=Object.assign({},a,{effective_rate:is8?'8pct':'grad'});
   let reg;
   if(t==='emp'){reg='emp_s';}
   else if(is8){reg=(t==='se'?'se_8':t==='mi'?'mi_8':null);}
@@ -3689,7 +3700,7 @@ if(!localStorage.getItem('tpv_disclaimer_ack')){
 function dismissDisclaimer(){
   safeSet('tpv_disclaimer_ack','1');
   const db=document.getElementById('disclaimerBanner');
-  if(db)db.style.display='none';
+  if(db){db.style.transition='opacity .25s';db.style.opacity='0';setTimeout(()=>{db.style.display='none';},260);}
 }
 
 // Reload when the system clock crosses into a new year or a new day after
@@ -3701,10 +3712,9 @@ document.addEventListener('visibilitychange',()=>{
   if(now.getFullYear()!==YEAR){location.reload();return;}
   // Same year but possibly a new day — refresh visible views so "days until" recomputes.
   const today=now.toISOString().split('T')[0];
-  if(window._tpvLastSeenDate&&window._tpvLastSeenDate!==today){ren();}
-  window._tpvLastSeenDate=today;
+  if(_tpvLastSeenDate&&_tpvLastSeenDate!==today){ren();}
+  _tpvLastSeenDate=today;
 });
-window._tpvLastSeenDate=new Date().toISOString().split('T')[0];
 
 // ══════════ PENALTY CALCULATOR ══════════
 function calcPenalty(){
@@ -3743,6 +3753,7 @@ function calcPenalty(){
 // Compromise penalty schedule from RMO 7-2015 Annex A — failure to file / pay
 // tax due under NIRC §255. Amounts are indicative; the assessing officer may
 // adjust per case. Always verify against the operative RMO at filing time.
+// Last verified: RMO 7-2015 (supersedes RMO 19-2007). Verify if a newer RMO applies.
 function compromisePenalty(tax){
   if(tax<5000)return 1000;
   if(tax<=10000)return 3000;
@@ -3810,8 +3821,9 @@ function calcWithholding(){
   }
   tax=Math.max(0,tax);
   const freqLabel={monthly:'Monthly withholding tax',semimonthly:'Semi-monthly withholding tax',weekly:'Weekly withholding tax'}[freq];
-  const capNote=benExcess>0?` · ⚠ ${fmt(benExcess)} of declared non-taxable benefits exceeds the ₱90K annual cap (${fmt(periodCap)} per ${freq==='monthly'?'month':freq==='semimonthly'?'half-month':'week'}) — excess added back to taxable`:'';
-  document.getElementById('wh-freq-label').textContent=freqLabel+' on ₱'+taxable.toLocaleString('en-PH')+' taxable compensation'+capNote;
+  const capNote=benExcess>0?`⚠ ${fmt(benExcess)} of declared non-taxable benefits exceeds the ₱90K annual cap (${fmt(periodCap)} per ${freq==='monthly'?'month':freq==='semimonthly'?'half-month':'week'}) — excess added back to taxable`:'';
+  document.getElementById('wh-freq-label').textContent=freqLabel+' on ₱'+taxable.toLocaleString('en-PH')+' taxable compensation';
+  const capAlertEl=document.getElementById('whCapAlert');if(capAlertEl)capAlertEl.textContent=capNote;
   document.getElementById('wh-tax').textContent=fmt(tax);
   document.getElementById('wh-er').textContent=taxable>0?`Effective rate: ${(tax/taxable*100).toFixed(2)}%`:'';
   const rangeLabels=brk.map(([lo,hi])=>lo===0?`≤ ₱${(hi).toLocaleString('en-PH')}`:(hi===Infinity?`> ₱${lo.toLocaleString('en-PH')}`:`₱${lo.toLocaleString('en-PH')} – ₱${hi.toLocaleString('en-PH')}`));
@@ -3855,10 +3867,11 @@ function del2307Entry(id){
   save2307Log(log);render2307Log();
 }
 function render2307Log(){
-  const log=get2307Log().filter(e=>e.yr===YEAR);
+  const yrSel=parseInt(document.getElementById('logYear')?.value)||YEAR;
+  const log=get2307Log().filter(e=>e.yr===yrSel);
   const el=document.getElementById('log2307List');
   if(!el)return;
-  if(!log.length){el.innerHTML='<div class="log-empty">No 2307 entries for '+YEAR+' yet. Add entries above.</div>';return;}
+  if(!log.length){el.innerHTML='<div class="log-empty">No 2307 entries for '+yrSel+' yet. Add entries above.</div>';return;}
   const byQ={Q1:[],Q2:[],Q3:[],Q4:[]};
   log.forEach(e=>{if(byQ[e.q])byQ[e.q].push(e);});
   let h='';
@@ -3868,11 +3881,11 @@ function render2307Log(){
     const qtotal=entries.reduce((s,e)=>s+e.amt,0);grand+=qtotal;
     h+=`<div class="log-q-section"><div class="log-q-hdr"><span>${q} (${q==='Q1'?'Jan–Mar':q==='Q2'?'Apr–Jun':q==='Q3'?'Jul–Sep':'Oct–Dec'})</span><span class="lqt">${fmt(qtotal)}</span></div>`;
     entries.forEach(e=>{
-      h+=`<div class="log-entry"><span class="log-entry-payor">${esc(e.payor)}${e.atc?` <span style="font-size:.58rem;color:var(--mu)">${esc(e.atc)}</span>`:''}</span><span class="log-entry-q">${esc(e.q)}</span><span class="log-entry-amt">${fmt(e.amt)}</span><button class="log-entry-del" onclick="del2307Entry(${Number(e.id)||0})" title="Delete">✕</button></div>`;
+      h+=`<div class="log-entry"><span class="log-entry-payor">${esc(e.payor)}${e.atc?` <span style="font-size:.58rem;color:var(--mu)">${esc(e.atc)}</span>`:''}</span><span class="log-entry-q">${esc(e.q)}</span><span class="log-entry-amt">${fmt(e.amt)}</span><button class="log-entry-del" onclick="del2307Entry(${Number(e.id)||0})" title="Delete this entry">✕</button></div>`;
     });
     h+=`</div>`;
   });
-  h+=`<div class="log-grand-total"><span class="log-grand-total-lbl">Total CWT Credits — ${YEAR}</span><span class="log-grand-total-val">${fmt(grand)}</span></div>`;
+  h+=`<div class="log-grand-total"><span class="log-grand-total-lbl">Total CWT Credits — ${yrSel}</span><span class="log-grand-total-val">${fmt(grand)}</span></div>`;
   el.innerHTML=h;
 }
 
@@ -3949,7 +3962,7 @@ function toggleGuide(id){document.getElementById(id)?.classList.toggle('open');}
   });
   // Penalty tax formatter
   const penTax=document.getElementById('penTax');
-  if(penTax)penTax.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});
+  if(penTax)penTax.addEventListener('input',function(){let v=this.value.replace(/[^0-9.]/g,'');const pts=v.split('.');this.value=pts[0]?(parseInt(pts[0])||0).toLocaleString('en-PH')+(pts.length>1?'.'+pts[1].slice(0,2):''):'';});
   // Log amount formatter
   const logAmt=document.getElementById('logAmt');
   if(logAmt)logAmt.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});
