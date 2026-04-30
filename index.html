@@ -112,6 +112,35 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .fv-empty-sub{font-family:var(--sa);font-size:.78rem;color:var(--mu);margin-top:.5rem;font-style:normal}
 .fgh{font-family:var(--sa);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);border-bottom:1px solid var(--bd);margin:1rem 0 .5rem;padding-bottom:.3rem}
 
+/* TIMELINE VIEW */
+.tlv{position:relative;padding:.25rem 0 1rem}
+.tlv-spine{position:absolute;left:17px;top:0;bottom:0;width:2px;background:var(--bd);z-index:0;border-radius:1px}
+.tlv-mhdr{font-family:var(--sa);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin:1.1rem 0 .55rem 40px;padding-bottom:.3rem;border-bottom:1px solid var(--bd)}
+.tlv-today{display:flex;align-items:center;margin:.65rem 0;position:relative;z-index:1}
+.tlv-today-dot{width:22px;height:22px;border-radius:50%;background:var(--royal);border:3px solid var(--sf);box-shadow:0 0 0 2px var(--royal);flex-shrink:0;margin-left:7px}
+.tlv-today-lbl{font-family:var(--sa);font-size:.74rem;font-weight:800;color:var(--royal);text-transform:uppercase;letter-spacing:.06em;background:var(--rs);padding:.2rem .55rem;border-radius:100px;margin-left:.55rem;white-space:nowrap}
+.tlv-node{display:flex;align-items:flex-start;gap:.55rem;margin-bottom:.55rem;position:relative;z-index:1}
+.tlv-dot{width:14px;height:14px;border-radius:50%;border:2px solid;background:var(--sf);flex-shrink:0;margin-top:.32rem;margin-left:11px;z-index:2;position:relative}
+.tlv-dot.overdue{border-color:var(--red);background:var(--red)}
+.tlv-dot.due-soon{border-color:var(--red)}
+.tlv-dot.upcoming{border-color:var(--royal)}
+.tlv-dot.ongoing{border-color:var(--slate)}
+.tlv-card{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);padding:.7rem .85rem;flex:1;min-width:0;border-left:3px solid transparent}
+.tlv-card.overdue{border-left-color:var(--red)}
+.tlv-card.due-soon{border-left-color:var(--red)}
+.tlv-card.upcoming{border-left-color:var(--royal)}
+.tlv-card.ongoing{border-left-color:var(--slate)}
+.tlv-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.2rem;gap:.4rem;flex-wrap:wrap}
+.tlv-status{font-size:.7rem;font-weight:700}
+.tlv-date{font-size:.7rem;color:var(--dim)}
+.tlv-title{font-family:var(--se);font-size:.95rem;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:.1rem}
+.tlv-ctx{font-family:var(--se);font-size:.8rem;color:var(--dim);font-style:italic;margin:.1rem 0 .35rem;line-height:1.45}
+.tlv-form{font-size:.7rem;color:var(--mu);font-weight:500;margin-bottom:.3rem}
+.tlv-badge{font-size:.66rem;font-weight:600;padding:.12rem .4rem;border-radius:100px;background:var(--s2);color:var(--mu);display:inline-block;margin-top:.3rem}
+.tlv-empty{font-family:var(--se);font-size:.9rem;color:var(--mu);text-align:center;padding:3rem 1rem}
+.tlv-empty-sub{font-family:var(--sa);font-size:.78rem;color:var(--mu);margin-top:.5rem;font-style:normal}
+@media(min-width:769px){.tlv-spine{left:20px}.tlv-dot{margin-left:14px}.tlv-today-dot{margin-left:10px}.tlv-mhdr{margin-left:48px}}
+
 /* TABLE */
 .tv{display:none}.tv.vis{display:block}#tl.hid{display:none}
 .tw{overflow-x:auto;border-radius:var(--r);background:var(--sf);box-shadow:var(--shs)}
@@ -2288,7 +2317,97 @@ function renPen(ongoingObs){
   if(ongoingObs.length){h+=`<div class="cal-ongoing-hdr">Ongoing &amp; Recurring Obligations</div>`;h+=ongoingObs.map(rObNew).join('');}
   return h;
 }
-function renderTL(f){const el=document.getElementById('tl');const bm={};f.forEach(o=>{if(!bm[o.month])bm[o.month]=[];bm[o.month].push(o);});const qm=[[1,2,3],[4,5,6],[7,8,9],[10,11,12]];const qlbl=['Q1 \u2014 January to March','Q2 \u2014 April to June','Q3 \u2014 July to September','Q4 \u2014 October to December'];const months=qm[cQuarter-1];let h=`<div class="cal-qhdr"><span class="cal-qtitle">${YEAR} ${qlbl[cQuarter-1]}</span><div class="cal-qnav">`;['Q1','Q2','Q3','Q4'].forEach((qn,qi)=>{h+=`<button class="cal-qbtn${qi+1===cQuarter?' act':''}" onclick="setCalQ(${qi+1})">${qn}</button>`;});h+=`</div></div>`;h+=`<div class="cal-legend">`;[{l:'Income Tax',c:'var(--royal)'},{l:'Business Tax',c:'var(--green)'},{l:'Withholding',c:'var(--purple)'},{l:'Employer / Contributions',c:'var(--teal)'},{l:'DST',c:'var(--rose)'},{l:'Admin',c:'var(--amber)'},{l:'SEC',c:'var(--slate)'}].forEach(li=>{h+=`<span class="cal-leg-item"><span class="cal-leg-dot" style="background:${li.c}"></span>${li.l}</span>`;});h+=`</div>`;h+=`<div class="cal-tabs">`;months.forEach(m=>{h+=`<button class="cal-tab${m===cMonth?' act':''}" onclick="setCalM(${m})">${MN[m]}</button>`;});h+=`<button class="cal-tab${cMonth===0?' act':''}" onclick="setCalM(0)">Penalties</button></div>`;if(cMonth===0){h+=renPen(bm[0]||[]);}else{h+=renMon(cMonth,bm[cMonth]||[]);}el.innerHTML=h;}
+function renderTL(f){
+  const el=document.getElementById('tl');
+  const today=new Date();today.setHours(0,0,0,0);
+  const tname=TYPES[cT].name;
+  const dated=f.filter(o=>o.month>0&&o.day>0);
+  const ongoing=f.filter(o=>o.month===0||o.day===0);
+  if(!dated.length&&!ongoing.length){
+    const totalCats=Object.keys(CATS).length;
+    const af=(cQ.size>0?1:0)+(aC.size<totalCats?1:0)+(SQ?1:0);
+    const hint=af>0
+      ?`<div class="tlv-empty-sub">${af} filter${af>1?'s':''} active \u2014 try clearing the search box, category filters, or conditional checks above.</div>`
+      :`<div class="tlv-empty-sub">If this looks wrong, check your taxpayer type and checklist filters above.</div>`;
+    el.innerHTML=`<div class="tlv-empty">No obligations match your current filters.${hint}</div>`;
+    return;
+  }
+  const sorted=[...dated].sort((a,b)=>{
+    const ea=effectiveDeadline(a),eb=effectiveDeadline(b);
+    return(ea?ea.getTime():0)-(eb?eb.getTime():0);
+  });
+  function obStatus(o){
+    const d=daysUntil(o);
+    if(d<0)return{cls:'overdue',text:'Overdue',color:'var(--red)'};
+    if(d===0)return{cls:'overdue',text:'Due today',color:'var(--red)'};
+    if(d===1)return{cls:'due-soon',text:'Due tomorrow',color:'var(--red)'};
+    if(d<=7)return{cls:'due-soon',text:'Due in '+d+' days',color:'var(--red)'};
+    return{cls:'upcoming',text:'Upcoming',color:'var(--royal)'};
+  }
+  function renderObNode(o){
+    const eff=effectiveDeadline(o);
+    const st=obStatus(o);
+    const dl=eff?`${ms(eff.getMonth()+1)} ${eff.getDate()}`:'';
+    const shiftNote=shiftedDeadlineNote(o);
+    let c=`<div class="tlv-node">`;
+    c+=`<div class="tlv-dot ${st.cls}"></div>`;
+    c+=`<div class="tlv-card ${st.cls}">`;
+    c+=`<div class="tlv-card-top"><span class="tlv-status" style="color:${st.color}">${st.text}</span><span class="tlv-date">${dl}${shiftNote?` &middot; <em style="color:var(--amber);font-style:normal">${shiftNote}</em>`:''}</span></div>`;
+    c+=`<div class="tlv-title">${o.title}</div>`;
+    if(o.ctx)c+=`<div class="tlv-ctx">${o.ctx}</div>`;
+    if(o.form&&o.form!=='\u2014')c+=`<div class="tlv-form">${o.form}</div>`;
+    c+=`<span class="tlv-badge">${tname}</span>`;
+    c+=`</div></div>`;
+    return c;
+  }
+  const months=[];
+  sorted.forEach(o=>{
+    const eff=effectiveDeadline(o);if(!eff)return;
+    const mk=eff.getFullYear()*100+(eff.getMonth()+1);
+    let mg=months.find(m=>m.key===mk);
+    if(!mg){mg={key:mk,year:eff.getFullYear(),month:eff.getMonth()+1,items:[]};months.push(mg);}
+    mg.items.push(o);
+  });
+  const todayMk=today.getFullYear()*100+(today.getMonth()+1);
+  const todayStr=`${ms(today.getMonth()+1)} ${today.getDate()}, ${today.getFullYear()}`;
+  const todayPin=`<div class="tlv-today"><div class="tlv-today-dot"></div><span class="tlv-today-lbl">Today &mdash; ${todayStr}</span></div>`;
+  let h=`<div class="tlv"><div class="tlv-spine"></div>`;
+  let todayPlaced=false;
+  months.forEach(mg=>{
+    if(!todayPlaced&&mg.key>todayMk){h+=todayPin;todayPlaced=true;}
+    h+=`<div class="tlv-mhdr">${ms(mg.month)} ${mg.year}</div>`;
+    if(mg.key===todayMk){
+      const past=mg.items.filter(o=>daysUntil(o)<0);
+      const present=mg.items.filter(o=>daysUntil(o)===0);
+      const future=mg.items.filter(o=>daysUntil(o)>0);
+      past.forEach(o=>{h+=renderObNode(o);});
+      h+=todayPin;todayPlaced=true;
+      present.forEach(o=>{h+=renderObNode(o);});
+      future.forEach(o=>{h+=renderObNode(o);});
+    }else{
+      mg.items.forEach(o=>{h+=renderObNode(o);});
+    }
+  });
+  if(!todayPlaced){h+=todayPin;}
+  if(ongoing.length){
+    h+=`<div class="tlv-mhdr">Ongoing &amp; Recurring</div>`;
+    ongoing.forEach(o=>{
+      let c=`<div class="tlv-node">`;
+      c+=`<div class="tlv-dot ongoing"></div>`;
+      c+=`<div class="tlv-card ongoing">`;
+      c+=`<div class="tlv-card-top"><span class="tlv-status" style="color:var(--slate)">Ongoing / Recurring</span><span class="tlv-date">\u2014</span></div>`;
+      c+=`<div class="tlv-title">${o.title}</div>`;
+      if(o.ctx)c+=`<div class="tlv-ctx">${o.ctx}</div>`;
+      else if(o.desc)c+=`<div class="tlv-ctx">${o.desc}</div>`;
+      if(o.form&&o.form!=='\u2014')c+=`<div class="tlv-form">${o.form}</div>`;
+      c+=`<span class="tlv-badge">${tname}</span>`;
+      c+=`</div></div>`;
+      h+=c;
+    });
+  }
+  h+=`</div>`;
+  el.innerHTML=h;
+}
 // ══ DYNAMIC HOLIDAY & DEADLINE-NOTE BUILDERS ══
 function buildHolidays(yr){
   const h={};
