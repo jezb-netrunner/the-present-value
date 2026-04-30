@@ -2086,7 +2086,7 @@ function getQuarterlyCWT(year,annualFallback){
   return{q:[a*.25,a*.25,a*.25,a*.25],source:'linear',total:a};
 }
 function urgLevel(d,o){
-  if(d<0)return{c:'var(--red)',t:'Overdue'};
+  if(d<0)return{c:'var(--mu)',t:'Past'};
   if(d===0)return{c:'var(--red)',t:'Due today'};
   if(d===1)return{c:'var(--red)',t:'Due tomorrow'};
   if(d<=7)return{c:'var(--red)',t:'Due in '+d+' days'};
