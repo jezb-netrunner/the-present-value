@@ -121,12 +121,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .tlv-today-lbl{font-family:var(--sa);font-size:.74rem;font-weight:800;color:var(--royal);text-transform:uppercase;letter-spacing:.06em;background:var(--rs);padding:.2rem .55rem;border-radius:100px;margin-left:.55rem;white-space:nowrap}
 .tlv-node{display:flex;align-items:flex-start;gap:.55rem;margin-bottom:.55rem;position:relative;z-index:1}
 .tlv-dot{width:14px;height:14px;border-radius:50%;border:2px solid;background:var(--sf);flex-shrink:0;margin-top:.32rem;margin-left:11px;z-index:2;position:relative}
-.tlv-dot.overdue{border-color:var(--red);background:var(--red)}
+.tlv-dot.past{border-color:var(--bl);background:var(--bl)}
 .tlv-dot.due-soon{border-color:var(--red)}
 .tlv-dot.upcoming{border-color:var(--royal)}
 .tlv-dot.ongoing{border-color:var(--slate)}
 .tlv-card{background:var(--sf);border-radius:var(--r);box-shadow:var(--shs);padding:.7rem .85rem;flex:1;min-width:0;border-left:3px solid transparent}
-.tlv-card.overdue{border-left-color:var(--red)}
+.tlv-card.past{border-left-color:var(--bl);opacity:.75}
 .tlv-card.due-soon{border-left-color:var(--red)}
 .tlv-card.upcoming{border-left-color:var(--royal)}
 .tlv-card.ongoing{border-left-color:var(--slate)}
@@ -2338,8 +2338,8 @@ function renderTL(f){
   });
   function obStatus(o){
     const d=daysUntil(o);
-    if(d<0)return{cls:'overdue',text:'Overdue',color:'var(--red)'};
-    if(d===0)return{cls:'overdue',text:'Due today',color:'var(--red)'};
+    if(d<0)return{cls:'past',text:'Past',color:'var(--lt)'};
+    if(d===0)return{cls:'due-soon',text:'Due today',color:'var(--red)'};
     if(d===1)return{cls:'due-soon',text:'Due tomorrow',color:'var(--red)'};
     if(d<=7)return{cls:'due-soon',text:'Due in '+d+' days',color:'var(--red)'};
     return{cls:'upcoming',text:'Upcoming',color:'var(--royal)'};
