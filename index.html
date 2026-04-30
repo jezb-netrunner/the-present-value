@@ -2213,18 +2213,20 @@ function updCalStat(){
   const today=new Date();today.setHours(0,0,0,0);
   const cm=today.getMonth()+1;
   const f=gF().filter(o=>o.month>0&&o.day>0);
-  let overdue=0,thisMonth=0;
+  let dueSoon=0,thisMonth=0;
   f.forEach(o=>{
     const eff=effectiveDeadline(o);if(!eff)return;
-    if(eff<today){overdue++;return;}
-    if((eff.getMonth()+1)===cm)thisMonth++;
+    if(eff<today)return;
+    const d=Math.floor((eff-today)/86400000);
+    if(d<=7)dueSoon++;
+    else if((eff.getMonth()+1)===cm)thisMonth++;
   });
-  if(!overdue&&!thisMonth){el.innerHTML='';el.removeAttribute('aria-label');return;}
+  if(!dueSoon&&!thisMonth){el.innerHTML='';el.removeAttribute('aria-label');return;}
   const parts=[];
-  if(overdue)parts.push(`<span class="cst-over">${overdue} overdue</span>`);
+  if(dueSoon)parts.push(`<span class="cst-over">${dueSoon} due this week</span>`);
   if(thisMonth)parts.push(`<span class="cst-n">${thisMonth}</span> this month`);
   el.innerHTML=parts.join('<span class="cst-sep">·</span>');
-  el.setAttribute('aria-label',`${overdue} overdue, ${thisMonth} due this month. Tap to view.`);
+  el.setAttribute('aria-label',`${dueSoon} due this week, ${thisMonth} due this month.`);
 }
 function onCalStatTap(){
   if(vM!=='fd')setV('fd',null);
