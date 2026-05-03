@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#F7F7FC;--sf:#fff;--s2:#EEEDF8;--s3:#E4E2F5;--bd:#D0CDED;--bl:#A09CC8;--ink:#1E1A5E;--ch:#1E1A5E;--dim:#647489;--mu:#8899A8;--lt:#9BAAB8;--royal:#3D388A;--rs:rgba(61,56,138,.07);--rm:rgba(61,56,138,.14);--navy:#1E1A5E;--green:#2d8a4e;--gs:rgba(45,138,78,.07);--amber:#d4850a;--as:rgba(212,133,10,.07);--red:#c0392b;--rds:rgba(192,57,43,.07);--teal:#08B1C2;--ts:rgba(8,177,194,.07);--purple:#6c5ce7;--ps:rgba(108,92,231,.07);--rose:#c44569;--ros:rgba(196,69,105,.07);--slate:#5a6c7d;--sls:rgba(90,108,125,.07);--se:'Source Serif 4',Georgia,serif;--sa:'Inter',system-ui,sans-serif;--r:8px;--rr:5px;--sh:0 1px 3px rgba(30,26,94,.05),0 4px 16px rgba(30,26,94,.08);--shs:0 1px 2px rgba(30,26,94,.04),0 2px 6px rgba(30,26,94,.05);--hdr-h:68px;}
+:root{--bg:#F7F7FC;--sf:#fff;--s2:#EEEDF8;--s3:#E4E2F5;--bd:#D0CDED;--bl:#A09CC8;--ink:#1E1A5E;--ch:#1E1A5E;--dim:#4F5B69;--mu:#5E6B7C;--lt:#7A8696;--royal:#3D388A;--rs:rgba(61,56,138,.07);--rm:rgba(61,56,138,.14);--navy:#1E1A5E;--green:#2d8a4e;--gs:rgba(45,138,78,.07);--amber:#d4850a;--as:rgba(212,133,10,.07);--amberInk:#8c5400;--amberInkD:#5a3a00;--amberInkX:#3d2700;--red:#c0392b;--rds:rgba(192,57,43,.07);--teal:#08B1C2;--ts:rgba(8,177,194,.07);--purple:#6c5ce7;--ps:rgba(108,92,231,.07);--rose:#c44569;--ros:rgba(196,69,105,.07);--slate:#5a6c7d;--sls:rgba(90,108,125,.07);--se:'Source Serif 4',Georgia,serif;--sa:'Inter',system-ui,sans-serif;--r:8px;--rr:5px;--sh:0 1px 3px rgba(30,26,94,.05),0 4px 16px rgba(30,26,94,.08);--shs:0 1px 2px rgba(30,26,94,.04),0 2px 6px rgba(30,26,94,.05);--hdr-h:68px;}
 html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);color:var(--ch);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .sr-only{position:absolute !important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .skip-link{position:absolute;top:-44px;left:8px;background:var(--ink);color:#fff;padding:.5rem .9rem;border-radius:4px;font-weight:700;z-index:1000;text-decoration:none;font-size:.85rem}
@@ -35,10 +35,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .tbar{background:var(--sf);border-bottom:1px solid var(--bd);padding:.5rem 2rem;}
 .tbar-i{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;}
 .tl-l{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin-right:.2rem;}
-.tb{font-family:var(--sa);font-size:.78rem;font-weight:600;padding:.4rem .85rem;border-radius:100px;border:1px solid var(--bd);background:var(--sf);color:var(--dim);cursor:pointer;transition:all .2s;white-space:nowrap;min-height:32px;}
+.tb{font-family:var(--sa);font-size:.78rem;font-weight:600;padding:.5rem .9rem;border-radius:100px;border:1px solid var(--bd);background:var(--sf);color:var(--dim);cursor:pointer;transition:all .2s;white-space:nowrap;min-height:36px;}
 .tb:hover{border-color:var(--bl);color:var(--ch)}.tb.act{background:var(--ink);color:var(--sf);border-color:var(--ink)}
 .rbar{max-width:1200px;margin:.55rem auto 0;padding:0 2rem;display:flex;flex-wrap:wrap;gap:.22rem;align-items:center;}
-.rb{font-family:var(--sa);font-size:.75rem;font-weight:600;padding:.35rem .75rem;border-radius:100px;border:1px solid var(--bd);background:var(--sf);color:var(--dim);cursor:pointer;transition:all .2s;white-space:nowrap;min-height:30px;}
+.rb{font-family:var(--sa);font-size:.75rem;font-weight:600;padding:.45rem .85rem;border-radius:100px;border:1px solid var(--bd);background:var(--sf);color:var(--dim);cursor:pointer;transition:all .2s;white-space:nowrap;min-height:36px;}
 .rb:hover{color:var(--ch);border-color:var(--bl)}.rb.act{background:var(--royal);color:#fff;border-color:var(--royal)}
 .mn{max-width:1200px;margin:0 auto;padding:.75rem 2rem 2rem;}
 
@@ -68,12 +68,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .vc{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-bottom:.65rem;justify-content:space-between}
 .vl{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
 .vt{display:flex;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rr);overflow:hidden;box-shadow:var(--shs)}
-.vt button{font-family:var(--sa);font-size:.75rem;font-weight:600;padding:.4rem .75rem;border:none;background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;min-height:32px}
+.vt button{font-family:var(--sa);font-size:.75rem;font-weight:600;padding:.5rem .85rem;border:none;background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;min-height:36px}
 .vt button:not(:last-child){border-right:1px solid var(--bd)}.vt button.act{background:var(--ink);color:#fff}
 .sb{font-family:var(--sa);font-size:.7rem;font-weight:500;padding:.3rem .6rem;border-radius:var(--rr);border:1px solid var(--bd);background:var(--sf);color:var(--ch);width:165px;outline:none;box-shadow:var(--shs)}
 .sb:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}.sb::placeholder{color:var(--lt)}
 .ft{display:flex;flex-wrap:wrap;gap:.18rem}
-.fb{font-size:.72rem;font-weight:600;padding:.3rem .55rem;border-radius:100px;border:1px solid var(--bd);background:var(--sf);color:var(--mu);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.25rem;min-height:28px}
+.fb{font-size:.72rem;font-weight:600;padding:.45rem .7rem;border-radius:100px;border:1px solid var(--bd);background:var(--sf);color:var(--mu);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.25rem;min-height:36px}
 .fb .fd{width:8px;height:8px;border-radius:50%;flex-shrink:0}.fb.fba{color:var(--ch);border-color:var(--bl);background:var(--s2)}
 .stb{display:flex;gap:.5rem;margin-bottom:.65rem;flex-wrap:wrap;font-size:.8rem;color:var(--dim)}.stb strong{color:var(--ink);font-weight:700;font-size:.88rem}
 
@@ -243,7 +243,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .cat-row:last-child{border-bottom:none}
 .cat-name{font-size:.72rem;color:var(--ch);line-height:1.25;display:flex;flex-direction:column;gap:.1rem}
 .cat-name .nm{font-weight:600}
-.cat-cap{font-size:.72rem;color:#8c5400;font-weight:600;display:flex;align-items:center;gap:.25rem}
+.cat-cap{font-size:.72rem;color:var(--amberInk);font-weight:600;display:flex;align-items:center;gap:.25rem}
 .cat-cap::before{content:'⚠';font-size:.6rem}
 .cat-input{font-family:var(--sa);font-size:.8rem;font-weight:600;padding:.35rem .55rem;border:1px solid var(--bd);border-radius:var(--rr);background:var(--bg);color:var(--ink);outline:none;text-align:right;transition:border-color .2s}
 .cat-input:focus{border-color:var(--royal);box-shadow:0 0 0 3px var(--rs)}
@@ -346,6 +346,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .ob.exp .ob-layman{max-height:600px;margin-top:.4rem}
 .ob-lay-inner{padding:.65rem .8rem;background:var(--rs);border-left:3px solid var(--royal);border-radius:var(--rr);font-family:var(--se);font-size:.86rem;color:var(--ch);line-height:1.55}
 .ob-lay-inner b{color:var(--royal);font-weight:700}
+.ob-formref-btn{margin-top:.5rem;font-size:.75rem;color:var(--royal);font-weight:600;cursor:pointer;background:none;border:none;padding:.3rem .4rem;border-radius:4px;min-height:32px}
 .ob-lay-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--royal);margin-bottom:.25rem;display:block}
 .ob-chev{margin-left:auto;color:var(--lt);font-size:.55rem;transition:transform .3s;flex-shrink:0}
 .ob.exp .ob-chev{transform:rotate(180deg);color:var(--royal)}
@@ -367,7 +368,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .cal-tab:last-child{border-right:none}.cal-tab:hover:not(.act){background:var(--s2);color:var(--ch)}.cal-tab.act{background:var(--ink);color:#fff}
 /* Note/deadline-shift banner */
 .cal-note{background:var(--as);border:1px solid rgba(212,133,10,.2);border-left:3px solid var(--amber);border-radius:var(--r);padding:.6rem .85rem;margin-bottom:.75rem;font-family:var(--se);font-size:.82rem;color:var(--ch);line-height:1.5}
-.cal-note-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#8c5400;display:block;margin-bottom:.2rem}
+.cal-note-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--amberInk);display:block;margin-bottom:.2rem}
 /* Holiday section */
 .cal-holidays{margin-bottom:.75rem}
 .cal-hol-hdr{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);padding-bottom:.3rem;margin-bottom:.35rem;border-bottom:1px solid var(--s2)}
@@ -400,7 +401,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .cal-pen-card{background:var(--sf);border-radius:var(--r);padding:.65rem .75rem;box-shadow:var(--shs);border-left:3px solid var(--amber)}
 .cal-pen-card.hi{border-left-color:var(--red)}.cal-pen-card.lo{border-left-color:var(--green)}
 .cal-pen-lbl{font-family:var(--sa);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin-bottom:.28rem}
-.cal-pen-val{font-family:var(--sa);font-size:.95rem;font-weight:700;color:#8c5400}.cal-pen-card.hi .cal-pen-val{color:var(--red)}.cal-pen-card.lo .cal-pen-val{color:var(--green)}
+.cal-pen-val{font-family:var(--sa);font-size:.95rem;font-weight:700;color:var(--amberInk)}.cal-pen-card.hi .cal-pen-val{color:var(--red)}.cal-pen-card.lo .cal-pen-val{color:var(--green)}
 .cal-pen-note{font-family:var(--se);font-size:.72rem;color:var(--mu);margin-top:.15rem;line-height:1.4}
 /* Ongoing section + empty state */
 .cal-ongoing-hdr{font-family:var(--sa);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.5rem 0 .3rem;border-bottom:1px solid var(--bd);margin-bottom:.35rem;margin-top:.75rem}
@@ -478,7 +479,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .form-line.tot .form-line-lbl{font-weight:700}
 .form-line.tot .form-line-val{font-size:.85rem}
 .form-footer{margin-top:.9rem;padding-top:.6rem;border-top:1.5px solid var(--ch);font-size:.72rem;color:var(--mu);font-style:italic;text-align:center}
-.form-disclaimer{background:var(--as);color:#8c5400;font-size:.76rem;padding:.55rem .85rem;border-radius:var(--rr);margin:.6rem 0 .9rem;font-family:var(--sa);font-weight:600;font-style:italic;line-height:1.5}
+.form-disclaimer{background:var(--as);color:var(--amberInk);font-size:.76rem;padding:.55rem .85rem;border-radius:var(--rr);margin:.6rem 0 .9rem;font-family:var(--sa);font-weight:600;font-style:italic;line-height:1.5}
 
 /* BOTTOM PANELS */
 .bp{max-width:1200px;margin:0 auto;padding:0 2rem 2rem}
@@ -507,7 +508,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .cp-sum::-webkit-scrollbar{display:none}
 .cp-sum .chip{background:var(--rs);color:var(--royal);padding:.14rem .55rem;border-radius:100px;font-weight:600;white-space:nowrap;font-size:.68rem;flex-shrink:0}
 .cp-sum .chip.muted{background:var(--s2);color:var(--mu)}
-.cp-edit{font-family:var(--sa);font-size:.74rem;font-weight:700;color:var(--royal);background:var(--rs);border:1px solid transparent;border-radius:100px;padding:.32rem .75rem;cursor:pointer;flex-shrink:0;min-height:30px;transition:background .15s}
+.cp-edit{font-family:var(--sa);font-size:.74rem;font-weight:700;color:var(--royal);background:var(--rs);border:1px solid transparent;border-radius:100px;padding:.5rem .85rem;cursor:pointer;flex-shrink:0;min-height:36px;transition:background .15s}
 .cp-edit:hover{background:var(--rm)}
 .cp-edit:focus-visible{outline:2px solid var(--royal);outline-offset:2px}
 .cProfile.open .cp-edit{background:var(--ink);color:#fff}
@@ -614,7 +615,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .guide-step-desc{font-family:var(--se);font-size:.82rem;color:var(--dim);line-height:1.55}
 .guide-step-desc b{color:var(--ink);font-weight:600}
 .guide-note{background:var(--as);border:1px solid rgba(212,133,10,.18);border-left:3px solid var(--amber);border-radius:var(--rr);padding:.5rem .7rem;font-family:var(--se);font-size:.82rem;color:var(--ch);line-height:1.5;margin:.45rem 0}
-.guide-note-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8c5400;display:block;margin-bottom:.1rem}
+.guide-note-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amberInk);display:block;margin-bottom:.1rem}
 .guide-note.info{background:var(--rs);border-color:rgba(61,56,138,.18);border-left-color:var(--royal)}.guide-note.info .guide-note-lbl{color:var(--royal)}
 /* YTD Projector */
 .ytd-inp{font-family:var(--sa);font-size:.7rem;font-weight:600;padding:.2rem .38rem;border:1px solid var(--bd);border-radius:var(--rr);background:var(--bg);color:var(--ink);width:100%;outline:none;text-align:right;max-width:110px}
@@ -868,14 +869,14 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <a href="#mainContent" class="skip-link">Skip to main content</a>
 
 <!-- ═══ ONE-TIME DISCLAIMER BANNER ═══ -->
-<div id="disclaimerBanner" role="note" style="display:none;background:#fff9e6;border-bottom:1px solid rgba(212,133,10,.3);padding:.7rem 1.25rem;font-family:var(--se);font-size:.85rem;color:#5a3a00;line-height:1.5">
+<div id="disclaimerBanner" role="note" style="display:none;background:#fff9e6;border-bottom:1px solid rgba(212,133,10,.3);padding:.7rem 1.25rem;font-family:var(--se);font-size:.85rem;color:var(--amberInkD);line-height:1.5">
   <div style="max-width:1200px;margin:0 auto;display:flex;align-items:flex-start;gap:.75rem;flex-wrap:wrap">
     <span aria-hidden="true" style="font-size:1.1rem;line-height:1.2">⚠</span>
     <div style="flex:1;min-width:200px">
-      <strong style="color:#3d2700">This is a reference tool, not formal tax advice.</strong>
+      <strong style="color:var(--amberInkX)">This is a reference tool, not formal tax advice.</strong>
       Always verify deadlines and rates against the BIR Interactive Tax Calendar at <a href="https://www.bir.gov.ph" target="_blank" rel="noopener" style="color:var(--royal);font-weight:600">bir.gov.ph</a> or consult a licensed CPA before filing.
     </div>
-    <button type="button" onclick="dismissDisclaimer()" style="background:transparent;border:1px solid rgba(140,84,0,.35);color:#5a3a00;font-family:var(--sa);font-weight:700;font-size:.8rem;padding:.4rem .8rem;border-radius:100px;cursor:pointer;min-height:36px;white-space:nowrap">I understand</button>
+    <button type="button" onclick="dismissDisclaimer()" style="background:transparent;border:1px solid rgba(140,84,0,.35);color:var(--amberInkD);font-family:var(--sa);font-weight:700;font-size:.8rem;padding:.4rem .8rem;border-radius:100px;cursor:pointer;min-height:36px;white-space:nowrap">I understand</button>
   </div>
 </div>
 
@@ -884,7 +885,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
   <div id="wzCard">
     <div id="wzProg" aria-hidden="true"><div id="wzBar"></div></div>
     <div id="wzStepMeta" aria-live="polite"></div>
-    <div id="wzBody"></div>
+    <div id="wzBody"><h2 id="wzTitle" class="wz-q">Setup wizard</h2></div>
     <div id="wzFoot">
       <button type="button" class="wz-back" id="wzBackBtn" onclick="wzBack()" disabled>← Back</button>
       <button type="button" class="wz-skip" onclick="wzSkip()">Skip — use Self-Employed default</button>
@@ -918,10 +919,10 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <button type="button" class="tb" onclick="setType('mi')" aria-pressed="false">Mixed Income</button>
 <button type="button" class="tb" onclick="setType('corp')" aria-pressed="false">Corporation</button>
 <button type="button" class="tb" onclick="setType('emp')" aria-pressed="false">Employee</button>
-<button type="button" class="upd-setup" onclick="showWizard()" aria-label="Update my setup"><span aria-hidden="true">⚙</span> Update My Setup</button>
+<button type="button" class="upd-setup" onclick="showWizard()" aria-label="Edit setup"><span aria-hidden="true">⚙</span> Edit Setup</button>
 </div></div>
 <div class="rbar" id="rBar" role="group" aria-label="Tax regime"></div>
-<div class="sm-bar" id="smBar">Showing obligations for <strong id="smTpLabel">Self-Employed</strong>. <button type="button" class="sm-upd" onclick="showWizard()">Update Setup →</button></div>
+<div class="sm-bar" id="smBar">Showing obligations for <strong id="smTpLabel">Self-Employed</strong>. <button type="button" class="sm-upd" onclick="showWizard()">Edit Setup →</button></div>
 <div class="calhdr-cm" id="calHdrCm" role="group" aria-label="Calendar controls">
 <span class="chm-who" id="calHdrWho"></span>
 <button type="button" onclick="openCalSearchSheet()" aria-label="Search and filter obligations"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
@@ -934,7 +935,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="clb"><div class="clg" id="clG"></div></div>
 <div class="csm" id="clS"></div>
 </div></section>
-<main class="mn" id="mainContent" role="main" data-skiptarget="1">
+<main class="mn" id="mainContent" role="main" data-skiptarget="1" tabindex="-1">
 <div class="vc"><div class="vl">
 <div class="vt" role="tablist" aria-label="Calendar view"><button type="button" class="act" onclick="setV('fd',this)" role="tab" aria-selected="true">Feed</button><button type="button" onclick="setV('tl',this)" role="tab" aria-selected="false">Timeline</button><button type="button" onclick="setV('tb',this)" role="tab" aria-selected="false">Table</button><button type="button" onclick="setV('wf',this)" role="tab" aria-selected="false">By Workflow</button></div>
 <label for="calSearch" class="sr-only">Search obligations</label>
@@ -985,8 +986,8 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="calc-intro"><h2>Which tax regime saves you the most?</h2>
 <p>Compare all three tax regimes side by side with full supporting computations and BIR form previews.</p></div>
 
-<div id="corpCalcGuard" style="display:none;background:var(--as);border:1px solid rgba(212,133,10,.25);border-left:3px solid var(--amber);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:1rem;font-family:var(--se);color:#5a3a00;line-height:1.55">
-  <strong style="color:#3d2700">This calculator is for individuals (self-employed or mixed income).</strong> Corporations are taxed under RCIT (25%/20%) or the 2% MCIT from the 4th year (NIRC §27). Use Form 1702-RT guidance in <em>Form Reference</em> instead — the 8% and OSD-40% regimes shown below do not apply to corporations.
+<div id="corpCalcGuard" style="display:none;background:var(--as);border:1px solid rgba(212,133,10,.25);border-left:3px solid var(--amber);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:1rem;font-family:var(--se);color:var(--amberInkD);line-height:1.55">
+  <strong style="color:var(--amberInkX)">This calculator is for individuals (self-employed or mixed income).</strong> Corporations are taxed under RCIT (25%/20%) or the 2% MCIT from the 4th year (NIRC §27). Use Form 1702-RT guidance in <em>Form Reference</em> instead — the 8% and OSD-40% regimes shown below do not apply to corporations.
 </div>
 <div class="calc-shell">
 
@@ -1158,7 +1159,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <details class="cd-sec" open>
 <summary>⚠ Late Filing Penalty Calculator</summary>
 <div class="cd-sec-body">
-<p class="tool-intro">Enter the original due date, actual payment date, and unpaid tax amount to compute the exact penalty under NIRC Sec. 248–250. EOPT rates apply to micro/small businesses (gross &lt; ₱20M).</p>
+<p class="tool-intro">Enter the original due date, actual payment date, and unpaid tax amount to compute the exact penalty under NIRC Sec. 248–250. <strong>EOPT</strong> (Ease of Paying Taxes Act, RA 11976) rates apply to micro and small businesses (gross &lt; ₱20M).</p>
 <div class="fg" style="max-width:700px">
 <div class="fld"><label for="penDue">Due Date</label><input type="date" id="penDue"></div>
 <div class="fld"><label for="penPay">Payment Date</label><input type="date" id="penPay"></div>
@@ -1218,7 +1219,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <p class="tool-intro">Track BIR Form 2307 certificates received from clients and employers. Running totals are available for use in your quarterly and annual income tax returns.</p>
 <div class="fg" style="max-width:700px;margin-bottom:.75rem">
 <div class="fld"><label for="logPayor">Payor / Client Name</label><input type="text" id="logPayor" placeholder="e.g. ABC Corporation" autocomplete="organization"></div>
-<div class="fld"><label for="logAtc">ATC Code</label><input type="text" id="logAtc" placeholder="from the 2307" autocomplete="off"></div>
+<div class="fld"><label for="logAtc">ATC Code <span style="font-weight:400;color:var(--mu);font-size:.7rem">(Alphanumeric Tax Code from the 2307 — e.g. WI010, WC120)</span></label><input type="text" id="logAtc" placeholder="e.g. WI010" autocomplete="off"></div>
 <div class="fld"><label for="logAmt">Amount Withheld (₱)</label><input type="text" id="logAmt" placeholder="0" inputmode="numeric" autocomplete="off"></div>
 <div class="fld"><label for="logQ">Quarter</label>
 <select id="logQ"><option value="Q1">Q1 (Jan–Mar)</option><option value="Q2">Q2 (Apr–Jun)</option><option value="Q3">Q3 (Jul–Sep)</option><option value="Q4">Q4 (Oct–Dec)</option></select></div>
@@ -1234,7 +1235,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <details class="cd-sec">
 <summary>📊 YTD Quarterly Tax Projector (1701Q)</summary>
 <div class="cd-sec-body">
-<p class="tool-intro">Enter your actual income and tax paid per quarter to project remaining quarterly payments and your estimated annual tax liability.</p>
+<p class="tool-intro">Enter your actual income and tax paid per quarter to project remaining quarterly payments and your estimated annual tax liability. <span style="color:var(--mu)">Quick projection only — assumes purely self-employed (no compensation income), no non-operating income, and even-quarter CWT distribution. Use the Regime Calculator for precise figures.</span></p>
 <div class="fg" style="max-width:400px;margin-bottom:.85rem">
 <div class="fld"><label for="ytdMethod">Tax Method</label>
 <select id="ytdMethod">
@@ -1259,7 +1260,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="guide-section-hdr">Deduction Methods Explained</div>
 
 <div class="guide-card" id="gc-osd">
-<div class="guide-hdr" onclick="toggleGuide('gc-osd')">
+<div class="guide-hdr" role="button" tabindex="0" aria-expanded="false" aria-controls="gc-osd" onclick="toggleGuide('gc-osd')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleGuide('gc-osd');}">
 <div class="guide-hdr-l"><span class="guide-title">OSD vs. Itemized Deductions — Which Is Better for You?</span><span class="guide-sub">Optional Standard Deduction · NIRC Sec. 34(L) · No receipts needed for OSD</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
@@ -1275,7 +1276,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="guide-section-hdr green">Income Type Guides</div>
 
 <div class="guide-card gc-teal" id="gc-rental">
-<div class="guide-hdr" onclick="toggleGuide('gc-rental')">
+<div class="guide-hdr" role="button" tabindex="0" aria-expanded="false" aria-controls="gc-rental" onclick="toggleGuide('gc-rental')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleGuide('gc-rental');}">
 <div class="guide-hdr-l"><span class="guide-title">Rental Income Guide — RA 9653, VAT Treatment &amp; Sworn Declaration</span><span class="guide-sub">Rent Control Act · BIR Revenue Regulations · Common landlord compliance checklist</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
@@ -1287,7 +1288,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 </div></div></div>
 
 <div class="guide-card gc-purple" id="gc-freelancer" style="margin-top:.4rem">
-<div class="guide-hdr" onclick="toggleGuide('gc-freelancer')">
+<div class="guide-hdr" role="button" tabindex="0" aria-expanded="false" aria-controls="gc-freelancer" onclick="toggleGuide('gc-freelancer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleGuide('gc-freelancer');}">
 <div class="guide-hdr-l"><span class="guide-title">Freelancer &amp; Professional Tax Flow — Gross Receipts → EWT → Net Tax Due</span><span class="guide-sub">Self-employed professionals · NIRC Sec. 24(A) · BIR Form 1701Q</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
@@ -1304,7 +1305,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="guide-section-hdr purple">Reconciliation Walkthroughs</div>
 
 <div class="guide-card gc-green" id="gc-sawt">
-<div class="guide-hdr" onclick="toggleGuide('gc-sawt')">
+<div class="guide-hdr" role="button" tabindex="0" aria-expanded="false" aria-controls="gc-sawt" onclick="toggleGuide('gc-sawt')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleGuide('gc-sawt');}">
 <div class="guide-hdr-l"><span class="guide-title">SAWT &amp; 2307 Reconciliation — Step-by-Step</span><span class="guide-sub">Summary Alphalist of Withholding Taxes · BIR eSubmission · Required for 1701Q and 1701/1701A</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
@@ -1323,7 +1324,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 
 <!-- ═══ SHARED BOTTOM ═══ -->
 <section class="bp">
-<div class="cp"><div class="cph" onclick="let b=document.getElementById('penB'),c=document.getElementById('penC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Penalties &amp; Interest Reference <span style="font-family:var(--sa);font-size:.7rem;font-weight:600;color:var(--mu)">(EOPT classifications)</span></h3><span class="mchv" id="penC" style="color:var(--lt);font-size:.6rem">▾</span></div>
+<div class="cp"><div class="cph" role="button" tabindex="0" aria-expanded="false" aria-controls="penB" onclick="togglePanel('penB','penC',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePanel('penB','penC',this);}"><h3>Penalties &amp; Interest Reference <span style="font-family:var(--sa);font-size:.7rem;font-weight:600;color:var(--mu)">(EOPT classifications)</span></h3><span class="mchv" id="penC" style="color:var(--lt);font-size:.6rem">▾</span></div>
 <div class="cpb" id="penB"><div class="pg">
 <div class="pc"><h4>Micro <span class="bsm" style="background:var(--gs);color:var(--green)">Gross &lt; ₱3M · EOPT</span></h4>
 <div class="pr"><span>Surcharge (late)</span><span class="pv pvg">10%</span></div><div class="pr"><span>Interest</span><span class="pv pvg">6%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvg">₱500 (max ₱12.5K/yr)</span></div></div>
@@ -1332,7 +1333,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="pc"><h4>Medium, Large &amp; Willful <span class="bsm" style="background:var(--rds);color:var(--red)">Standard</span></h4>
 <div class="pr"><span>Surcharge (late)</span><span class="pv pvr">25%</span></div><div class="pr"><span>Surcharge (willful)</span><span class="pv pvr">50%</span></div><div class="pr"><span>Interest</span><span class="pv pvr">12%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvr">₱1,000 (max ₱25K/yr)</span></div></div>
 </div><p style="font-family:var(--se);font-size:.75rem;color:var(--mu);padding:.6rem .75rem;line-height:1.5">EOPT thresholds: Medium = ₱20M – &lt;₱1B · Large = ≥₱1B (RA 11976 §47). Willful neglect / fraud imposes the 50% surcharge regardless of size.</p></div></div>
-<div class="cp"><div class="cph" onclick="let b=document.getElementById('lgB'),c=document.getElementById('lgC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Legal Basis</h3><span class="mchv" id="lgC" style="color:var(--lt);font-size:.6rem">▾</span></div>
+<div class="cp"><div class="cph" role="button" tabindex="0" aria-expanded="false" aria-controls="lgB" onclick="togglePanel('lgB','lgC',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePanel('lgB','lgC',this);}"><h3>Legal Basis</h3><span class="mchv" id="lgC" style="color:var(--lt);font-size:.6rem">▾</span></div>
 <div class="cpb" id="lgB">
 <div class="lr"><span class="lrt">Income Tax</span><span class="lrc">NIRC Sec. 24(A)(2); TRAIN Law (RA 10963)</span></div>
 <div class="lr"><span class="lrt">8% Flat Rate</span><span class="lrc">NIRC Sec. 24(A)(2)(b); RR 8-2018</span></div>
@@ -1348,7 +1349,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 </div></div>
 </section>
 
-<footer class="ftr">This suite is for general reference only — not formal tax advice. Verify against the BIR Interactive Tax Calendar at www.bir.gov.ph. Deadlines on weekends/holidays move to the next business day. Rates current as of April 2026, incorporating TRAIN (RA 10963), CREATE (RA 11534), CREATE MORE (RA 12066), EOPT (RA 11976), CMEPA (RA 12214, eff. 1 Jul 2025), RR 29-2025 expanded de minimis (eff. 6 Jan 2026), and RR 26-2025 e-invoicing (31 Dec 2026 deadline).</footer>
+<footer class="ftr">This suite is for general reference only — not formal tax advice. Verify against the BIR Interactive Tax Calendar at www.bir.gov.ph. Deadlines on weekends/holidays move to the next business day. Rates current as of May 2026, incorporating TRAIN (RA 10963), CREATE (RA 11534), CREATE MORE (RA 12066), EOPT (RA 11976), CMEPA (RA 12214, eff. 1 Jul 2025), RR 29-2025 expanded de minimis (eff. 6 Jan 2026), and RR 26-2025 e-invoicing (31 Dec 2026 deadline).</footer>
 
 <script>
 // ══════════ SHARED UTILITIES ══════════
@@ -1588,11 +1589,15 @@ function updateMobileCalcBar(){
   }
 }
 // Keep the mobile bar in sync as cCards re-renders (calc() updates on every keystroke).
+// Coalesce mutation bursts via rAF so we paint at most once per frame regardless of
+// how many subtree mutations a single calc() emits.
 (function initMobileCalcObserver(){
   if(typeof MutationObserver==='undefined')return;
+  let scheduled=false;
+  const onMut=()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;updateMobileCalcBar();});};
   const start=()=>{
     const target=document.getElementById('cCards');if(!target)return;
-    new MutationObserver(updateMobileCalcBar).observe(target,{childList:true,subtree:true});
+    new MutationObserver(onMut).observe(target,{childList:true,subtree:true});
     updateMobileCalcBar();
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);
@@ -1822,7 +1827,7 @@ function renderForms(){
   const q=(document.getElementById('frSearch')?.value||'').toLowerCase();
   const list=document.getElementById('frList');
   // Category filters
-  document.getElementById('frCats').innerHTML=`<button class="fr-cat ${frCat==='all'?'act':''}" onclick="frCat='all';renderForms()">All Forms</button>`+Object.entries(FR_CATS).map(([k,v])=>`<button class="fr-cat ${frCat===k?'act':''}" onclick="frCat='${k}';renderForms()">${v}</button>`).join('');
+  document.getElementById('frCats').innerHTML=`<button type="button" class="fr-cat ${frCat==='all'?'act':''}" data-frcat="all">All Forms</button>`+Object.entries(FR_CATS).map(([k,v])=>`<button type="button" class="fr-cat ${frCat===k?'act':''}" data-frcat="${esc(k)}">${esc(v)}</button>`).join('');
 
   const filtered=FORMS.filter(f=>{
     if(frCat!=='all'&&f.cat!==frCat)return false;
@@ -1841,10 +1846,10 @@ function renderForms(){
     items.forEach((f,i)=>{
       const id='fr_'+f.form.replace(/[^a-zA-Z0-9]/g,'')+'_'+i;
       h+=`<div class="fr-card ${FR_COLORS[f.cat]}" id="${id}">
-        <div class="fr-top" onclick="document.getElementById('${id}').classList.toggle('open')">
-          <div class="fr-form">${f.form}</div>
-          <div class="fr-name">${f.name} <span class="fr-brief">— ${f.brief}</span></div>
-          <span class="fr-chev">▾</span>
+        <div class="fr-top" role="button" tabindex="0" aria-expanded="false" aria-controls="${id}" data-frcard="${id}">
+          <div class="fr-form">${esc(f.form)}</div>
+          <div class="fr-name">${esc(f.name)} <span class="fr-brief">— ${esc(f.brief)}</span></div>
+          <span class="fr-chev" aria-hidden="true">▾</span>
         </div>
         <div class="fr-body"><div class="fr-content">
           ${f.who?`<div class="fr-row"><div class="fr-label">Who Files</div><div class="fr-val">${f.who}</div></div>`:''}
@@ -2049,9 +2054,9 @@ function renderWF(f){
     const sorted=[...obs].sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));
     const sid='wfs_'+wf;
     h+=`<div class="wf-sec" id="${sid}">`;
-    h+=`<div class="wf-sec-hdr" onclick="document.getElementById('${sid}').classList.toggle('collapsed')">`;
-    h+=`<span class="wf-sec-name">${WF_LABELS[wf]}</span><span class="wf-sec-badge">${obs.length}</span><span class="wf-sec-chev">&#9662;</span></div>`;
-    h+=`<div class="wf-sec-body">${sorted.map(rObNew).join('')}</div></div>`;
+    h+=`<div class="wf-sec-hdr" role="button" tabindex="0" aria-expanded="true" aria-controls="${sid}-body" data-wfsec="${sid}">`;
+    h+=`<span class="wf-sec-name">${WF_LABELS[wf]}</span><span class="wf-sec-badge">${obs.length}</span><span class="wf-sec-chev" aria-hidden="true">&#9662;</span></div>`;
+    h+=`<div class="wf-sec-body" id="${sid}-body">${sorted.map(rObNew).join('')}</div></div>`;
   });
   if(!h)h=`<div class="wf-empty">No obligations match your current filters.</div>`;
   document.getElementById('wv').innerHTML=h;
@@ -2063,11 +2068,19 @@ function obsId(o){return(o.month+'_'+o.day+'_'+(o.form||'').replace(/[^a-zA-Z0-9
 // Per BIR practice, a deadline falling on a Saturday, Sunday, or public
 // holiday (regular or special non-working) shifts to the next business day.
 function isHoliday(m,d){const list=HOLIDAYS[m]||[];for(let i=0;i<list.length;i++){if(list[i][0]===d)return true;}return false;}
+// Memoize by month/day pair — obligations with the same nominal deadline always
+// resolve to the same effective deadline. Cache survives between renders since
+// HOLIDAYS is built once per page load.
+const _effDeadlineCache=new Map();
 function effectiveDeadline(o){
   if(!o||o.month===0||o.day===0)return null;
+  const key=o.month*100+o.day;
+  const hit=_effDeadlineCache.get(key);if(hit)return new Date(hit);
   const d=new Date(YEAR,o.month-1,o.day);
   let guard=0;
-  while(guard++<14&&(d.getDay()===0||d.getDay()===6||isHoliday(d.getMonth()+1,d.getDate())))d.setDate(d.getDate()+1);
+  while(guard++<30&&(d.getDay()===0||d.getDay()===6||isHoliday(d.getMonth()+1,d.getDate())))d.setDate(d.getDate()+1);
+  if(guard>=30)console.warn('effectiveDeadline guard exhausted for',o.title,o.form);
+  _effDeadlineCache.set(key,d.getTime());
   return d;
 }
 function nominalDeadline(o){if(!o||o.month===0||o.day===0)return null;return new Date(YEAR,o.month-1,o.day);}
@@ -2088,8 +2101,11 @@ function shiftedDeadlineNote(o){
 // ── CWT per quarter sourced from 2307 log (falls back to linear split) ─
 // Returns {q:[Q1,Q2,Q3,Q4], source:'log'|'linear', total:annual} where each
 // entry is the total CWT received in that quarter for the requested year.
+let _cwtLogCache=null;
+function _readCwtLog(){if(_cwtLogCache)return _cwtLogCache;try{_cwtLogCache=JSON.parse(localStorage.getItem('tpv_2307log')||'[]');}catch(e){_cwtLogCache=[];}return _cwtLogCache;}
+function _invalidateCwtLog(){_cwtLogCache=null;}
 function getQuarterlyCWT(year,annualFallback){
-  let log=[];try{log=JSON.parse(localStorage.getItem('tpv_2307log')||'[]');}catch(e){log=[];}
+  const log=_readCwtLog();
   const byQ={Q1:0,Q2:0,Q3:0,Q4:0};let total=0;
   log.filter(e=>e.yr===year).forEach(e=>{if(byQ[e.q]!=null){byQ[e.q]+=Number(e.amt)||0;total+=Number(e.amt)||0;}});
   if(total>0)return{q:[byQ.Q1,byQ.Q2,byQ.Q3,byQ.Q4],source:'log',total};
@@ -2139,6 +2155,7 @@ function renderFeed(){
   const grps={tw:[],nw:[],tm:[],ip:[],lt:[]};
   items.forEach(o=>{
     const d=daysUntil(o);
+    if(d<0)return; // already past — don't show stale items in any bucket
     if(d<=7)grps.tw.push(o);
     else if(d<=14)grps.nw.push(o);
     else{
@@ -2317,7 +2334,7 @@ function getDayName(m,d){return['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new D
 function setCalM(m){cMonth=m;if(m>0)cQuarter=Math.ceil(m/3);ren();}
 function setCalQ(q){cQuarter=q;cMonth=(q-1)*3+1;ren();}
 function getObGrp(o){const f=o.form||'';if(['1601-C','0619-E','0619-F','1600'].includes(f))return'wh-m';if(['1701A','1701','1700'].includes(f)||(f==='2316'&&o.cat==='inc'))return'itr-a';if(f==='1702-RT')return'itr-ac';if(['1604-C','1604-F','1604-E'].includes(f))return'wh-a';if(f==='1701Q')return'itr-q';if(f==='1702Q')return'itr-qc';if(['2550Q','2551Q','SLSP'].includes(f))return'biz-q';if(['1601-EQ','1601-FQ','2307','2306'].includes(f))return'wh-q';if(f==='Agency'||o.cat==='emp')return'contrib';if(f==='SEC'||o.cat==='sec')return'sec';return'adm';}
-function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='obn_'+obsId(o);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);const shift=shiftedDeadlineNote(o);return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div><span class="ob-row-title">${o.title}${obTip(o.title)}</span>${o.form&&o.form!=='—'?`<span class="form-ref">${o.form}</span>`:''}</div><div class="ob-row-meta">${shift?`<span class="ob-row-pq" style="background:var(--as);color:var(--amber)">${shift}</span>`:''}${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.5rem;padding-top:.4rem;border-top:1px solid rgba(61,56,138,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.78rem;color:var(--ch);padding:.15rem 0;display:flex;align-items:center;gap:.35rem"><span aria-hidden="true" style="font-size:.72rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<button type="button" style="margin-top:.5rem;font-size:.75rem;color:var(--royal);font-weight:600;cursor:pointer;background:none;border:none;padding:.3rem .4rem;border-radius:4px;min-height:32px" onclick="event.stopPropagation();document.querySelector('.pnav button[data-pg=\"ref\"]').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">&#8594; View ${o.form} in Form Reference</button>`:''}</div></div></div>`;}
+function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='obn_'+obsId(o);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);const shift=shiftedDeadlineNote(o);const formAttr=o.form?` data-obform="${esc(o.form)}"`:'';return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" role="button" tabindex="0" aria-expanded="false" data-obrow="${oid}"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div><span class="ob-row-title">${o.title}${obTip(o.title)}</span>${o.form&&o.form!=='—'?`<span class="form-ref">${o.form}</span>`:''}</div><div class="ob-row-meta">${shift?`<span class="ob-row-pq" style="background:var(--as);color:var(--amber)">${shift}</span>`:''}${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev" aria-hidden="true">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.5rem;padding-top:.4rem;border-top:1px solid rgba(61,56,138,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.78rem;color:var(--ch);padding:.15rem 0;display:flex;align-items:center;gap:.35rem"><span aria-hidden="true" style="font-size:.72rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<button type="button" class="ob-formref-btn"${formAttr}>&#8594; View ${esc(o.form)} in Form Reference</button>`:''}</div></div></div>`;}
 function renMon(month,obs){let h='';if(MONTH_NOTES[month])h+=`<div class="cal-note"><span class="cal-note-lbl">Deadline note</span>${MONTH_NOTES[month]}</div>`;const hols=HOLIDAYS[month]||[];if(hols.length){h+=`<div class="cal-holidays"><div class="cal-hol-hdr">Public holidays this month</div>`;hols.forEach(([d,name,type])=>{const dn=getDayName(month,d);h+=`<div class="cal-hol-item"><span class="cal-hol-date">${MN[month].substr(0,3)} ${d}, ${YEAR}</span><span class="cal-hol-name">${dn} &middot; ${name}</span><span class="cal-hol-badge ${type}">${type==='reg'?'Regular holiday':'Special non-working'}</span></div>`;});h+=`</div>`;}if(!obs.length)return h+`<div class="cal-empty">No obligations match your current filters for ${MN[month]}.</div>`;const grps={};[...obs].sort((a,b)=>a.day-b.day).forEach(o=>{const g=getObGrp(o);if(!grps[g])grps[g]=[];grps[g].push(o);});let first=true;GROUP_ORDER.forEach(gk=>{if(!grps[gk])return;h+=`<div class="cal-grp-hdr"${first?' style="margin-top:0"':''}>${GROUP_LABELS[gk]||gk}</div>`;h+=grps[gk].map(rObNew).join('');first=false;});return h;}
 function renPen(ongoingObs){
   const sectionHdr=t=>`<div style="font-family:var(--sa);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.6rem 0 .3rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">${t}</div>`;
@@ -2452,14 +2469,14 @@ function buildHolidays(yr){
   // using the official Presidential proclamation once published.
   const eid={2025:[3,30,6,7],2026:[3,19,5,27],2027:[3,9,5,16],2028:[2,26,5,5],2029:[2,14,4,24],2030:[2,3,4,13],2031:[1,23,4,2],2032:[1,13,3,22]};
   if(eid[yr]){const[efm,efd,eam,ead]=eid[yr];add(efm,efd,"Eid al-Fitr",'reg');add(eam,ead,"Eid al-Adha",'reg');}
-  else if(yr>2032||yr<2025){console.warn(`Eid holidays are not in the lookup table for ${yr}. Deadline roll-forward will still honour Saturdays, Sundays, and all other holidays, but Eid dates for this year must be added manually to buildHolidays().`);}
+  else if(yr>2032||yr<2025){console.warn(`Eid holidays are not in the lookup table for ${yr}. Deadline roll-forward will still honour Saturdays, Sundays, and all other holidays, but Eid dates for this year must be added manually to buildHolidays().`);if(typeof toast==='function')setTimeout(()=>toast(`Eid ${yr} dates missing — verify against the Presidential proclamation before relying on deadline shifts.`,'warn'),1200);}
   Object.keys(h).forEach(m=>{h[m].sort((a,b)=>a[0]-b[0]);});
   return h;
 }
 function buildMonthNotes(yr){
   const notes={};
   const MNX=['','January','February','March','April','May','June','July','August','September','October','November','December'];
-  function chk(m,d){const dow=new Date(yr,m-1,d).getDay();if(dow===6)return{s:true,lbl:'Saturday',nd:d+2};if(dow===0)return{s:true,lbl:'Sunday',nd:d+1};if(typeof isHoliday==='function'&&isHoliday(yr,m,d))return{s:true,lbl:'a public holiday',nd:d+1};return{s:false};}
+  function chk(m,d){const dow=new Date(yr,m-1,d).getDay();if(dow===6)return{s:true,lbl:'Saturday',nd:d+2};if(dow===0)return{s:true,lbl:'Sunday',nd:d+1};if(typeof isHoliday==='function'&&isHoliday(m,d))return{s:true,lbl:'a public holiday',nd:d+1};return{s:false};}
   // Quarterly VAT/PT/SLSP: 25th of Jan, Apr, Jul, Oct
   [[1],[4],[7],[10]].forEach(([m])=>{const r=chk(m,25);if(r.s)notes[m]=`${MNX[m]} 25 falls on a ${r.lbl} — 2550Q, 2551Q, and SLSP deadlines shift to <strong>Monday, ${MNX[m]} ${r.nd}</strong>.`;});
   // Quarterly income tax 1701Q: 15th of May (Q1), Aug (Q2), Nov (Q3)
@@ -2541,7 +2558,7 @@ function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f
 function gradTax(ti){ti=Math.max(0,ti);if(ti<=250000)return 0;if(ti<=400000)return(ti-250000)*.15;if(ti<=800000)return 22500+(ti-400000)*.20;if(ti<=2000000)return 102500+(ti-800000)*.25;if(ti<=8000000)return 402500+(ti-2000000)*.30;return 2202500+(ti-8000000)*.35;}
 function fmt(n){return'₱'+Math.round(n).toLocaleString('en-PH');}
 function pct(n,d){return d>0?(n/d*100).toFixed(2)+'%':'0.00%';}
-function pN(id){const el=document.getElementById(id);if(!el)return 0;return parseFloat(el.value.replace(/[^0-9.]/g,''))||0;}
+function pN(id){const el=document.getElementById(id);if(!el)return 0;const cleaned=el.value.replace(/[^0-9.]/g,'').replace(/\.(?=[^.]*\.)/g,'');return Math.max(0,parseFloat(cleaned)||0);}
 
 // EXPENSE MODE STATE
 let EXP_MODE='lump';
@@ -2665,7 +2682,10 @@ function computeCategoryDeductions(g){
   const cats={};ks.forEach(k=>cats[k]=pN('cat_'+k));
   const intIncome=pN('cat_intIncome');
   const isGoods=document.getElementById('bizT').value==='goods';
-  // Rep cap
+  // Rep cap. RR 10-2002 measures the cap against NET sales/receipts (gross
+  // less returns, allowances, and discounts). The calculator uses gross as a
+  // simplification — accurate when there are no material returns/allowances,
+  // which is the common case for service providers and small retailers.
   const repCap=isGoods?g*0.005:g*0.01;
   const repAllowed=Math.min(cats.rep,repCap);
   const repDis=Math.max(0,cats.rep-repCap);
@@ -3844,20 +3864,21 @@ function calcWithholding(){
 
 // ══════════ 2307 CREDIT LOG ══════════
 function get2307Log(){try{return JSON.parse(localStorage.getItem('tpv_2307log')||'[]');}catch{return[];}}
-function save2307Log(l){if(!safeSet('tpv_2307log',JSON.stringify(l))){toast('Could not save 2307 log — storage is full. Delete old entries.','err');}}
+function save2307Log(l){const MAX=2000;if(l.length>MAX){l=l.slice(-MAX);toast('2307 log capped at '+MAX+' entries — oldest were dropped.','warn');}if(!safeSet('tpv_2307log',JSON.stringify(l))){toast('Could not save 2307 log — storage is full. Delete old entries.','err');}_invalidateCwtLog();}
 function add2307Entry(){
   const payor=document.getElementById('logPayor').value.trim();
   const atc=document.getElementById('logAtc').value.trim();
   const amtStr=document.getElementById('logAmt').value.replace(/[^0-9.]/g,'');
-  const amt=parseFloat(amtStr)||0;
+  const amt=Math.max(0,parseFloat(amtStr)||0);
   const q=document.getElementById('logQ').value;
-  const yr=parseInt(document.getElementById('logYear').value)||YEAR;
+  let yr=parseInt(document.getElementById('logYear').value,10);
+  if(!Number.isFinite(yr)||yr<2020||yr>2035)yr=YEAR;
   const errEl=document.getElementById('log2307Err');
+  const showErr=m=>{if(errEl){errEl.textContent=m;errEl.style.display='block';}};
   if(errEl){errEl.style.display='none';errEl.textContent='';}
-  if(!payor||!amt){
-    if(errEl){errEl.textContent='Please enter both the payor name and the amount withheld.';errEl.style.display='block';}
-    return;
-  }
+  if(!payor){showErr('Please enter the payor / client name.');return;}
+  if(!amt){showErr('Please enter a positive amount withheld.');return;}
+  if(payor.length>120){showErr('Payor name is too long — keep it under 120 characters.');return;}
   const log=get2307Log();
   log.push({id:Date.now(),payor,atc,amt,q,yr});
   save2307Log(log);
@@ -3875,7 +3896,7 @@ function render2307Log(){
   const log=get2307Log().filter(e=>e.yr===yrSel);
   const el=document.getElementById('log2307List');
   if(!el)return;
-  if(!log.length){el.innerHTML='<div class="log-empty">No 2307 entries for '+yrSel+' yet. Add entries above.</div>';return;}
+  if(!log.length){el.innerHTML=`<div class="log-empty">No 2307 entries for ${Number(yrSel)||YEAR} yet. Add entries above.</div>`;return;}
   const byQ={Q1:[],Q2:[],Q3:[],Q4:[]};
   log.forEach(e=>{if(byQ[e.q])byQ[e.q].push(e);});
   let h='';
@@ -3909,7 +3930,8 @@ function initYTDTable(){
   });
   tbody.innerHTML=h;
 }
-function fmtYtd(el){let v=el.value.replace(/[^0-9]/g,'');el.value=v?parseInt(v).toLocaleString('en-PH'):'';}
+const _ytdRecompute=debounce(function(){if(typeof calcYTD==='function')calcYTD();},120);
+function fmtYtd(el){let v=el.value.replace(/[^0-9]/g,'');el.value=v?parseInt(v).toLocaleString('en-PH'):'';_ytdRecompute();}
 function pYtd(id){const el=document.getElementById(id);if(!el)return 0;return parseFloat(el.value.replace(/[^0-9]/g,''))||0;}
 function calcYTD(){
   const method=document.getElementById('ytdMethod').value;
@@ -3944,7 +3966,8 @@ function calcYTD(){
 }
 
 // ══════════ GUIDE CARDS ══════════
-function toggleGuide(id){document.getElementById(id)?.classList.toggle('open');}
+function toggleGuide(id){const card=document.getElementById(id);if(!card)return;const open=card.classList.toggle('open');const hdr=card.querySelector('.guide-hdr');if(hdr)hdr.setAttribute('aria-expanded',open?'true':'false');}
+function togglePanel(bodyId,chevId,hdr){const b=document.getElementById(bodyId);if(!b)return;const open=b.classList.toggle('vis');const c=document.getElementById(chevId);if(c)c.style.transform=open?'rotate(180deg)':'';if(hdr)hdr.setAttribute('aria-expanded',open?'true':'false');}
 
 // ══════════ INIT NEW FEATURES ══════════
 (function initNewFeatures(){
@@ -3970,6 +3993,39 @@ function toggleGuide(id){document.getElementById(id)?.classList.toggle('open');}
   // Log amount formatter
   const logAmt=document.getElementById('logAmt');
   if(logAmt)logAmt.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});
+  // YTD projector: recompute on method or annual-CWT change too (table inputs already fire via fmtYtd)
+  const ytdMethod=document.getElementById('ytdMethod');
+  if(ytdMethod)ytdMethod.addEventListener('change',function(){if(typeof calcYTD==='function')calcYTD();});
+  const ytdCwt=document.getElementById('ytdCwt');
+  if(ytdCwt)ytdCwt.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';if(typeof _ytdRecompute==='function')_ytdRecompute();});
+  // Delegated handlers for dynamic content (form-reference category chips,
+  // form-reference card expand). Avoids inline onclick attributes that bake
+  // in JS function names and complicate any future Content-Security-Policy.
+  const frCats=document.getElementById('frCats');
+  if(frCats)frCats.addEventListener('click',function(e){const b=e.target.closest('[data-frcat]');if(!b)return;frCat=b.getAttribute('data-frcat');renderForms();});
+  const frList=document.getElementById('frList');
+  if(frList){
+    function tgFrCard(top){const id=top.getAttribute('data-frcard');if(!id)return;const card=document.getElementById(id);if(!card)return;const open=card.classList.toggle('open');top.setAttribute('aria-expanded',open?'true':'false');}
+    frList.addEventListener('click',function(e){const top=e.target.closest('[data-frcard]');if(top)tgFrCard(top);});
+    frList.addEventListener('keydown',function(e){if(e.key!=='Enter'&&e.key!==' ')return;const top=e.target.closest('[data-frcard]');if(top){e.preventDefault();tgFrCard(top);}});
+  }
+  // Delegated handlers for dynamic obligation rows (feed/timeline/workflow),
+  // workflow-section headers, and the inline "View X in Form Reference" link.
+  // Bound at document level since rows render across multiple containers.
+  function _tgObRow(row){const open=row.classList.toggle('exp');row.setAttribute('aria-expanded',open?'true':'false');}
+  function _tgWfSec(hdr){const id=hdr.getAttribute('data-wfsec');if(!id)return;const sec=document.getElementById(id);if(!sec)return;const collapsed=sec.classList.toggle('collapsed');hdr.setAttribute('aria-expanded',collapsed?'false':'true');}
+  function _jumpToFormRef(form){const refBtn=document.querySelector('.pnav button[data-pg="ref"]');if(refBtn)refBtn.click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value=form;s.dispatchEvent(new Event('input'));}},100);}
+  document.addEventListener('click',function(e){
+    const formBtn=e.target.closest('.ob-formref-btn');if(formBtn){e.stopPropagation();const f=formBtn.getAttribute('data-obform');if(f)_jumpToFormRef(f);return;}
+    const wfHdr=e.target.closest('[data-wfsec]');if(wfHdr){_tgWfSec(wfHdr);return;}
+    const row=e.target.closest('[data-obrow]');if(row)_tgObRow(row);
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    const formBtn=e.target.closest('.ob-formref-btn');if(formBtn){e.preventDefault();const f=formBtn.getAttribute('data-obform');if(f)_jumpToFormRef(f);return;}
+    const wfHdr=e.target.closest('[data-wfsec]');if(wfHdr){e.preventDefault();_tgWfSec(wfHdr);return;}
+    const row=e.target.closest('[data-obrow]');if(row){e.preventDefault();_tgObRow(row);}
+  });
 })();
 
 </script>
