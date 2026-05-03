@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#F7F7FC;--sf:#fff;--s2:#EEEDF8;--s3:#E4E2F5;--bd:#D0CDED;--bl:#A09CC8;--ink:#1E1A5E;--ch:#1E1A5E;--dim:#647489;--mu:#8899A8;--lt:#9BAAB8;--royal:#3D388A;--rs:rgba(61,56,138,.07);--rm:rgba(61,56,138,.14);--navy:#1E1A5E;--green:#2d8a4e;--gs:rgba(45,138,78,.07);--amber:#d4850a;--as:rgba(212,133,10,.07);--red:#c0392b;--rds:rgba(192,57,43,.07);--teal:#08B1C2;--ts:rgba(8,177,194,.07);--purple:#6c5ce7;--ps:rgba(108,92,231,.07);--rose:#c44569;--ros:rgba(196,69,105,.07);--slate:#5a6c7d;--sls:rgba(90,108,125,.07);--se:'Source Serif 4',Georgia,serif;--sa:'Inter',system-ui,sans-serif;--r:8px;--rr:5px;--sh:0 1px 3px rgba(30,26,94,.05),0 4px 16px rgba(30,26,94,.08);--shs:0 1px 2px rgba(30,26,94,.04),0 2px 6px rgba(30,26,94,.05);--hdr-h:68px;}
+:root{--bg:#F7F7FC;--sf:#fff;--s2:#EEEDF8;--s3:#E4E2F5;--bd:#D0CDED;--bl:#A09CC8;--ink:#1E1A5E;--ch:#1E1A5E;--dim:#4F5B69;--mu:#5E6B7C;--lt:#7A8696;--royal:#3D388A;--rs:rgba(61,56,138,.07);--rm:rgba(61,56,138,.14);--navy:#1E1A5E;--green:#2d8a4e;--gs:rgba(45,138,78,.07);--amber:#d4850a;--as:rgba(212,133,10,.07);--red:#c0392b;--rds:rgba(192,57,43,.07);--teal:#08B1C2;--ts:rgba(8,177,194,.07);--purple:#6c5ce7;--ps:rgba(108,92,231,.07);--rose:#c44569;--ros:rgba(196,69,105,.07);--slate:#5a6c7d;--sls:rgba(90,108,125,.07);--se:'Source Serif 4',Georgia,serif;--sa:'Inter',system-ui,sans-serif;--r:8px;--rr:5px;--sh:0 1px 3px rgba(30,26,94,.05),0 4px 16px rgba(30,26,94,.08);--shs:0 1px 2px rgba(30,26,94,.04),0 2px 6px rgba(30,26,94,.05);--hdr-h:68px;}
 html{scroll-behavior:smooth}body{font-family:var(--sa);background:var(--bg);color:var(--ch);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .sr-only{position:absolute !important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .skip-link{position:absolute;top:-44px;left:8px;background:var(--ink);color:#fff;padding:.5rem .9rem;border-radius:4px;font-weight:700;z-index:1000;text-decoration:none;font-size:.85rem}
@@ -918,10 +918,10 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <button type="button" class="tb" onclick="setType('mi')" aria-pressed="false">Mixed Income</button>
 <button type="button" class="tb" onclick="setType('corp')" aria-pressed="false">Corporation</button>
 <button type="button" class="tb" onclick="setType('emp')" aria-pressed="false">Employee</button>
-<button type="button" class="upd-setup" onclick="showWizard()" aria-label="Update my setup"><span aria-hidden="true">⚙</span> Update My Setup</button>
+<button type="button" class="upd-setup" onclick="showWizard()" aria-label="Edit setup"><span aria-hidden="true">⚙</span> Edit Setup</button>
 </div></div>
 <div class="rbar" id="rBar" role="group" aria-label="Tax regime"></div>
-<div class="sm-bar" id="smBar">Showing obligations for <strong id="smTpLabel">Self-Employed</strong>. <button type="button" class="sm-upd" onclick="showWizard()">Update Setup →</button></div>
+<div class="sm-bar" id="smBar">Showing obligations for <strong id="smTpLabel">Self-Employed</strong>. <button type="button" class="sm-upd" onclick="showWizard()">Edit Setup →</button></div>
 <div class="calhdr-cm" id="calHdrCm" role="group" aria-label="Calendar controls">
 <span class="chm-who" id="calHdrWho"></span>
 <button type="button" onclick="openCalSearchSheet()" aria-label="Search and filter obligations"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
@@ -1259,7 +1259,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="guide-section-hdr">Deduction Methods Explained</div>
 
 <div class="guide-card" id="gc-osd">
-<div class="guide-hdr" onclick="toggleGuide('gc-osd')">
+<div class="guide-hdr" role="button" tabindex="0" aria-expanded="false" aria-controls="gc-osd" onclick="toggleGuide('gc-osd')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleGuide('gc-osd');}">
 <div class="guide-hdr-l"><span class="guide-title">OSD vs. Itemized Deductions — Which Is Better for You?</span><span class="guide-sub">Optional Standard Deduction · NIRC Sec. 34(L) · No receipts needed for OSD</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
@@ -1275,7 +1275,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="guide-section-hdr green">Income Type Guides</div>
 
 <div class="guide-card gc-teal" id="gc-rental">
-<div class="guide-hdr" onclick="toggleGuide('gc-rental')">
+<div class="guide-hdr" role="button" tabindex="0" aria-expanded="false" aria-controls="gc-rental" onclick="toggleGuide('gc-rental')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleGuide('gc-rental');}">
 <div class="guide-hdr-l"><span class="guide-title">Rental Income Guide — RA 9653, VAT Treatment &amp; Sworn Declaration</span><span class="guide-sub">Rent Control Act · BIR Revenue Regulations · Common landlord compliance checklist</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
@@ -1287,7 +1287,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 </div></div></div>
 
 <div class="guide-card gc-purple" id="gc-freelancer" style="margin-top:.4rem">
-<div class="guide-hdr" onclick="toggleGuide('gc-freelancer')">
+<div class="guide-hdr" role="button" tabindex="0" aria-expanded="false" aria-controls="gc-freelancer" onclick="toggleGuide('gc-freelancer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleGuide('gc-freelancer');}">
 <div class="guide-hdr-l"><span class="guide-title">Freelancer &amp; Professional Tax Flow — Gross Receipts → EWT → Net Tax Due</span><span class="guide-sub">Self-employed professionals · NIRC Sec. 24(A) · BIR Form 1701Q</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
@@ -1304,7 +1304,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="guide-section-hdr purple">Reconciliation Walkthroughs</div>
 
 <div class="guide-card gc-green" id="gc-sawt">
-<div class="guide-hdr" onclick="toggleGuide('gc-sawt')">
+<div class="guide-hdr" role="button" tabindex="0" aria-expanded="false" aria-controls="gc-sawt" onclick="toggleGuide('gc-sawt')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleGuide('gc-sawt');}">
 <div class="guide-hdr-l"><span class="guide-title">SAWT &amp; 2307 Reconciliation — Step-by-Step</span><span class="guide-sub">Summary Alphalist of Withholding Taxes · BIR eSubmission · Required for 1701Q and 1701/1701A</span></div>
 <span class="guide-chev">▾</span></div>
 <div class="guide-body"><div class="guide-content">
@@ -1323,7 +1323,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 
 <!-- ═══ SHARED BOTTOM ═══ -->
 <section class="bp">
-<div class="cp"><div class="cph" onclick="let b=document.getElementById('penB'),c=document.getElementById('penC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Penalties &amp; Interest Reference <span style="font-family:var(--sa);font-size:.7rem;font-weight:600;color:var(--mu)">(EOPT classifications)</span></h3><span class="mchv" id="penC" style="color:var(--lt);font-size:.6rem">▾</span></div>
+<div class="cp"><div class="cph" role="button" tabindex="0" aria-expanded="false" aria-controls="penB" onclick="togglePanel('penB','penC',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePanel('penB','penC',this);}"><h3>Penalties &amp; Interest Reference <span style="font-family:var(--sa);font-size:.7rem;font-weight:600;color:var(--mu)">(EOPT classifications)</span></h3><span class="mchv" id="penC" style="color:var(--lt);font-size:.6rem">▾</span></div>
 <div class="cpb" id="penB"><div class="pg">
 <div class="pc"><h4>Micro <span class="bsm" style="background:var(--gs);color:var(--green)">Gross &lt; ₱3M · EOPT</span></h4>
 <div class="pr"><span>Surcharge (late)</span><span class="pv pvg">10%</span></div><div class="pr"><span>Interest</span><span class="pv pvg">6%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvg">₱500 (max ₱12.5K/yr)</span></div></div>
@@ -1332,7 +1332,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 <div class="pc"><h4>Medium, Large &amp; Willful <span class="bsm" style="background:var(--rds);color:var(--red)">Standard</span></h4>
 <div class="pr"><span>Surcharge (late)</span><span class="pv pvr">25%</span></div><div class="pr"><span>Surcharge (willful)</span><span class="pv pvr">50%</span></div><div class="pr"><span>Interest</span><span class="pv pvr">12%/yr</span></div><div class="pr"><span>Info return failure</span><span class="pv pvr">₱1,000 (max ₱25K/yr)</span></div></div>
 </div><p style="font-family:var(--se);font-size:.75rem;color:var(--mu);padding:.6rem .75rem;line-height:1.5">EOPT thresholds: Medium = ₱20M – &lt;₱1B · Large = ≥₱1B (RA 11976 §47). Willful neglect / fraud imposes the 50% surcharge regardless of size.</p></div></div>
-<div class="cp"><div class="cph" onclick="let b=document.getElementById('lgB'),c=document.getElementById('lgC');b.classList.toggle('vis');c.style.transform=b.classList.contains('vis')?'rotate(180deg)':''"><h3>Legal Basis</h3><span class="mchv" id="lgC" style="color:var(--lt);font-size:.6rem">▾</span></div>
+<div class="cp"><div class="cph" role="button" tabindex="0" aria-expanded="false" aria-controls="lgB" onclick="togglePanel('lgB','lgC',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePanel('lgB','lgC',this);}"><h3>Legal Basis</h3><span class="mchv" id="lgC" style="color:var(--lt);font-size:.6rem">▾</span></div>
 <div class="cpb" id="lgB">
 <div class="lr"><span class="lrt">Income Tax</span><span class="lrc">NIRC Sec. 24(A)(2); TRAIN Law (RA 10963)</span></div>
 <div class="lr"><span class="lrt">8% Flat Rate</span><span class="lrc">NIRC Sec. 24(A)(2)(b); RR 8-2018</span></div>
@@ -1348,7 +1348,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 </div></div>
 </section>
 
-<footer class="ftr">This suite is for general reference only — not formal tax advice. Verify against the BIR Interactive Tax Calendar at www.bir.gov.ph. Deadlines on weekends/holidays move to the next business day. Rates current as of April 2026, incorporating TRAIN (RA 10963), CREATE (RA 11534), CREATE MORE (RA 12066), EOPT (RA 11976), CMEPA (RA 12214, eff. 1 Jul 2025), RR 29-2025 expanded de minimis (eff. 6 Jan 2026), and RR 26-2025 e-invoicing (31 Dec 2026 deadline).</footer>
+<footer class="ftr">This suite is for general reference only — not formal tax advice. Verify against the BIR Interactive Tax Calendar at www.bir.gov.ph. Deadlines on weekends/holidays move to the next business day. Rates current as of May 2026, incorporating TRAIN (RA 10963), CREATE (RA 11534), CREATE MORE (RA 12066), EOPT (RA 11976), CMEPA (RA 12214, eff. 1 Jul 2025), RR 29-2025 expanded de minimis (eff. 6 Jan 2026), and RR 26-2025 e-invoicing (31 Dec 2026 deadline).</footer>
 
 <script>
 // ══════════ SHARED UTILITIES ══════════
@@ -2541,7 +2541,7 @@ function ren(){const f=gF();document.getElementById('st').innerHTML=`<strong>${f
 function gradTax(ti){ti=Math.max(0,ti);if(ti<=250000)return 0;if(ti<=400000)return(ti-250000)*.15;if(ti<=800000)return 22500+(ti-400000)*.20;if(ti<=2000000)return 102500+(ti-800000)*.25;if(ti<=8000000)return 402500+(ti-2000000)*.30;return 2202500+(ti-8000000)*.35;}
 function fmt(n){return'₱'+Math.round(n).toLocaleString('en-PH');}
 function pct(n,d){return d>0?(n/d*100).toFixed(2)+'%':'0.00%';}
-function pN(id){const el=document.getElementById(id);if(!el)return 0;return parseFloat(el.value.replace(/[^0-9.]/g,''))||0;}
+function pN(id){const el=document.getElementById(id);if(!el)return 0;const cleaned=el.value.replace(/[^0-9.]/g,'').replace(/\.(?=[^.]*\.)/g,'');return Math.max(0,parseFloat(cleaned)||0);}
 
 // EXPENSE MODE STATE
 let EXP_MODE='lump';
@@ -3844,7 +3844,7 @@ function calcWithholding(){
 
 // ══════════ 2307 CREDIT LOG ══════════
 function get2307Log(){try{return JSON.parse(localStorage.getItem('tpv_2307log')||'[]');}catch{return[];}}
-function save2307Log(l){if(!safeSet('tpv_2307log',JSON.stringify(l))){toast('Could not save 2307 log — storage is full. Delete old entries.','err');}}
+function save2307Log(l){const MAX=2000;if(l.length>MAX){l=l.slice(-MAX);toast('2307 log capped at '+MAX+' entries — oldest were dropped.','warn');}if(!safeSet('tpv_2307log',JSON.stringify(l))){toast('Could not save 2307 log — storage is full. Delete old entries.','err');}}
 function add2307Entry(){
   const payor=document.getElementById('logPayor').value.trim();
   const atc=document.getElementById('logAtc').value.trim();
@@ -3944,7 +3944,8 @@ function calcYTD(){
 }
 
 // ══════════ GUIDE CARDS ══════════
-function toggleGuide(id){document.getElementById(id)?.classList.toggle('open');}
+function toggleGuide(id){const card=document.getElementById(id);if(!card)return;const open=card.classList.toggle('open');const hdr=card.querySelector('.guide-hdr');if(hdr)hdr.setAttribute('aria-expanded',open?'true':'false');}
+function togglePanel(bodyId,chevId,hdr){const b=document.getElementById(bodyId);if(!b)return;const open=b.classList.toggle('vis');const c=document.getElementById(chevId);if(c)c.style.transform=open?'rotate(180deg)':'';if(hdr)hdr.setAttribute('aria-expanded',open?'true':'false');}
 
 // ══════════ INIT NEW FEATURES ══════════
 (function initNewFeatures(){
