@@ -346,6 +346,7 @@ table.qt td{padding:.3rem .4rem;border-bottom:1px solid var(--s2)}table.qt tr:la
 .ob.exp .ob-layman{max-height:600px;margin-top:.4rem}
 .ob-lay-inner{padding:.65rem .8rem;background:var(--rs);border-left:3px solid var(--royal);border-radius:var(--rr);font-family:var(--se);font-size:.86rem;color:var(--ch);line-height:1.55}
 .ob-lay-inner b{color:var(--royal);font-weight:700}
+.ob-formref-btn{margin-top:.5rem;font-size:.75rem;color:var(--royal);font-weight:600;cursor:pointer;background:none;border:none;padding:.3rem .4rem;border-radius:4px;min-height:32px}
 .ob-lay-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--royal);margin-bottom:.25rem;display:block}
 .ob-chev{margin-left:auto;color:var(--lt);font-size:.55rem;transition:transform .3s;flex-shrink:0}
 .ob.exp .ob-chev{transform:rotate(180deg);color:var(--royal)}
@@ -1588,11 +1589,15 @@ function updateMobileCalcBar(){
   }
 }
 // Keep the mobile bar in sync as cCards re-renders (calc() updates on every keystroke).
+// Coalesce mutation bursts via rAF so we paint at most once per frame regardless of
+// how many subtree mutations a single calc() emits.
 (function initMobileCalcObserver(){
   if(typeof MutationObserver==='undefined')return;
+  let scheduled=false;
+  const onMut=()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;updateMobileCalcBar();});};
   const start=()=>{
     const target=document.getElementById('cCards');if(!target)return;
-    new MutationObserver(updateMobileCalcBar).observe(target,{childList:true,subtree:true});
+    new MutationObserver(onMut).observe(target,{childList:true,subtree:true});
     updateMobileCalcBar();
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);
@@ -2049,9 +2054,9 @@ function renderWF(f){
     const sorted=[...obs].sort((a,b)=>deadlineSortKey(a)-deadlineSortKey(b));
     const sid='wfs_'+wf;
     h+=`<div class="wf-sec" id="${sid}">`;
-    h+=`<div class="wf-sec-hdr" onclick="document.getElementById('${sid}').classList.toggle('collapsed')">`;
-    h+=`<span class="wf-sec-name">${WF_LABELS[wf]}</span><span class="wf-sec-badge">${obs.length}</span><span class="wf-sec-chev">&#9662;</span></div>`;
-    h+=`<div class="wf-sec-body">${sorted.map(rObNew).join('')}</div></div>`;
+    h+=`<div class="wf-sec-hdr" role="button" tabindex="0" aria-expanded="true" aria-controls="${sid}-body" data-wfsec="${sid}">`;
+    h+=`<span class="wf-sec-name">${WF_LABELS[wf]}</span><span class="wf-sec-badge">${obs.length}</span><span class="wf-sec-chev" aria-hidden="true">&#9662;</span></div>`;
+    h+=`<div class="wf-sec-body" id="${sid}-body">${sorted.map(rObNew).join('')}</div></div>`;
   });
   if(!h)h=`<div class="wf-empty">No obligations match your current filters.</div>`;
   document.getElementById('wv').innerHTML=h;
@@ -2063,12 +2068,19 @@ function obsId(o){return(o.month+'_'+o.day+'_'+(o.form||'').replace(/[^a-zA-Z0-9
 // Per BIR practice, a deadline falling on a Saturday, Sunday, or public
 // holiday (regular or special non-working) shifts to the next business day.
 function isHoliday(m,d){const list=HOLIDAYS[m]||[];for(let i=0;i<list.length;i++){if(list[i][0]===d)return true;}return false;}
+// Memoize by month/day pair — obligations with the same nominal deadline always
+// resolve to the same effective deadline. Cache survives between renders since
+// HOLIDAYS is built once per page load.
+const _effDeadlineCache=new Map();
 function effectiveDeadline(o){
   if(!o||o.month===0||o.day===0)return null;
+  const key=o.month*100+o.day;
+  const hit=_effDeadlineCache.get(key);if(hit)return new Date(hit);
   const d=new Date(YEAR,o.month-1,o.day);
   let guard=0;
   while(guard++<30&&(d.getDay()===0||d.getDay()===6||isHoliday(d.getMonth()+1,d.getDate())))d.setDate(d.getDate()+1);
   if(guard>=30)console.warn('effectiveDeadline guard exhausted for',o.title,o.form);
+  _effDeadlineCache.set(key,d.getTime());
   return d;
 }
 function nominalDeadline(o){if(!o||o.month===0||o.day===0)return null;return new Date(YEAR,o.month-1,o.day);}
@@ -2143,6 +2155,7 @@ function renderFeed(){
   const grps={tw:[],nw:[],tm:[],ip:[],lt:[]};
   items.forEach(o=>{
     const d=daysUntil(o);
+    if(d<0)return; // already past — don't show stale items in any bucket
     if(d<=7)grps.tw.push(o);
     else if(d<=14)grps.nw.push(o);
     else{
@@ -2321,7 +2334,7 @@ function getDayName(m,d){return['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new D
 function setCalM(m){cMonth=m;if(m>0)cQuarter=Math.ceil(m/3);ren();}
 function setCalQ(q){cQuarter=q;cMonth=(q-1)*3+1;ren();}
 function getObGrp(o){const f=o.form||'';if(['1601-C','0619-E','0619-F','1600'].includes(f))return'wh-m';if(['1701A','1701','1700'].includes(f)||(f==='2316'&&o.cat==='inc'))return'itr-a';if(f==='1702-RT')return'itr-ac';if(['1604-C','1604-F','1604-E'].includes(f))return'wh-a';if(f==='1701Q')return'itr-q';if(f==='1702Q')return'itr-qc';if(['2550Q','2551Q','SLSP'].includes(f))return'biz-q';if(['1601-EQ','1601-FQ','2307','2306'].includes(f))return'wh-q';if(f==='Agency'||o.cat==='emp')return'contrib';if(f==='SEC'||o.cat==='sec')return'sec';return'adm';}
-function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='obn_'+obsId(o);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);const shift=shiftedDeadlineNote(o);return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" onclick="document.getElementById('${oid}').classList.toggle('exp')"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div><span class="ob-row-title">${o.title}${obTip(o.title)}</span>${o.form&&o.form!=='—'?`<span class="form-ref">${o.form}</span>`:''}</div><div class="ob-row-meta">${shift?`<span class="ob-row-pq" style="background:var(--as);color:var(--amber)">${shift}</span>`:''}${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.5rem;padding-top:.4rem;border-top:1px solid rgba(61,56,138,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.78rem;color:var(--ch);padding:.15rem 0;display:flex;align-items:center;gap:.35rem"><span aria-hidden="true" style="font-size:.72rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<button type="button" style="margin-top:.5rem;font-size:.75rem;color:var(--royal);font-weight:600;cursor:pointer;background:none;border:none;padding:.3rem .4rem;border-radius:4px;min-height:32px" onclick="event.stopPropagation();document.querySelector('.pnav button[data-pg=\"ref\"]').click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value='${o.form}';s.dispatchEvent(new Event('input'))}},100)">&#8594; View ${o.form} in Form Reference</button>`:''}</div></div></div>`;}
+function rObNew(o){const sa=document.getElementById('saT')?.checked,dm=o.pq&&!cQ.has(o.pq)&&sa;const cc={inc:'c-inc',biz:'c-biz',wh:'c-wh',emp:'c-emp',dst:'c-dst',adm:'c-adm',sec:'c-sec'}[o.cat]||'';const oid='obn_'+obsId(o);const isOng=o.month===0||o.day===0;const dayNum=isOng?'&#8734;':o.day;const dayName=!isOng&&o.month>0?getDayName(o.month,o.day):'';const nk=['Agency','LGU','SEC','IPA','ORUS','SLSP','—'];const lk=o.form&&!nk.includes(o.form);const shift=shiftedDeadlineNote(o);const formAttr=o.form?` data-obform="${esc(o.form)}"`:'';return`<div class="ob ob-row ${cc}${dm?' dm':''}" id="${oid}" role="button" tabindex="0" aria-expanded="false" data-obrow="${oid}"><div class="ob-row-wrap"><div class="ob-row-date"><div class="ob-row-day">${dayNum}</div>${dayName?`<div class="ob-row-dow">${dayName}</div>`:''}</div><div class="ob-row-body"><div><span class="ob-row-title">${o.title}${obTip(o.title)}</span>${o.form&&o.form!=='—'?`<span class="form-ref">${o.form}</span>`:''}</div><div class="ob-row-meta">${shift?`<span class="ob-row-pq" style="background:var(--as);color:var(--amber)">${shift}</span>`:''}${o.pq?`<span class="ob-row-pq">If: ${pqL(o.pq)}</span>`:''}${o.att?.length?`<span class="ob-row-att">+ ${o.att.join(', ')}</span>`:''}</div></div><div class="ob-row-right"><span class="ob-chev" aria-hidden="true">&#9662;</span></div></div><div class="ob-layman"><div class="ob-lay-inner"><span class="ob-lay-label">What this means</span>${getLayman(o)}${o.att?.length?`<div style="margin-top:.5rem;padding-top:.4rem;border-top:1px solid rgba(61,56,138,.15)"><span class="ob-lay-label">Required Attachments</span>${o.att.map(a=>`<div style="font-size:.78rem;color:var(--ch);padding:.15rem 0;display:flex;align-items:center;gap:.35rem"><span aria-hidden="true" style="font-size:.72rem">&#128206;</span> ${a}</div>`).join('')}</div>`:''}${lk?`<button type="button" class="ob-formref-btn"${formAttr}>&#8594; View ${esc(o.form)} in Form Reference</button>`:''}</div></div></div>`;}
 function renMon(month,obs){let h='';if(MONTH_NOTES[month])h+=`<div class="cal-note"><span class="cal-note-lbl">Deadline note</span>${MONTH_NOTES[month]}</div>`;const hols=HOLIDAYS[month]||[];if(hols.length){h+=`<div class="cal-holidays"><div class="cal-hol-hdr">Public holidays this month</div>`;hols.forEach(([d,name,type])=>{const dn=getDayName(month,d);h+=`<div class="cal-hol-item"><span class="cal-hol-date">${MN[month].substr(0,3)} ${d}, ${YEAR}</span><span class="cal-hol-name">${dn} &middot; ${name}</span><span class="cal-hol-badge ${type}">${type==='reg'?'Regular holiday':'Special non-working'}</span></div>`;});h+=`</div>`;}if(!obs.length)return h+`<div class="cal-empty">No obligations match your current filters for ${MN[month]}.</div>`;const grps={};[...obs].sort((a,b)=>a.day-b.day).forEach(o=>{const g=getObGrp(o);if(!grps[g])grps[g]=[];grps[g].push(o);});let first=true;GROUP_ORDER.forEach(gk=>{if(!grps[gk])return;h+=`<div class="cal-grp-hdr"${first?' style="margin-top:0"':''}>${GROUP_LABELS[gk]||gk}</div>`;h+=grps[gk].map(rObNew).join('');first=false;});return h;}
 function renPen(ongoingObs){
   const sectionHdr=t=>`<div style="font-family:var(--sa);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mu);padding:.6rem 0 .3rem;border-bottom:1px solid var(--bd);margin-bottom:.55rem">${t}</div>`;
@@ -3856,15 +3869,16 @@ function add2307Entry(){
   const payor=document.getElementById('logPayor').value.trim();
   const atc=document.getElementById('logAtc').value.trim();
   const amtStr=document.getElementById('logAmt').value.replace(/[^0-9.]/g,'');
-  const amt=parseFloat(amtStr)||0;
+  const amt=Math.max(0,parseFloat(amtStr)||0);
   const q=document.getElementById('logQ').value;
-  const yr=parseInt(document.getElementById('logYear').value)||YEAR;
+  let yr=parseInt(document.getElementById('logYear').value,10);
+  if(!Number.isFinite(yr)||yr<2020||yr>2035)yr=YEAR;
   const errEl=document.getElementById('log2307Err');
+  const showErr=m=>{if(errEl){errEl.textContent=m;errEl.style.display='block';}};
   if(errEl){errEl.style.display='none';errEl.textContent='';}
-  if(!payor||!amt){
-    if(errEl){errEl.textContent='Please enter both the payor name and the amount withheld.';errEl.style.display='block';}
-    return;
-  }
+  if(!payor){showErr('Please enter the payor / client name.');return;}
+  if(!amt){showErr('Please enter a positive amount withheld.');return;}
+  if(payor.length>120){showErr('Payor name is too long — keep it under 120 characters.');return;}
   const log=get2307Log();
   log.push({id:Date.now(),payor,atc,amt,q,yr});
   save2307Log(log);
@@ -3916,7 +3930,8 @@ function initYTDTable(){
   });
   tbody.innerHTML=h;
 }
-function fmtYtd(el){let v=el.value.replace(/[^0-9]/g,'');el.value=v?parseInt(v).toLocaleString('en-PH'):'';}
+const _ytdRecompute=debounce(function(){if(typeof calcYTD==='function')calcYTD();},120);
+function fmtYtd(el){let v=el.value.replace(/[^0-9]/g,'');el.value=v?parseInt(v).toLocaleString('en-PH'):'';_ytdRecompute();}
 function pYtd(id){const el=document.getElementById(id);if(!el)return 0;return parseFloat(el.value.replace(/[^0-9]/g,''))||0;}
 function calcYTD(){
   const method=document.getElementById('ytdMethod').value;
@@ -3978,6 +3993,11 @@ function togglePanel(bodyId,chevId,hdr){const b=document.getElementById(bodyId);
   // Log amount formatter
   const logAmt=document.getElementById('logAmt');
   if(logAmt)logAmt.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';});
+  // YTD projector: recompute on method or annual-CWT change too (table inputs already fire via fmtYtd)
+  const ytdMethod=document.getElementById('ytdMethod');
+  if(ytdMethod)ytdMethod.addEventListener('change',function(){if(typeof calcYTD==='function')calcYTD();});
+  const ytdCwt=document.getElementById('ytdCwt');
+  if(ytdCwt)ytdCwt.addEventListener('input',function(){let v=this.value.replace(/[^0-9]/g,'');this.value=v?parseInt(v).toLocaleString('en-PH'):'';if(typeof _ytdRecompute==='function')_ytdRecompute();});
   // Delegated handlers for dynamic content (form-reference category chips,
   // form-reference card expand). Avoids inline onclick attributes that bake
   // in JS function names and complicate any future Content-Security-Policy.
@@ -3989,6 +4009,23 @@ function togglePanel(bodyId,chevId,hdr){const b=document.getElementById(bodyId);
     frList.addEventListener('click',function(e){const top=e.target.closest('[data-frcard]');if(top)tgFrCard(top);});
     frList.addEventListener('keydown',function(e){if(e.key!=='Enter'&&e.key!==' ')return;const top=e.target.closest('[data-frcard]');if(top){e.preventDefault();tgFrCard(top);}});
   }
+  // Delegated handlers for dynamic obligation rows (feed/timeline/workflow),
+  // workflow-section headers, and the inline "View X in Form Reference" link.
+  // Bound at document level since rows render across multiple containers.
+  function _tgObRow(row){const open=row.classList.toggle('exp');row.setAttribute('aria-expanded',open?'true':'false');}
+  function _tgWfSec(hdr){const id=hdr.getAttribute('data-wfsec');if(!id)return;const sec=document.getElementById(id);if(!sec)return;const collapsed=sec.classList.toggle('collapsed');hdr.setAttribute('aria-expanded',collapsed?'false':'true');}
+  function _jumpToFormRef(form){const refBtn=document.querySelector('.pnav button[data-pg="ref"]');if(refBtn)refBtn.click();setTimeout(()=>{const s=document.getElementById('frSearch');if(s){s.value=form;s.dispatchEvent(new Event('input'));}},100);}
+  document.addEventListener('click',function(e){
+    const formBtn=e.target.closest('.ob-formref-btn');if(formBtn){e.stopPropagation();const f=formBtn.getAttribute('data-obform');if(f)_jumpToFormRef(f);return;}
+    const wfHdr=e.target.closest('[data-wfsec]');if(wfHdr){_tgWfSec(wfHdr);return;}
+    const row=e.target.closest('[data-obrow]');if(row)_tgObRow(row);
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    const formBtn=e.target.closest('.ob-formref-btn');if(formBtn){e.preventDefault();const f=formBtn.getAttribute('data-obform');if(f)_jumpToFormRef(f);return;}
+    const wfHdr=e.target.closest('[data-wfsec]');if(wfHdr){e.preventDefault();_tgWfSec(wfHdr);return;}
+    const row=e.target.closest('[data-obrow]');if(row){e.preventDefault();_tgObRow(row);}
+  });
 })();
 
 </script>
